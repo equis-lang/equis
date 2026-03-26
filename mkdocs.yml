@@ -12,17 +12,17 @@ theme:
     - search.highlight
 
 nav:
-  - Home: README.md
+  - Home: index.md
   - Language Overview: EQUIS.md
   - Core Documentation:
-      - Architecture: docs/architecture.md
-      - Language Specification: docs/specification.md
-      - Operational Semantics: docs/operational_semantics.md
-      - Grammar (EBNF): docs/grammar.md
+      - Architecture: architecture.md
+      - Language Specification: specification.md
+      - Operational Semantics: operational_semantics.md
+      - Grammar (EBNF): grammar.md
   - Reference:
-      - Standard Library: docs/stdlib_reference.md
-      - Integration Guide: docs/integration_guide.md
-      - Benchmarks: docs/benchmarks.md
+      - Standard Library: stdlib_reference.md
+      - Integration Guide: integration_guide.md
+      - Benchmarks: benchmarks.md
   - Community & Legal:
       - Contributing: CONTRIBUTING.md
       - Code of Conduct: CODE_OF_CONDUCT.md

@@ -1,0 +1,35 @@
+name: Deploy Docs
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Prepare documentation files
+        run: |
+          mkdir -p docs
+          cp README.md docs/index.md
+          cp EQUIS.md docs/EQUIS.md
+          # Salin file legal lainnya
+          cp CONTRIBUTING.md docs/CONTRIBUTING.md
+          cp CODE_OF_CONDUCT.md docs/CODE_OF_CONDUCT.md
+          cp SECURITY.md docs/SECURITY.md
+          cp CHANGELOG.md docs/CHANGELOG.md
+
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-material
+
+      - name: Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force
