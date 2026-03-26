@@ -124,8 +124,8 @@ fn gen_escaped_len(s) {
 }
 
 fn gen_expr(c, expr) {
-    if (c == 0) { return 0; }
     if (expr == 0) { return 0; }
+    if (expr < 4096) { return 0; }
     let type = expr[0];
     // Skip expression tracing in release build
     if (type == EXPR_VARIABLE) { return gen_expr_variable(c, expr); }
@@ -933,7 +933,6 @@ fn gen_program(c, ast) {
         if (stmt) {
             if (stmt[0] == STMT_FUNCTION) {
                 name = stmt[1]; params = stmt[2]; body = stmt[3]; p_size = vec_size(params);
-                write(2, "      Func: ", 12); write(2, name, sys_strlen(name)); write(2, "\n", 1);
                 print_raw_str("define i64 @_eq_"); print_raw_str(name); print_raw_str("(");
                 j = 0;
                 while (j < p_size) {
