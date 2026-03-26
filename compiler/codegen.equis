@@ -28,12 +28,35 @@ fn emit_ln(s) {
     print_raw_str("\n");
 }
 fn gen_retain(c, res) {
+    if (res < 4096) { return 0; }
+    if (res[0] == 0) { return 0; }
+    print_raw_str("    call i64 @sys_retain(i64 %r");
+    print_raw(res[1]);
+    emit_ln(")");
     return 0;
 }
 fn gen_release(c, res) {
+    if (res < 4096) { return 0; }
+    if (res[0] == 0) { return 0; }
+    print_raw_str("    call i64 @sys_release(i64 %r");
+    print_raw(res[1]);
+    emit_ln(")");
     return 0;
 }
 fn gen_release_locals(c, vars) {
+    if (vars < 4096) { return 0; }
+    let mut i = 0; let size = vec_size(vars);
+    while (i < size) {
+        let entry = vec_get(vars, i);
+        if (entry >= 4096) {
+            let l_ptr = entry[1];
+            let reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = load i64, ptr %p"); print_raw(l_ptr); emit_ln("");
+            let tmp_res = sys_malloc(16); tmp_res[0] = 1; tmp_res[1] = reg;
+            gen_release(c, tmp_res);
+        }
+        i = i + 1;
+    }
     return 0;
 }
 
@@ -91,6 +114,9 @@ fn collect_allocas(c, node) {
         collect_allocas(c, node[2]);
     } else if (type == STMT_FOR) {
         collect_allocas(c, node[1]); collect_allocas(c, node[4]);
+    } else if (type == STMT_EVENT || type == STMT_COMMITMENT || type == STMT_POLICY || type == STMT_TRANSFORMATION || type == STMT_VALUATOR) {
+        let l_node = node[3];
+        if (l_node >= 4096) { collect_allocas(c, l_node); }
     }
     return 0;
 }
@@ -539,34 +565,43 @@ fn gen_expr_get(c, expr) {
 }
 
 fn gen_expr_assignment(c, expr) {
-    let mut target = expr[1]; let mut value = gen_expr(c, expr[2]);
-    if (target < 4096 || value < 4096) { return 0; }
+    let target = expr[1];
+    let val_expr = expr[2];
+    let val = gen_expr(c, val_expr);
+    gen_retain(c, val);
+    
+    // Find target pointer
+    let mut ptr = 0;
+    let mut old_val_reg = 0;
+
     if (target[0] == EXPR_VARIABLE) {
-        let mut name = target[1]; let mut found_local = 0;
+        let name = target[1]; let mut found_local = 0;
         if (c[4]) {
-            let mut locals = c[4]; let mut v_idx = vec_size(locals) - 1;
+            let locals = c[4]; let mut v_idx = vec_size(locals) - 1;
             while (v_idx >= 0) {
-                let mut entry = vec_get(locals, v_idx);
+                let entry = vec_get(locals, v_idx);
                 if (entry) {
                     if (str_equal(entry[0], name)) {
-                        let old_reg = freshen_reg(c);
-                        print_raw_str("    %r"); print_raw(old_reg); print_raw_str(" = load i64, ptr %p"); print_raw(entry[1]); emit_ln("");
-                        if (value) { gen_retain(c, value); }
-                        print_raw_str("    store i64 "); if (value[0]) { print_raw_str("%r"); } print_raw(value[1]);
-                        print_raw_str(", ptr %p"); print_raw(entry[1]); emit_ln("");
-                        let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_reg; gen_release(c, old_res);
+                        ptr = entry[1];
                         found_local = 1; v_idx = -1;
                     } else { v_idx = v_idx - 1; }
                 } else { v_idx = v_idx - 1; }
             }
         }
         if (found_local == 0) {
-            let old_reg = freshen_reg(c);
-            print_raw_str("    %r"); print_raw(old_reg); print_raw_str(" = load i64, ptr @Global_"); print_raw_str(name); emit_ln("");
-            if (value) { gen_retain(c, value); }
-            print_raw_str("    store i64 "); if (value[0]) { print_raw_str("%r"); } print_raw(value[1]);
+            // Global variable
+            old_val_reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(old_val_reg); print_raw_str(" = load i64, ptr @Global_"); print_raw_str(name); emit_ln("");
+            print_raw_str("    store i64 "); if (val[0]) { print_raw_str("%r"); } print_raw(val[1]);
             print_raw_str(", ptr @Global_"); print_raw_str(name); emit_ln("");
-            let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_reg; gen_release(c, old_res);
+            let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_val_reg; gen_release(c, old_res);
+        } else {
+            // Local variable
+            old_val_reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(old_val_reg); print_raw_str(" = load i64, ptr %p"); print_raw(ptr); emit_ln("");
+            print_raw_str("    store i64 "); if (val[0]) { print_raw_str("%r"); } print_raw(val[1]);
+            print_raw_str(", ptr %p"); print_raw(ptr); emit_ln("");
+            let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_val_reg; gen_release(c, old_res);
         }
     } else if (target[0] == EXPR_INDEX) {
         let arr = gen_expr(c, target[1]); let idx = gen_expr(c, target[2]);
@@ -575,11 +610,11 @@ fn gen_expr_assignment(c, expr) {
         if (arr[0]) { print_raw_str("%r"); } print_raw(arr[1]); emit_ln(" to ptr");
         let ll_ptr = freshen_reg(c); print_raw_str("    %r"); print_raw(ll_ptr); print_raw_str(" = getelementptr i64, ptr %r"); print_raw(arr_ptr); print_raw_str(", i64 ");
         if (idx[0]) { print_raw_str("%r"); } print_raw(idx[1]); emit_ln("");
-        let old_reg = freshen_reg(c); print_raw_str("    %r"); print_raw(old_reg); print_raw_str(" = load i64, ptr %r"); print_raw(ll_ptr); emit_ln("");
-        if (value) { gen_retain(c, value); }
-        print_raw_str("    store i64 "); if (value[0]) { print_raw_str("%r"); } print_raw(value[1]);
+        old_val_reg = freshen_reg(c); print_raw_str("    %r"); print_raw(old_val_reg); print_raw_str(" = load i64, ptr %r"); print_raw(ll_ptr); emit_ln("");
+        print_raw_str("    store i64 "); if (val[0]) { print_raw_str("%r"); } print_raw(val[1]);
         print_raw_str(", ptr %r"); print_raw(ll_ptr); emit_ln("");
-        let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_reg; gen_release(c, old_res);
+        let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_val_reg; gen_release(c, old_res);
+        gen_release(c, arr); gen_release(c, idx);
     } else if (target[0] == EXPR_GET) {
         let obj_assign_result = gen_expr(c, target[1]);
         if (obj_assign_result == 0) { return 0; }
@@ -598,22 +633,33 @@ fn gen_expr_assignment(c, expr) {
         let field_ptr = freshen_reg(c);
         print_raw_str("    %r"); print_raw(field_ptr); print_raw_str(" = getelementptr i64, ptr %r"); print_raw(obj_ptr); print_raw_str(", i64 ");
         print_raw(offset); emit_ln("");
-        let old_reg = freshen_reg(c);
-        print_raw_str("    %r"); print_raw(old_reg); print_raw_str(" = load i64, ptr %r"); print_raw(field_ptr); emit_ln("");
-        if (value) { gen_retain(c, value); }
+        old_val_reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(old_val_reg); print_raw_str(" = load i64, ptr %r"); print_raw(field_ptr); emit_ln("");
         print_raw_str("    store i64 ");
-        if (value[0]) { print_raw_str("%r"); } print_raw(value[1]);
+        if (val[0]) { print_raw_str("%r"); } print_raw(val[1]);
         print_raw_str(", ptr %r"); print_raw(field_ptr); emit_ln("");
-        let old_res_get = sys_malloc(2 * 8); old_res_get[0] = 1; old_res_get[1] = old_reg;
+        let old_res_get = sys_malloc(2 * 8); old_res_get[0] = 1; old_res_get[1] = old_val_reg;
         gen_release(c, old_res_get);
+        gen_release(c, obj_assign_result);
     }
-    return value;
+    gen_release(c, val);
+    return val;
+}
+
+fn gen_stmt_block(c, node) {
+    let body = node[1];
+    let mut i = 0; let size = vec_size(body);
+    while (i < size) {
+        gen_stmt(c, vec_get(body, i));
+        i = i + 1;
+    }
+    return 0;
 }
 
 fn gen_stmt(c, stmt) {
     if (stmt == 0) { return 0; }
     let type = stmt[0];
-    let mut name = 0; let mut value = 0; let mut l_ptr = 0; let mut existing = 0;
+    let mut name = 0; let mut l_ptr = 0; let mut existing = 0;
     let mut vars = 0; let mut j = 0; let mut v_sz = 0; let mut v_entry = 0;
     let mut val_reg = 0; let mut body = 0; let mut i = 0; let mut size = 0;
     let mut cond = 0; let mut l_then = 0; let mut l_else = 0; let mut l_cont = 0;
@@ -622,20 +668,16 @@ fn gen_stmt(c, stmt) {
     let mut res = 0; let mut args = 0; let arg_val = 0; let mut c_flows = 0;
     let mut c_logic = 0; let mut f_name = 0; let i_arg = 0; let mut p_name = 0;
     let mut sig_res = 0; let sig_ptr = 0; let mut reg = 0; let mut fields = 0;
-    let mut icmp_res = 0; let a_size = 0; let mut k_size = 0; let mut v_sz = 0;
-    let mut target = 0; let mut value = 0; let old_reg = 0; let obj_assign_result = 0;
-    let field_name = 0; let offset_entry = 0; let offset = 0; let obj_ptr = 0;
-    let field_ptr = 0; let arr = 0; let idx = 0; let arr_ptr = 0; let ll_ptr = 0;
+    let mut icmp_res = 0; let a_size = 0; let mut k_size = 0;
     let check_reg = 0; let l_ok = 0; let l_cond = 0; let l_end = 0;
-    let mut val = 0; let mut existing = 0; let mut vars = 0; let mut j = 0; let mut v_entry = 0;
-    let mut e_entry = 0; let e_node = 0; let mut c_roles = 0;
+    let mut val = 0; let mut e_entry = 0; let e_node = 0; let mut c_roles = 0;
     let mut f_init = 0; let mut f_cond = 0; let mut f_step = 0; let mut f_body = 0;
     let mut k = 0; 
 
     if (type == STMT_EXPRESSION) { gen_expr(c, stmt[1]); }
     else if (type == STMT_LET) {
         name = stmt[1];
-        value = stmt[2];
+        val = gen_expr(c, stmt[2]);
         if (name < 4096) { return 0; }
         l_ptr = 0; existing = 0; vars = c[4];
         if (vars >= 4096) {
@@ -657,24 +699,18 @@ fn gen_stmt(c, stmt) {
             c[4] = vec_push(c[4], entry);
         }
 
-        val_reg = gen_expr(c, value);
         if (c[4] >= 4096) { 
             print_raw_str("    store i64 "); 
-            if (val_reg >= 4096) { if (val_reg[0]) { print_raw_str("%r"); } print_raw(val_reg[1]); } else { print_raw_str("0"); }
+            if (val >= 4096) { if (val[0]) { print_raw_str("%r"); } print_raw(val[1]); } else { print_raw_str("0"); }
             print_raw_str(", ptr %p"); print_raw(l_ptr); emit_ln("");
         } else { 
             print_raw_str("    store i64 ");
-            if (val_reg >= 4096) { if (val_reg[0]) { print_raw_str("%r"); } print_raw(val_reg[1]); } else { print_raw_str("0"); }
+            if (val >= 4096) { if (val[0]) { print_raw_str("%r"); } print_raw(val[1]); } else { print_raw_str("0"); }
             print_raw_str(", ptr @Global_"); print_raw_str(name); emit_ln("");
         }
         return 0;
     } else if (type == STMT_BLOCK) {
-        body = stmt[1];
-        i = 0; size = vec_size(body);
-        while (i < size) { 
-            gen_stmt(c, vec_get(body, i)); 
-            i = i + 1; 
-        }
+        gen_stmt_block(c, stmt);
     } else if (type == STMT_IF) {
         cond = gen_expr(c, stmt[1]); l_then = freshen_label(c); l_else = freshen_label(c); l_cont = freshen_label(c);
         if (cond < 4096) { cond = sys_malloc(16); cond[0] = 0; cond[1] = 0; }
@@ -709,7 +745,7 @@ fn gen_stmt(c, stmt) {
         print_raw_str("    br i1 %r"); print_raw(r_wh_check); print_raw_str(", label %Preywh_"); print_raw(l_prey_wh); print_raw_str(", label %Checkwh_"); print_raw(l_prey_wh); emit_ln("");
         print_raw_str("Preywh_"); print_raw(l_prey_wh); print_raw_str(":\n");
         emit_ln("    store i32 0, ptr @g_needs_yield");
-        emit_ln("    call i64 @_eq_fiber_yield()");
+        emit_ln("    call i64 @_eq_preempt_yield()");
         print_raw_str("    br label %Checkwh_"); print_raw(l_prey_wh); emit_ln("");
         print_raw_str("Checkwh_"); print_raw(l_prey_wh); print_raw_str(":\n");
         cond = gen_expr(c, stmt[1]);
@@ -769,14 +805,14 @@ fn gen_stmt(c, stmt) {
         print_raw_str("    br label %Label_"); print_raw(l_start); emit_ln("");
         print_raw_str("Label_"); print_raw(l_cont); print_raw_str(":\n");
     } else if (type == STMT_RETURN) {
-        if (stmt[1] >= 4096) {
-            res = gen_expr(c, stmt[1]);
-            gen_release_locals(c, c[4]);
-            print_raw_str("    ret i64 "); if (res[0]) { print_raw_str("%r"); } print_raw(res[1]); emit_ln("");
-        } else {
-            gen_release_locals(c, c[4]);
-            emit_ln("    ret i64 0");
-        }
+        let ret_val = gen_expr(c, stmt[1]);
+        gen_retain(c, ret_val); // Retain return value before releasing locals
+        gen_release_locals(c, c[4]);
+        print_raw_str("    ret i64 ");
+        if (ret_val >= 4096) { if (ret_val[0]) { print_raw_str("%r"); } print_raw(ret_val[1]); } else { print_raw_str("0"); }
+        emit_ln("");
+        gen_release(c, ret_val); // Release result reference as ownership is transferred to caller
+        return 0;
     } else if (type == STMT_PRINT) {
         res = gen_expr(c, stmt[1]);
         print_raw_str("    call i64 (ptr, ...) @printf(ptr @fmt_print, i64 ");
@@ -1012,6 +1048,10 @@ fn gen_program(c, ast) {
     if (is_extern(c, "sys_pin") == 0) { print_raw_str("declare i64 @sys_pin(i64)\n"); c[3] = vec_push(c[3], "sys_pin"); }
 
     if (is_extern(c, "sys_strlen") == 0) { print_raw_str("declare i64 @sys_strlen(i64)\n"); c[3] = vec_push(c[3], "sys_strlen"); }
+    if (is_extern(c, "sys_retain") == 0) { print_raw_str("declare i64 @sys_retain(i64)\n"); c[3] = vec_push(c[3], "sys_retain"); }
+    if (is_extern(c, "sys_release") == 0) { print_raw_str("declare i64 @sys_release(i64)\n"); c[3] = vec_push(c[3], "sys_release"); }
+    if (is_extern(c, "_eq_preempt_yield") == 0) { print_raw_str("declare i64 @_eq_preempt_yield()\n"); c[3] = vec_push(c[3], "_eq_preempt_yield"); }
+    if (is_extern(c, "print_raw") == 0) { print_raw_str("declare i64 @print_raw(i64)\n"); c[3] = vec_push(c[3], "print_raw"); }
     if (is_extern(c, "sys_str_equal") == 0) { print_raw_str("declare i64 @sys_str_equal(i64, i64)\n"); c[3] = vec_push(c[3], "sys_str_equal"); }
     if (is_extern(c, "read") == 0) { print_raw_str("declare i64 @read(i64, i64, i64)\n"); c[3] = vec_push(c[3], "read"); }
     if (is_extern(c, "open") == 0) { print_raw_str("declare i64 @open(i64, i64, i64)\n"); c[3] = vec_push(c[3], "open"); }
@@ -1028,7 +1068,7 @@ fn gen_program(c, ast) {
     if (is_extern(c, "sys_os") == 0) { print_raw_str("declare i64 @sys_os()\n"); c[3] = vec_push(c[3], "sys_os"); }
     if (is_extern(c, "sys_mkdir") == 0) { print_raw_str("declare i64 @sys_mkdir(i64)\n"); c[3] = vec_push(c[3], "sys_mkdir"); }
     if (is_extern(c, "sys_realloc") == 0) { print_raw_str("declare i64 @sys_realloc(i64, i64)\n"); c[3] = vec_push(c[3], "sys_realloc"); }
-    if (is_extern(c, "_eq_fiber_yield") == 0) { print_raw_str("declare i64 @_eq_fiber_yield()\n"); c[3] = vec_push(c[3], "_eq_fiber_yield"); }
+    // Preempt yield is handled in the unique declaration block above
     if (is_extern(c, "sys_create_agent") == 0) { print_raw_str("declare i64 @sys_create_agent(ptr)\n"); c[3] = vec_push(c[3], "sys_create_agent"); }
     if (is_extern(c, "sys_add_agent_role") == 0) { print_raw_str("declare void @sys_add_agent_role(i64, ptr)\n"); c[3] = vec_push(c[3], "sys_add_agent_role"); }
     if (is_extern(c, "sys_activate_signatory") == 0) { print_raw_str("declare void @sys_activate_signatory(i64)\n"); c[3] = vec_push(c[3], "sys_activate_signatory"); }
@@ -1079,7 +1119,7 @@ fn gen_program(c, ast) {
                     print_raw_str("    br i1 %r"); print_raw(r_check); print_raw_str(", label %yield_preempt, label %start_fn\n");
                     print_raw_str("yield_preempt:\n");
                     emit_ln("    store i32 0, ptr @g_needs_yield");
-                    emit_ln("    call i64 @_eq_fiber_yield()");
+                    emit_ln("    call i64 @_eq_preempt_yield()");
                     emit_ln("    br label %start_fn");
                     print_raw_str("start_fn:\n");
 

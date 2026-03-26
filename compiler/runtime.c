@@ -74,7 +74,7 @@ void sys_fiber_preempt_setup(i64 ms) {
 #endif
 }
 
-i64 _eq_fiber_yield() {
+i64 _eq_preempt_yield() {
     if (g_needs_yield) {
         g_needs_yield = 0;
 #ifdef _WIN32
@@ -416,6 +416,10 @@ i64 codegen_print_char(i64 c) {
 i64 print_char(i64 c) {
   putchar((int)c);
   return 0;
+}
+i64 print_raw(i64 n) {
+    printf("%lld", (long long)n);
+    return 0;
 }
 i64 print_raw_stderr(i64 s) {
   if (!s)
@@ -906,4 +910,12 @@ int main(int argc, char **argv) {
   _eq___equis_cleanup_globals();
   sys_report_leaks();
   return 0;
+}
+i64 sys_sleep(i64 ms) {
+#ifdef _WIN32
+    Sleep((DWORD)ms);
+#else
+    usleep(ms * 1000);
+#endif
+    return 0;
 }

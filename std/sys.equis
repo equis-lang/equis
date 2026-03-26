@@ -1,5 +1,6 @@
 extern fn time(tloc);
 extern fn printf(fmt, val);
+extern fn print_int(n);
 extern fn sys_mkdir(path);
 
 let mut __global_print_buf = 0;
@@ -48,54 +49,28 @@ extern fn sys_pgsql_get_val(res, row, col);
 extern fn sys_pgsql_clear(res);
 extern fn sys_pgsql_finish(conn);
 extern fn sys_socket_create();
+extern fn sys_sleep(ms);
+
+let true = 1;
+let false = 0;
+
+fn print_raw_int(n) {
+    print_int(n);
+}
+
 extern fn sys_socket_connect(s, host, port);
 extern fn sys_socket_send(s, buf, len);
 extern fn sys_socket_recv(s, buf, len);
 extern fn sys_socket_close(s);
-extern fn sys_fiber_preempt_setup(ms);
-fn sys_write(fd, buf, count) {
-    return write(fd, buf, count);
-}
-fn print_raw(mut n) {
-    if (n == 0) { write(1, "0", 1); return 0; }
-    if (n < 0) { write(1, "-", 1); n = 0 - n; }
-    let buf = sys_malloc(64);
-    let mut i = 62;
-    set_char(buf, 63, 0);
-    let mut digit = 0;
-    while (n > 0) {
-        digit = n - ((n / 10) * 10);
-        set_char(buf, i, digit + 48);
-        n = n / 10;
-        i = i - 1;
-    }
-    write(1, buf + i + 1, 62 - i);
-    sys_free(buf);
-}
-extern fn print_raw_stderr(s);
-extern fn print_int_stderr(n);
-extern fn sys_strlen(s);
-fn print_raw_str(s) {
-    if (s == 0) { return 0; }
-    let len = sys_strlen(s);
-    write(1, s, len);
-}
-fn print_err(s) {
-    if (s == 0) { return 0; }
-    let len = sys_strlen(s);
-    write(2, s, len);
-}
 extern fn sys_os();
-
-fn sys_path_separator() {
-    if (sys_os() == 2) { return "\\"; }
-    return "/";
-}
-
-fn sys_os_name() {
-    let o = sys_os();
-    if (o == 1) { return "Linux"; }
-    if (o == 2) { return "Windows"; }
-    if (o == 3) { return "macOS"; }
-    return "Unknown";
-}
+extern fn set_char(s, i, v);
+extern fn get_char(s, i);
+extern fn sys_str_equal(s1, s2);
+extern fn print_char(c);
+extern fn print_raw(s);
+extern fn str_to_int(s);
+extern fn sys_trace_flow(e, r, a);
+extern fn print_char_stderr(c);
+extern fn print_int_stderr(n);
+extern fn print_raw_stderr(s);
+extern fn sys_strlen(s);

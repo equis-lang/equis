@@ -56,6 +56,20 @@ fn print_str(s) {
         write(1, s, len);
     }
 }
+fn print_err(s) {
+    if (s) {
+        let mut len = 0;
+        len = sys_strlen(s);
+        write(2, s, len);
+    }
+}
+fn print_raw_str(s) {
+    if (s) {
+        let mut len = 0;
+        len = sys_strlen(s);
+        write(1, s, len);
+    }
+}
 fn str_concat(s1, s2) {
     let mut l1 = 0;
     l1 = sys_strlen(s1);

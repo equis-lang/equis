@@ -5,7 +5,7 @@ fn watcher() {
     let mut i = 0;
     while (true) {
         print_raw("[Watcher] Heartbeat: ");
-        print_raw_int(i);
+        print_int(i);
         print_raw("\n");
         i = i + 1;
         fiber_yield(); // Voluntarily yield to show cooperation
@@ -26,10 +26,10 @@ fn main() {
     print_raw("--- Equis Preemption Test ---\n");
     
     // Set preemption frequency to 50ms (0.05s)
-    sys_preempt_config(50); 
+    sys_fiber_preempt_setup(50); 
     
-    spawn(watcher);
-    spawn(busy_worker);
+    fiber_spawn(watcher);
+    fiber_spawn(busy_worker);
     
     // Wait and observe preemption
     sys_sleep(2000); // Sleep for 2s

@@ -3,6 +3,7 @@ use "std/string.equis";
 use "std/collections.equis";
 extern fn _setjmp(env);
 extern fn longjmp(env, val);
+extern fn sys_fiber_preempt_setup(ms);
 let mut Fiber_Queue = 0;
 let mut Current_Fiber = 0;
 let mut Scheduler_Buf = 0;
