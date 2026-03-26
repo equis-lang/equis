@@ -38,19 +38,21 @@ fn gen_release_locals(c, vars) {
 }
 
 fn freshen_reg(c) {
-    if (c == 0) { return 0; }
+    if (c < 4096) { return 0; }
     let id = c[0];
     c[0] = c[0] + 1;
     return id;
 }
 
 fn freshen_ptr(c) {
+    if (c < 4096) { return 0; }
     let id = c[0];
     c[0] = c[0] + 1;
     return id;
 }
 
 fn freshen_label(c) {
+    if (c < 4096) { return 0; }
     let l = c[1];
     c[1] = c[1] + 1;
     return l;
@@ -63,7 +65,9 @@ fn gen_string_label(c, val) {
     let found = -1;
     if (found_ptr) { found = found_ptr[0] - 1; }
     if (found == -1) {
+        if (c < 4096) { return 0; }
         let strings = c[2];
+        if (strings < 4096) { return 0; }
         found = vec_size(strings);
         c[2] = vec_push(strings, s);
         let entry = sys_malloc(16); entry[0] = found + 1;
@@ -73,21 +77,29 @@ fn gen_string_label(c, val) {
 }
 
 fn is_extern(c, name) {
+    if (c < 4096 || name < 4096) { return 0; }
     let fns = c[3]; let i = 0; let size = vec_size(fns);
+    if (fns < 4096) { return 0; }
     let fn_name = 0;
     while (i < size) {
         fn_name = vec_get(fns, i);
-        if (str_equal(fn_name, name)) { return 1; }
+        if (fn_name >= 4096) {
+            if (str_equal(fn_name, name)) { return 1; }
+        }
         i = i + 1;
     }
     return 0;
 }
 fn is_defined(c, name) {
+    if (c < 4096 || name < 4096) { return 0; }
     let fns = c[5]; let i = 0; let size = vec_size(fns);
+    if (fns < 4096) { return 0; }
     let fn_name = 0;
     while (i < size) {
         fn_name = vec_get(fns, i);
-        if (str_equal(fn_name, name)) { return 1; }
+        if (fn_name >= 4096) {
+            if (str_equal(fn_name, name)) { return 1; }
+        }
         i = i + 1;
     }
     return 0;
@@ -147,7 +159,7 @@ fn gen_expr_variable(c, expr) {
         let locals = c[4]; let i = vec_size(locals) - 1;
         while (i >= 0) {
             let entry = vec_get(locals, i);
-            if (entry != 0) {
+            if (entry >= 4096) {
                 if (str_equal(entry[0], name)) {
                     let reg = freshen_reg(c);
                     print_raw_str("    %r"); print_raw(reg); print_raw_str(" = load i64, ptr %p"); print_raw(entry[1]); emit_ln("");
@@ -201,7 +213,7 @@ fn gen_expr_string(c, expr) {
 
 fn gen_expr_binary(c, expr) {
     let l_res = gen_expr(c, expr[1]); let r_res = gen_expr(c, expr[3]);
-    if (l_res == 0 || r_res == 0) { return 0; }
+    if (l_res < 4096 || r_res < 4096) { return 0; }
     let op = expr[2];
     if (l_res[0] == 0 && r_res[0] == 0) {
         let lv = l_res[1]; let rv = r_res[1]; let folded = 0; let handled = 0;
@@ -246,7 +258,7 @@ fn gen_expr_binary(c, expr) {
         reg = next_reg;
     }
     let res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
-    gen_retain(c, res); return res;
+    return res;
 }
 
 fn gen_expr_unary(c, expr) {
@@ -391,7 +403,7 @@ fn gen_expr_call(c, expr) {
     while (i < arg_count) {
         let a_node = vec_get(args, i);
         let a_res = gen_expr(c, a_node);
-        if (a_res == 0) { a_res = sys_malloc(2 * 8); a_res[0] = 1; a_res[1] = 0; }
+        if (a_res < 4096) { a_res = sys_malloc(2 * 8); a_res[0] = 1; a_res[1] = 0; }
         gen_retain(c, a_res); arg_results = vec_push(arg_results, a_res);
         i = i + 1;
     }
@@ -418,7 +430,9 @@ fn gen_expr_call(c, expr) {
         print_raw_str(callee_name); print_raw_str("(");
         let k = 0; while (k < arg_count) {
             let a_res = vec_get(arg_results, k); print_raw_str("i64 ");
-            if (a_res[0]) { print_raw_str("%r"); } print_raw(a_res[1]);
+            if (a_res >= 4096) {
+                if (a_res[0]) { print_raw_str("%r"); } print_raw(a_res[1]);
+            } else { print_raw_str("0"); }
             if (k < arg_count - 1) { print_raw_str(", "); } k = k + 1;
         }
         emit_ln(")");
@@ -431,7 +445,9 @@ fn gen_expr_call(c, expr) {
         print_raw_str("    %r"); print_raw(reg); print_raw_str(" = call i64 %r"); print_raw(callee_ptr); print_raw_str("(");
         let k = 0; while (k < arg_count) {
             let a_res = vec_get(arg_results, k); print_raw_str("i64 ");
-            if (a_res[0]) { print_raw_str("%r"); } print_raw(a_res[1]);
+            if (a_res >= 4096) {
+                if (a_res[0]) { print_raw_str("%r"); } print_raw(a_res[1]);
+            } else { print_raw_str("0"); }
             if (k < arg_count - 1) { print_raw_str(", "); } k = k + 1;
         }
         emit_ln(")");
@@ -442,7 +458,7 @@ fn gen_expr_call(c, expr) {
 
 fn gen_expr_index(c, expr) {
     let arr = gen_expr(c, expr[1]); let idx = gen_expr(c, expr[2]);
-    if (arr == 0 || idx == 0) { return 0; }
+    if (arr < 4096 || idx < 4096) { return 0; }
     let check_reg = freshen_reg(c);
     print_raw_str("    %r"); print_raw(check_reg); print_raw_str(" = icmp eq i64 ");
     if (arr[0]) { print_raw_str("%r"); } print_raw(arr[1]); emit_ln(", 0");
@@ -461,7 +477,7 @@ fn gen_expr_index(c, expr) {
 }
 
 fn gen_expr_get(c, expr) {
-    let obj = gen_expr(c, expr[1]); if (obj == 0) { return 0; }
+    let obj = gen_expr(c, expr[1]); if (obj < 4096) { return 0; }
     let field_name = expr[2]; let check_reg = freshen_reg(c);
     print_raw_str("    %r"); print_raw(check_reg); print_raw_str(" = icmp eq i64 ");
     if (obj[0]) { print_raw_str("%r"); } print_raw(obj[1]); emit_ln(", 0");
@@ -488,7 +504,7 @@ fn gen_expr_get(c, expr) {
 
 fn gen_expr_assignment(c, expr) {
     let target = expr[1]; let value = gen_expr(c, expr[2]);
-    if (target == 0 || value == 0) { return 0; }
+    if (target < 4096 || value < 4096) { return 0; }
     if (target[0] == EXPR_VARIABLE) {
         let name = target[1]; let found_local = 0;
         if (c[4]) {
@@ -518,8 +534,7 @@ fn gen_expr_assignment(c, expr) {
         }
     } else if (target[0] == EXPR_INDEX) {
         let arr = gen_expr(c, target[1]); let idx = gen_expr(c, target[2]);
-        if (arr == 0) { return 0; }
-        if (idx == 0) { return 0; }
+        if (arr < 4096 || idx < 4096) { return 0; }
         let arr_ptr = freshen_reg(c); print_raw_str("    %r"); print_raw(arr_ptr); print_raw_str(" = inttoptr i64 ");
         if (arr[0]) { print_raw_str("%r"); } print_raw(arr[1]); emit_ln(" to ptr");
         let ll_ptr = freshen_reg(c); print_raw_str("    %r"); print_raw(ll_ptr); print_raw_str(" = getelementptr i64, ptr %r"); print_raw(arr_ptr); print_raw_str(", i64 ");
@@ -585,23 +600,24 @@ fn gen_stmt(c, stmt) {
     else if (type == STMT_LET) {
         name = stmt[1];
         value = stmt[2];
+        if (name < 4096) { return 0; }
         l_ptr = 0;
-        
-
         existing = 0;
         vars = c[4];
-        if (vars) {
+        if (vars >= 4096) {
             j = 0; v_sz = vec_size(vars);
             while (j < v_sz) {
                 v_entry = vec_get(vars, j);
-                if (str_equal(v_entry[0], name)) { existing = v_entry; j = v_sz; }
+                if (v_entry >= 4096) {
+                    if (str_equal(v_entry[0], name)) { existing = v_entry; j = v_sz; }
+                }
                 j = j + 1;
             }
         }
 
-        if (existing) {
+        if (existing >= 4096) {
             l_ptr = existing[1];
-        } else if (c[4]) { 
+        } else if (c[4] >= 4096) { 
             l_ptr = freshen_ptr(c);
             print_raw_str("    %p"); print_raw(l_ptr); emit_ln(" = alloca i64");
             print_raw_str("    store i64 0, ptr %p"); print_raw(l_ptr); emit_ln("");
@@ -610,17 +626,17 @@ fn gen_stmt(c, stmt) {
         }
 
         val_reg = gen_expr(c, value);
-        if (val_reg) { gen_retain(c, val_reg); }
-        
-        if (c[4]) { 
+        if (c[4] >= 4096) { 
             print_raw_str("    store i64 "); 
-            if (val_reg) { if (val_reg[0]) { print_raw_str("%r"); } print_raw(val_reg[1]); }
-            else { print_raw_str("0"); }
+            if (val_reg >= 4096) { 
+                if (val_reg[0]) { print_raw_str("%r"); } print_raw(val_reg[1]); 
+            } else { print_raw_str("0"); }
             print_raw_str(", ptr %p"); print_raw(l_ptr); emit_ln("");
         } else { 
             print_raw_str("    store i64 ");
-            if (val_reg) { if (val_reg[0]) { print_raw_str("%r"); } print_raw(val_reg[1]); }
-            else { print_raw_str("0"); }
+            if (val_reg >= 4096) { 
+                if (val_reg[0]) { print_raw_str("%r"); } print_raw(val_reg[1]); 
+            } else { print_raw_str("0"); }
             print_raw_str(", ptr @Global_"); print_raw_str(name); emit_ln("");
         }
         return 0;
@@ -633,6 +649,7 @@ fn gen_stmt(c, stmt) {
         }
     } else if (type == STMT_IF) {
         cond = gen_expr(c, stmt[1]); l_then = freshen_label(c); l_else = freshen_label(c); l_cont = freshen_label(c);
+        if (cond < 4096) { cond = sys_malloc(16); cond[0] = 0; cond[1] = 0; }
         cond_reg = cond[1];
         if (cond[0] == 0) {
             reg = freshen_reg(c);
@@ -668,6 +685,7 @@ fn gen_stmt(c, stmt) {
         print_raw_str("    br label %Checkwh_"); print_raw(l_prey_wh); emit_ln("");
         print_raw_str("Checkwh_"); print_raw(l_prey_wh); print_raw_str(":\n");
         cond = gen_expr(c, stmt[1]);
+        if (cond < 4096) { cond = sys_malloc(16); cond[0] = 0; cond[1] = 0; }
         cond_reg = cond[1];
         if (cond[0] == 0) {
             reg = freshen_reg(c);
@@ -701,8 +719,9 @@ fn gen_stmt(c, stmt) {
         emit_ln("    call i64 @_eq_fiber_yield()");
         print_raw_str("    br label %Check_"); print_raw(l_pre_real_f); emit_ln("");
         print_raw_str("Check_"); print_raw(l_pre_real_f); print_raw_str(":\n");
-        if (f_cond) {
+        if (f_cond >= 4096) {
             cond = gen_expr(c, f_cond);
+            if (cond < 4096) { cond = sys_malloc(16); cond[0] = 0; cond[1] = 0; }
             cond_reg = cond[1];
             if (cond[0] == 0) {
                 reg = freshen_reg(c);
@@ -723,10 +742,12 @@ fn gen_stmt(c, stmt) {
         print_raw_str("    br label %Label_"); print_raw(l_start); emit_ln("");
         print_raw_str("Label_"); print_raw(l_cont); print_raw_str(":\n");
     } else if (type == STMT_RETURN) {
-        if (stmt[1]) {
+        if (stmt[1] >= 4096) {
             res = gen_expr(c, stmt[1]);
             gen_release_locals(c, c[4]);
-            print_raw_str("    ret i64 "); if (res[0]) { print_raw_str("%r"); } print_raw(res[1]); emit_ln("");
+            if (res >= 4096) {
+                print_raw_str("    ret i64 "); if (res[0]) { print_raw_str("%r"); } print_raw(res[1]); emit_ln("");
+            } else { emit_ln("    ret i64 0"); }
         } else { 
             gen_release_locals(c, c[4]);
             emit_ln("    ret i64 0"); 
