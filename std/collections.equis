@@ -1,0 +1,207 @@
+use "std/sys.equis";
+use "std/string.equis";
+fn vec_new(capacity) {
+    let mut __eq_cap_val = capacity;
+    if (__eq_cap_val < 0) { __eq_cap_val = 0; }
+    let p = sys_malloc((__eq_cap_val + 2) * 8);
+    if (p == 0) {
+        write(2, "error: vector allocation failed\n", 31);
+        exit(1);
+    }
+    p[0] = __eq_cap_val;
+    p[1] = 0;
+    return p;
+}
+fn vec_push(mut vec, value) {
+    let mut __eq_cap_val = vec[0];
+    let size = vec[1];
+    if (size >= __eq_cap_val) {
+        let new_cap = __eq_cap_val * 2;
+        if (new_cap == 0) { new_cap = 8; }
+        vec = sys_realloc(vec, (new_cap + 2) * 8);
+        vec[0] = new_cap;
+    }
+    let offset = size + 2;
+    vec[offset] = sys_retain(value);
+    vec[1] = size + 1;
+    return vec;
+}
+fn vec_get(vec, index) {
+    if (vec == 0) { return 0; }
+    if (index < 0 || index >= vec[1]) { return 0; }
+    let offset = index + 2;
+    return vec[offset];
+}
+fn vec_size(vec) {
+    if (vec == 0) { return 0; }
+    return vec[1];
+}
+fn map_new(capacity) {
+    let m = sys_malloc((capacity + 1) * 8);
+    let mut i = 0;
+    let mut offset = 0;
+    m[0] = capacity;
+    while (i < capacity) {
+        offset = i + 1;
+        m[offset] = 0;
+        i = i + 1;
+    }
+    return m;
+}
+fn map_hash(key) {
+    if (key == 0) { return 0; }
+    let mut h = 0;
+    let mut i = 0;
+    let len = sys_strlen(key);
+    while (i < len) {
+        h = (h * 31) + get_char(key, i);
+        i = i + 1;
+    }
+    return h;
+}
+fn vec_free(vec) {
+    if (vec == 0) { return 0; }
+    sys_free(vec);
+    return 0;
+}
+
+fn map_put(mut m, key, val) {
+    if (m == 0) { return 0; }
+    let __map_cap = m[0];
+    let h = map_hash(key);
+    let mut rem = 0;
+    let quot = h / __map_cap;
+    rem = h - (quot * __map_cap);
+    if (rem < 0) { rem = 0 - rem; }
+    let m_off = rem + 1;
+    
+    let mut entry = m[m_off];
+    while (entry != 0) {
+        if (str_equal(entry[0], key)) {
+            entry[1] = val;
+            return 1;
+        }
+        entry = entry[2];
+    }
+    
+    let new_entry = sys_malloc(8 * 8);
+    new_entry[0] = sys_retain(key);
+    new_entry[1] = sys_retain(val);
+    new_entry[2] = m[m_off];
+    m[m_off] = new_entry;
+    return 1;
+}
+fn map_free(m) {
+    if (m == 0) { return 0; }
+    let __eq_cap_val = m[0];
+    let mut i = 0;
+    while (i < __eq_cap_val) {
+        let mut entry = m[i + 1];
+        while (entry != 0) {
+            let __map_next = entry[2];
+            sys_free(entry);
+            entry = __map_next;
+        }
+        i = i + 1;
+    }
+    sys_free(m);
+    return 0;
+}
+fn map_get(m, key) {
+    if (m == 0) { return 0; }
+    let __map_cap = m[0];
+    let h = map_hash(key);
+    let mut rem = 0;
+    let quot = h / __map_cap;
+    rem = h - (quot * __map_cap);
+    if (rem < 0) { rem = 0 - rem; }
+    let m_off = rem + 1;
+    let mut entry = m[m_off];
+    while (entry != 0) {
+        if (str_equal(entry[0], key)) { 
+            return entry[1]; 
+        }
+        entry = entry[2];
+    }
+    return 0;
+}
+fn map_has(m, key) {
+    if (m == 0) { return 0; }
+    let __map_cap = m[0];
+    let h = map_hash(key);
+    let mut rem = 0;
+    let quot = h / __map_cap;
+    rem = h - (quot * __map_cap);
+    if (rem < 0) { rem = 0 - rem; }
+    let m_off = rem + 1;
+    let mut entry = m[m_off];
+    while (entry != 0) {
+        if (str_equal(entry[0], key)) { return 1; }
+        entry = entry[2];
+    }
+    return 0;
+}
+fn map_keys(m) {
+    let __eq_cap_val = m[0];
+    let mut keys = vec_new(__eq_cap_val);
+    let mut i = 0;
+    while (i < __eq_cap_val) {
+        let mut entry = m[i + 1];
+        while (entry != 0) {
+            keys = vec_push(keys, entry[0]);
+            entry = entry[2];
+        }
+        i = i + 1;
+    }
+    return keys;
+}
+fn vec_set(vec, index, value) {
+    if (vec == 0) { return 0; }
+    if (index < 0 || index >= vec[0]) { return 0; }
+    let offset = index + 2;
+    vec[offset] = value;
+    return vec;
+}
+fn vec_remove(vec, index) {
+    let size = vec[1];
+    let i = index;
+    let limit = size - 1;
+    let __eq_next_ptr = 0;
+    let val = 0;
+    while (i < limit) {
+        __eq_next_ptr = i + 1;
+        val = vec_get(vec, __eq_next_ptr);
+        vec_set(vec, i, val);
+        i = __eq_next_ptr;
+    }
+    vec[1] = limit;
+    return vec;
+}
+fn map_remove(m, key) {
+    if (m == 0) { return 0; }
+    let __eq_cap_val = m[0];
+    let h = map_hash(key);
+    let quot = h / __eq_cap_val;
+    let rem = h - (quot * __eq_cap_val);
+    if (rem < 0) { rem = 0 - rem; }
+    let m_off = rem + 1;
+    let entry = m[m_off];
+    let prev = 0;
+    let entry_key = 0;
+    let next_entry = 0;
+    while (entry != 0) {
+        entry_key = entry[0];
+        if (str_equal(entry_key, key)) {
+            next_entry = entry[2];
+            if (prev == 0) {
+                m[m_off] = next_entry;
+            } else {
+                prev[2] = next_entry;
+            }
+            return 1;
+        }
+        prev = entry;
+        entry = entry[2];
+    }
+    return 0;
+}

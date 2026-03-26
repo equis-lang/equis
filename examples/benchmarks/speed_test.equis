@@ -1,0 +1,18 @@
+use "std/sys.equis";
+
+fn main() {
+    let iterations = 1000000;
+    let mut i = 0;
+    let mut total = 0.0;
+    
+    print_raw_str("Starting Benchmark: 1,000,000 iterations of fixed-point math...\n");
+    
+    while (i < iterations) {
+        total = total + 1.25;
+        i = i + 1;
+    }
+    
+    print_raw_str("Total: ");
+    print_raw(total);
+    print_raw_str("\nDone.\n");
+}

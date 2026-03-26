@@ -1,0 +1,39 @@
+use "std/sys.equis";
+use "std/string.equis";
+extern fn dlopen(filename, flags);
+extern fn dlsym(handle, symbol);
+extern fn dlerror(void_ptr);
+extern fn dlclose(handle);
+let RTLD_LAZY   = 1;
+let RTLD_NOW    = 2;
+let RTLD_GLOBAL = 256;
+fn ffi_load_library(path) {
+    let handle = dlopen(path, RTLD_NOW);
+    if (handle == 0) {
+        print_str("FFI Error: Failed to load library ");
+        print_str(path);
+        print_str("\n");
+        return 0;
+    }
+    let lib = sys_malloc(2 * 16);
+    lib[0] = handle;
+    lib[1] = path;
+    return lib;
+}
+fn ffi_get_symbol(lib, symbol_name) {
+    if (lib == 0) { return 0; }
+    let sym = dlsym(lib[0], symbol_name);
+    if (sym == 0) {
+        print_str("FFI Error: Symbol not found: ");
+        print_str(symbol_name);
+        print_str("\n");
+        return 0;
+    }
+    return sym;
+}
+fn ffi_close(lib) {
+    if (lib == 0) { return 0; }
+    dlclose(lib[0]);
+    sys_release(lib);
+    return 1;
+}

@@ -1,0 +1,126 @@
+use "std/sys.equis";
+use "std/collections.equis";
+use "compiler/constants.equis";
+
+fn borrow_checker_new() {
+    let b = sys_malloc(10 * 8);
+    b[0] = map_new(1024); // Resource states: Name -> State (2: Available, 3: Moved)
+    b[1] = vec_new(16);
+    b[2] = vec_new(16);  // Scope stack (vector of maps)
+    b[3] = 0;            // Current analyzer context for errors
+    return b;
+}
+
+fn bc_error(bc, msg, line, col) {
+    analyze_error(msg, line, col);
+}
+
+fn bc_check_expr(bc, expr) {
+    if (expr == 0) { return 0; }
+    let type = expr[0];
+    if (type == EXPR_VARIABLE) {
+        let name = intern_string(expr[1]);
+        if (str_starts_with(name, "__eq_")) { return 0; }
+        if (map_has(bc[0], name)) {
+            let state = map_get(bc[0], name);
+            if (state == 3) {
+                bc_error(bc, str_concat("Use-after-move Error: Resource '", str_concat(name, "' has already been consumed.")), expr[2], expr[3]);
+            }
+        }
+    } else if (type == EXPR_BINARY) {
+        bc_check_expr(bc, expr[1]);
+        bc_check_expr(bc, expr[3]);
+    } else if (type == EXPR_CALL) {
+        bc_check_expr(bc, expr[1]);
+        let args = expr[2];
+        let i = 0;
+        let n = vec_size(args);
+        while (i < n) {
+            let arg = vec_get(args, i);
+            bc_check_expr(bc, arg);
+            if (arg[0] == EXPR_VARIABLE) {
+                let name = intern_string(arg[1]);
+                if (str_starts_with(name, "__eq_") == 0) {
+                    if (map_has(bc[0], name)) {
+                        let state = map_get(bc[0], name);
+                        if (state == 2) { map_put(bc[0], name, 3); }
+                    }
+                }
+            }
+            i = i + 1;
+        }
+    } else if (type == EXPR_ASSIGNMENT) {
+        let target = expr[1];
+        let rhs = expr[2];
+        bc_check_expr(bc, rhs);
+        if (target[0] == EXPR_VARIABLE) {
+            let name = intern_string(target[1]);
+            if (str_starts_with(name, "__eq_") == 0) {
+                if (map_has(bc[0], name)) {
+                    map_put(bc[0], name, 2);
+                }
+            }
+        }
+    } else if (type == EXPR_INDEX) {
+        bc_check_expr(bc, expr[1]);
+        bc_check_expr(bc, expr[2]);
+    } else if (type == EXPR_GET) {
+        bc_check_expr(bc, expr[1]);
+    }
+    return 1;
+}
+
+fn bc_check_stmt(bc, stmt) {
+    if (stmt == 0) { return 0; }
+    let type = stmt[0];
+    if (type == STMT_FUNCTION) {
+        let old_map = bc[0];
+        bc[0] = map_new(8192); // Massive map to minimize collisions
+        bc_check_stmt(bc, stmt[FUNC_BODY]);
+        bc[0] = old_map;
+    } else if (type == STMT_LET) {
+        let rhs = stmt[LET_VAL];
+        bc_check_expr(bc, rhs);
+        if (rhs[0] == EXPR_VARIABLE) {
+            let name = intern_string(rhs[1]);
+            if (str_starts_with(name, "__eq_") == 0) {
+                if (map_has(bc[0], name)) {
+                    let state = map_get(bc[0], name);
+                    if (state == 2) { map_put(bc[0], name, 3); } // Move!
+                }
+            }
+        }
+        let n = intern_string(stmt[LET_NAME]);
+        if (stmt[LET_IS_RESOURCE]) {
+            map_put(bc[0], n, 2);
+        } else {
+            map_remove(bc[0], n);
+        }
+    } else if (type == STMT_BLOCK) {
+        let stmts = stmt[1];
+        let i = 0; let size = vec_size(stmts);
+        while (i < size) {
+            bc_check_stmt(bc, vec_get(stmts, i));
+            i = i + 1;
+        }
+    } else if (type == STMT_IF) {
+        bc_check_expr(bc, stmt[1]);
+        bc_check_stmt(bc, stmt[2]);
+        if (stmt[3]) { bc_check_stmt(bc, stmt[3]); }
+    } else if (type == STMT_WHILE) {
+        bc_check_expr(bc, stmt[1]);
+        bc_check_stmt(bc, stmt[2]);
+    } else if (type == STMT_EXPRESSION) {
+        bc_check_expr(bc, stmt[1]);
+    } else if (type == STMT_RETURN) {
+        bc_check_expr(bc, stmt[1]);
+    }
+}
+
+fn borrow_check_program(bc, ast) {
+    let i = 0; let size = vec_size(ast);
+    while (i < size) {
+        bc_check_stmt(bc, vec_get(ast, i));
+        i = i + 1;
+    }
+}

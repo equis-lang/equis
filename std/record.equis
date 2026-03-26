@@ -1,0 +1,73 @@
+use "std/sys.equis";
+use "std/string.equis";
+use "std/collections.equis";
+let RECORD_TYPE_ALPHA = 1;
+let RECORD_TYPE_NUMERIC = 2;
+fn record_layout_new() {
+    let l = sys_malloc(3 * 8);
+    l[0] = vec_new(100);
+    l[1] = vec_new(100);
+    l[2] = 0;
+    return l;
+}
+fn record_add_field(l, name, length, type) {
+    vec_push(l[0], intern_string(name));
+    let meta = sys_malloc(3 * 8);
+    meta[0] = l[2];
+    meta[1] = length;
+    meta[2] = type;
+    vec_push(l[1], meta);
+    l[2] = l[2] + length;
+}
+fn record_get_field_meta(l, name) {
+    let names = l[0];
+    let metas = l[1];
+    let size = vec_size(names);
+    let i = 0;
+    let target = intern_string(name);
+    while (i < size) {
+        if (vec_get(names, i) == target) { return vec_get(metas, i); }
+        i = i + 1;
+    }
+    return 0;
+}
+fn record_get_str(l, buf, name) {
+    let meta = record_get_field_meta(l, name);
+    if (meta == 0) { return 0; }
+    let offset = meta[0];
+    let len = meta[1];
+    let res = sys_malloc(len + 1);
+    let i = 0;
+    while (i < len) {
+        set_char(res, i, get_char(buf, offset + i));
+        i = i + 1;
+    }
+    set_char(res, len, 0);
+    return res;
+}
+fn record_get_int(l, buf, name) {
+    let s = record_get_str(l, buf, name);
+    if (s == 0) { return 0; }
+    let res = str_to_int(s);
+    sys_release(s);
+    return res;
+}
+fn record_set_str(l, buf, name, val) {
+    let meta = record_get_field_meta(l, name);
+    if (meta == 0) { return 0; }
+    let offset = meta[0];
+    let len = meta[1];
+    let v_len = sys_strlen(val);
+    let i = 0;
+    while (i < len) {
+        if (i < v_len) { set_char(buf, offset + i, get_char(val, i)); }
+        else { set_char(buf, offset + i, 32); }
+        i = i + 1;
+    }
+}
+fn record_set_int(l, buf, name, val) {
+    let s = str_from_int(val);
+    record_set_str(l, buf, name, s);
+    sys_release(s);
+}
+fn record_width(l) { return l[2]; }

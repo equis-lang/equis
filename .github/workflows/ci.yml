@@ -1,0 +1,40 @@
+name: Equis CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential clang llvm libpq-dev
+
+    - name: Bootstrap Compiler
+      run: make bootstrap
+
+    - name: Run Core Verification
+      run: make check
+
+    - name: Verify Standard Library
+      run: |
+        ./eq-core -I std examples/main.equis > main.ll
+        clang -O3 main.ll compiler/runtime.c -lpthread -o main_bin
+        ./main_bin
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: equis-binaries
+        path: |
+          eq-core
+          eq
+          epm

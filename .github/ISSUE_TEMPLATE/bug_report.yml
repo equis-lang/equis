@@ -1,0 +1,38 @@
+name: Bug Report
+description: Report a bug in the Equis compiler or standard library.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us what you expected to happen.
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction Steps
+      description: Provide a minimal Equis code snippet that reproduces the issue.
+      placeholder: |
+        let x = 1;
+        print x;
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Equis Version
+      description: Output of `eq version`
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Copy/paste any compiler error logs or crash traces.

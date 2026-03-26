@@ -1,0 +1,1007 @@
+use "std/sys.equis";
+use "std/string.equis";
+let mut Magic_Malloc = 0;
+let mut Magic_Free = 0;
+let mut Magic_GetChar = 0;
+let mut Magic_SetChar = 0;
+let mut Magic_StrEqual = 0;
+let mut Magic_GetArgc = 0;
+let mut Magic_GetArgv = 0;
+let mut String_Map = 0;
+let mut Global_Field_Map = 0;
+fn is_intrinsic_name(name) {
+    if (name == 0) { return 0; }
+    if (str_equal(name, "get_char")) { return 1; }
+    if (str_equal(name, "set_char")) { return 1; }
+    if (str_equal(name, "malloc")) { return 1; }
+    if (str_equal(name, "free")) { return 1; }
+    if (str_equal(name, "get_argc")) { return 1; }
+    if (str_equal(name, "get_argv")) { return 1; }
+    if (str_equal(name, "sys_str_equal")) { return 1; }
+    return 0;
+}
+let mut print_buf = 0;
+extern fn codegen_print_char(c);
+fn emit_ln(s) {
+    print_raw_str("    ");
+    print_raw_str(s);
+    print_raw_str("\n");
+}
+fn gen_retain(c, res) {
+    return 0;
+}
+fn gen_release(c, res) {
+    return 0;
+}
+fn gen_release_locals(c, vars) {
+    return 0;
+}
+
+fn freshen_reg(c) {
+    if (c == 0) { return 0; }
+    let id = c[0];
+    c[0] = c[0] + 1;
+    return id;
+}
+
+fn freshen_ptr(c) {
+    let id = c[0];
+    c[0] = c[0] + 1;
+    return id;
+}
+
+fn freshen_label(c) {
+    let l = c[1];
+    c[1] = c[1] + 1;
+    return l;
+}
+
+fn gen_string_label(c, val) {
+    let s = intern_string(val);
+    if (String_Map == 0) { String_Map = map_new(2000); }
+    let found_ptr = map_get(String_Map, s);
+    let found = -1;
+    if (found_ptr) { found = found_ptr[0] - 1; }
+    if (found == -1) {
+        let strings = c[2];
+        found = vec_size(strings);
+        c[2] = vec_push(strings, s);
+        let entry = sys_malloc(16); entry[0] = found + 1;
+        map_put(String_Map, s, entry);
+    }
+    return found;
+}
+
+fn is_extern(c, name) {
+    let fns = c[3]; let i = 0; let size = vec_size(fns);
+    let fn_name = 0;
+    while (i < size) {
+        fn_name = vec_get(fns, i);
+        if (str_equal(fn_name, name)) { return 1; }
+        i = i + 1;
+    }
+    return 0;
+}
+fn is_defined(c, name) {
+    let fns = c[5]; let i = 0; let size = vec_size(fns);
+    let fn_name = 0;
+    while (i < size) {
+        fn_name = vec_get(fns, i);
+        if (str_equal(fn_name, name)) { return 1; }
+        i = i + 1;
+    }
+    return 0;
+}
+
+fn print_escaped_str(s) {
+    let len = sys_strlen(s);
+    let i = 0;
+    while (i < len) {
+        let c = get_char(s, i);
+        if (c == 34) { print_raw_str("\\22"); }
+        else if (c == 92) { print_raw_str("\\\\"); }
+        else if (c >= 32 && c <= 126) { codegen_print_char(c); }
+        else {
+            print_raw_str("\\");
+            let h1 = c / 16; let h2 = c - (h1 * 16);
+            if (h1 < 10) { codegen_print_char(h1 + 48); } else { codegen_print_char(h1 + 55); }
+            if (h2 < 10) { codegen_print_char(h2 + 48); } else { codegen_print_char(h2 + 55); }
+        }
+        i = i + 1;
+    }
+}
+
+fn gen_escaped_len(s) {
+    if (s == 0) { return 1; }
+    let len = sys_strlen(s);
+    let i = 0;
+    let logical_len = 0;
+    while (i < len) {
+        logical_len = logical_len + 1;
+        i = i + 1;
+    }
+    return logical_len + 1; // +1 for null terminator
+}
+
+fn gen_expr(c, expr) {
+    if (c == 0) { return 0; }
+    if (expr == 0) { return 0; }
+    let type = expr[0];
+    // Skip expression tracing in release build
+    if (type == EXPR_VARIABLE) { return gen_expr_variable(c, expr); }
+    if (type == EXPR_LITERAL) { return gen_expr_literal(c, expr); }
+    if (type == EXPR_BINARY) { return gen_expr_binary(c, expr); }
+    if (type == EXPR_CALL) { return gen_expr_call(c, expr); }
+    if (type == EXPR_INDEX) { return gen_expr_index(c, expr); }
+    if (type == EXPR_GET) { return gen_expr_get(c, expr); }
+    if (type == EXPR_ASSIGNMENT) { return gen_expr_assignment(c, expr); }
+    if (type == EXPR_UNARY) { return gen_expr_unary(c, expr); }
+    if (type == EXPR_TRY) { return gen_expr_try(c, expr); }
+    if (type == EXPR_STRING_LITERAL) { return gen_expr_string(c, expr); }
+    return 0;
+}
+
+fn gen_expr_variable(c, expr) {
+    let name = expr[1];
+    if (c[4] != 0) {
+        let locals = c[4]; let i = vec_size(locals) - 1;
+        while (i >= 0) {
+            let entry = vec_get(locals, i);
+            if (entry != 0) {
+                if (str_equal(entry[0], name)) {
+                    let reg = freshen_reg(c);
+                    print_raw_str("    %r"); print_raw(reg); print_raw_str(" = load i64, ptr %p"); print_raw(entry[1]); emit_ln("");
+                    let res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
+                    gen_retain(c, res);
+                    return res;
+                }
+            }
+            i = i - 1;
+        }
+    }
+    if (is_extern(c, name) || is_defined(c, name)) {
+        let reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(reg); print_raw_str(" = ptrtoint ptr @");
+        if (is_extern(c, name) == 0) { print_raw_str("_eq_"); }
+        print_raw_str(name); emit_ln(" to i64");
+        let res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
+        return res;
+    }
+    if (is_intrinsic_name(name)) {
+        if (str_equal(name, "get_argc") == 0 && str_equal(name, "get_argv") == 0) {
+            let reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = ptrtoint ptr @");
+            if (str_equal(name, "malloc") == 0 && str_equal(name, "free") == 0) {
+                print_raw_str("_eq_");
+            }
+            print_raw_str(name); emit_ln(" to i64");
+            let res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
+            return res;
+        }
+    }
+    let reg = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(reg); print_raw_str(" = load i64, ptr @Global_"); print_raw_str(name); emit_ln("");
+    let res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
+    gen_retain(c, res);
+    return res;
+}
+
+fn gen_expr_literal(c, expr) {
+    let res = sys_malloc(2 * 8); res[0] = 0; res[1] = expr[1];
+    return res;
+}
+
+fn gen_expr_string(c, expr) {
+    let label_idx = gen_string_label(c, expr[1]);
+    let reg = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(reg); print_raw_str(" = ptrtoint ptr @str."); print_raw(label_idx); emit_ln(" to i64");
+    let res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
+    return res;
+}
+
+fn gen_expr_binary(c, expr) {
+    let l_res = gen_expr(c, expr[1]); let r_res = gen_expr(c, expr[3]);
+    if (l_res == 0 || r_res == 0) { return 0; }
+    let op = expr[2];
+    if (l_res[0] == 0 && r_res[0] == 0) {
+        let lv = l_res[1]; let rv = r_res[1]; let folded = 0; let handled = 0;
+        if (op == TOKEN_PLUS) { folded = lv + rv; handled = 1; }
+        if (op == TOKEN_MINUS) { folded = lv - rv; handled = 1; }
+        if (op == TOKEN_ASTERISK) { folded = lv * rv; handled = 1; }
+        if (op == TOKEN_SLASH) { if (rv != 0) { folded = lv / rv; handled = 1; } }
+        if (op == TOKEN_PERCENT) { if (rv != 0) { folded = lv - (lv / rv * rv); handled = 1; } }
+        if (op == TOKEN_EQUAL_EQUAL) { if (lv == rv) { folded = 1; } handled = 1; }
+        if (op == TOKEN_BANG_EQUAL) { if (lv != rv) { folded = 1; } handled = 1; }
+        if (op == TOKEN_LESS) { if (lv < rv) { folded = 1; } handled = 1; }
+        if (op == TOKEN_LESS_EQUAL) { if (lv <= rv) { folded = 1; } handled = 1; }
+        if (op == TOKEN_GREATER) { if (lv > rv) { folded = 1; } handled = 1; }
+        if (op == TOKEN_GREATER_EQUAL) { if (lv >= rv) { folded = 1; } handled = 1; }
+        if (op == TOKEN_OR) { if (lv != 0 || rv != 0) { folded = 1; } handled = 1; }
+        if (op == TOKEN_AND) { if (lv != 0 && rv != 0) { folded = 1; } handled = 1; }
+        
+        if (handled) {
+            let res = sys_malloc(2 * 8); res[0] = 0; res[1] = folded; return res;
+        }
+    }
+    let reg = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(reg);
+    if (op == TOKEN_PLUS) { print_raw_str(" = add i64 "); }
+    else if (op == TOKEN_MINUS) { print_raw_str(" = sub i64 "); }
+    else if (op == TOKEN_ASTERISK) { print_raw_str(" = mul i64 "); }
+    else if (op == TOKEN_SLASH) { print_raw_str(" = sdiv i64 "); }
+    else if (op == TOKEN_PERCENT) { print_raw_str(" = srem i64 "); }
+    else if (op == TOKEN_EQUAL_EQUAL) { print_raw_str(" = icmp eq i64 "); }
+    else if (op == TOKEN_BANG_EQUAL) { print_raw_str(" = icmp ne i64 "); }
+    else if (op == TOKEN_LESS) { print_raw_str(" = icmp slt i64 "); }
+    else if (op == TOKEN_LESS_EQUAL) { print_raw_str(" = icmp sle i64 "); }
+    else if (op == TOKEN_GREATER) { print_raw_str(" = icmp sgt i64 "); }
+    else if (op == TOKEN_GREATER_EQUAL) { print_raw_str(" = icmp sge i64 "); }
+    else if (op == TOKEN_OR) { print_raw_str(" = or i64 "); }
+    else if (op == TOKEN_AND) { print_raw_str(" = and i64 "); }
+    if (l_res[0]) { print_raw_str("%r"); } print_raw(l_res[1]); print_raw_str(", ");
+    if (r_res[0]) { print_raw_str("%r"); } print_raw(r_res[1]); emit_ln("");
+    if (op >= TOKEN_EQUAL_EQUAL && op <= TOKEN_GREATER_EQUAL) {
+        let next_reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(next_reg); print_raw_str(" = zext i1 %r"); print_raw(reg); emit_ln(" to i64");
+        reg = next_reg;
+    }
+    let res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
+    gen_retain(c, res); return res;
+}
+
+fn gen_expr_unary(c, expr) {
+    let op = expr[1]; let reg = 0;
+    if (op == TOKEN_BANG) {
+        let operand = gen_expr(c, expr[2]); reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(reg); print_raw_str(" = icmp eq i64 ");
+        if (operand[0]) { print_raw_str("%r"); } print_raw(operand[1]); emit_ln(", 0");
+        let next_reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(next_reg); print_raw_str(" = zext i1 %r"); print_raw(reg); emit_ln(" to i64");
+        reg = next_reg;
+    } else if (op == TOKEN_MINUS) {
+        let operand = gen_expr(c, expr[2]); reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(reg); print_raw_str(" = sub i64 0, ");
+        if (operand[0]) { print_raw_str("%r"); } print_raw(operand[1]); emit_ln("");
+    } else if (op == TOKEN_AMPERSAND) {
+        let target = expr[2];
+        if (target[0] == EXPR_VARIABLE) {
+            let name = target[1];
+            if (c[4]) {
+                let locals = c[4]; let i = vec_size(locals) - 1;
+                while (i >= 0) {
+                    let entry = vec_get(locals, i);
+                    if (entry && str_equal(entry[0], name)) {
+                        reg = freshen_reg(c);
+                        print_raw_str("    %r"); print_raw(reg); print_raw_str(" = ptrtoint ptr %p"); print_raw(entry[1]); emit_ln(" to i64");
+                        i = -1;
+                    } else { i = i - 1; }
+                }
+            } else {
+                reg = freshen_reg(c);
+                print_raw_str("    %r"); print_raw(reg); print_raw_str(" = ptrtoint ptr @Global_"); print_raw_str(name); emit_ln(" to i64");
+            }
+        }
+    } else if (op == TOKEN_ASTERISK) {
+        let ptr_res = gen_expr(c, expr[2]);
+        let ptr_reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(ptr_reg); print_raw_str(" = inttoptr i64 ");
+        if (ptr_res[0]) { print_raw_str("%r"); } print_raw(ptr_res[1]); emit_ln(" to ptr");
+        reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(reg); print_raw_str(" = load i64, ptr %r"); print_raw(ptr_reg); emit_ln("");
+    }
+    let res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
+    gen_retain(c, res); return res;
+}
+
+fn gen_expr_try(c, expr) {
+    let val = gen_expr(c, expr[1]);
+    let l_err = freshen_label(c); let l_ok = freshen_label(c);
+    let try_reg = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(try_reg); print_raw_str(" = icmp eq i64 ");
+    if (val[0]) { print_raw_str("%r"); } print_raw(val[1]); emit_ln(", 0");
+    let res = sys_malloc(2 * 8); res[0] = 1; res[1] = try_reg;
+    gen_retain(c, res); 
+    print_raw_str("    br i1 %r"); print_raw(try_reg); print_raw_str(", label %Label_"); print_raw(l_err); print_raw_str(", label %Label_"); print_raw(l_ok); emit_ln("");
+    print_raw_str("Label_"); print_raw(l_err); print_raw_str(":\n");
+    gen_release_locals(c, c[4]); emit_ln("    ret i64 0");
+    print_raw_str("Label_"); print_raw(l_ok); print_raw_str(":\n");
+    return val;
+}
+
+fn gen_intrinsic_call(c, callee_name, arg_results, reg, arg_count) {
+    if (str_equal(callee_name, "get_char")) {
+        let s_res = vec_get(arg_results, 0); let i_res = vec_get(arg_results, 1);
+        if (s_res != 0 && i_res != 0) {
+            let ll_ptr = freshen_reg(c); let char_ptr = freshen_reg(c); let val_reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(ll_ptr); print_raw_str(" = inttoptr i64 ");
+            if (s_res[0]) { print_raw_str("%r"); } print_raw(s_res[1]); emit_ln(" to ptr");
+            print_raw_str("    %r"); print_raw(char_ptr); print_raw_str(" = getelementptr i8, ptr %r"); print_raw(ll_ptr); print_raw_str(", i64 ");
+            if (i_res[0]) { print_raw_str("%r"); } print_raw(i_res[1]); emit_ln("");
+            print_raw_str("    %r"); print_raw(val_reg); print_raw_str(" = load i8, ptr %r"); print_raw(char_ptr); emit_ln("");
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = zext i8 %r"); print_raw(val_reg); emit_ln(" to i64");
+            let k = 0; while (k < arg_count) { gen_release(c, vec_get(arg_results, k)); k = k + 1; }
+            return 1;
+        }
+    } else if (str_equal(callee_name, "set_char")) {
+        let s_res = vec_get(arg_results, 0); let i_res = vec_get(arg_results, 1); let v_res = vec_get(arg_results, 2);
+        if (s_res != 0 && i_res != 0 && v_res != 0) {
+            let ll_ptr = freshen_reg(c); let char_ptr = freshen_reg(c); let val_reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(ll_ptr); print_raw_str(" = inttoptr i64 ");
+            if (s_res[0]) { print_raw_str("%r"); } print_raw(s_res[1]); emit_ln(" to ptr");
+            print_raw_str("    %r"); print_raw(char_ptr); print_raw_str(" = getelementptr i8, ptr %r"); print_raw(ll_ptr); print_raw_str(", i64 ");
+            if (i_res[0]) { print_raw_str("%r"); } print_raw(i_res[1]); emit_ln("");
+            print_raw_str("    %r"); print_raw(val_reg); print_raw_str(" = trunc i64 ");
+            if (v_res[0]) { print_raw_str("%r"); } print_raw(v_res[1]); emit_ln(" to i8");
+            print_raw_str("    store i8 %r"); print_raw(val_reg); print_raw_str(", ptr %r"); print_raw(char_ptr); emit_ln("");
+            let k = 0; while (k < arg_count) { gen_release(c, vec_get(arg_results, k)); k = k + 1; }
+            return 1;
+        }
+    } else if (str_equal(callee_name, "malloc")) {
+        let a_res = vec_get(arg_results, 0);
+        if (a_res != 0) {
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = call i64 @malloc(i64 ");
+            if (a_res[0]) { print_raw_str("%r"); } print_raw(a_res[1]); emit_ln(")");
+            let k = 0; while (k < arg_count) { gen_release(c, vec_get(arg_results, k)); k = k + 1; }
+            return 1;
+        }
+    } else if (str_equal(callee_name, "free")) {
+        let p_res = vec_get(arg_results, 0);
+        if (p_res != 0) {
+            print_raw_str("    call i64 @free(i64 ");
+            if (p_res[0]) { print_raw_str("%r"); } print_raw(p_res[1]); emit_ln(")");
+            let k = 0; while (k < arg_count) { gen_release(c, vec_get(arg_results, k)); k = k + 1; }
+            return 1;
+        }
+    } else if (str_equal(callee_name, "get_argc")) {
+        print_raw_str("    %r"); print_raw(reg); emit_ln(" = load i64, ptr @__equis_argc");
+        let k = 0; while (k < arg_count) { gen_release(c, vec_get(arg_results, k)); k = k + 1; }
+        return 1;
+    } else if (str_equal(callee_name, "get_argv")) {
+        let idx_res = vec_get(arg_results, 0);
+        if (idx_res != 0) {
+            let ll_ptr = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(ll_ptr); emit_ln(" = load ptr, ptr @__equis_argv");
+            print_raw_str("    %r"); print_raw(ll_ptr); print_raw_str(" = getelementptr ptr, ptr %r"); print_raw(ll_ptr); print_raw_str(", i64 ");
+            if (idx_res[0]) { print_raw_str("%r"); } print_raw(idx_res[1]); emit_ln("");
+            let char_ptr = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(char_ptr); print_raw_str(" = load ptr, ptr %r"); print_raw(ll_ptr); emit_ln("");
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = ptrtoint ptr %r"); print_raw(char_ptr); emit_ln(" to i64");
+            let k = 0; while (k < arg_count) { gen_release(c, vec_get(arg_results, k)); k = k + 1; }
+            return 1;
+        }
+    } else if (str_equal(callee_name, "sys_str_equal")) {
+        let s1_res = vec_get(arg_results, 0); let s2_res = vec_get(arg_results, 1);
+        if (s1_res != 0 && s2_res != 0) {
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = call i64 @sys_str_equal(i64 ");
+            if (s1_res[0]) { print_raw_str("%r"); } print_raw(s1_res[1]); print_raw_str(", i64 ");
+            if (s2_res[0]) { print_raw_str("%r"); } print_raw(s2_res[1]); emit_ln(")");
+            let k = 0; while (k < arg_count) { gen_release(c, vec_get(arg_results, k)); k = k + 1; }
+            return 1;
+        }
+    }
+    return 0;
+}
+
+fn gen_expr_call(c, expr) {
+    if (expr == 0) { return 0; }
+    let callee = expr[1]; let args = expr[2]; 
+    if (args == 0) { return 0; }
+    let arg_count = vec_size(args);
+    let arg_results = vec_new(arg_count); let i = 0;
+    while (i < arg_count) {
+        let a_node = vec_get(args, i);
+        let a_res = gen_expr(c, a_node);
+        if (a_res == 0) { a_res = sys_malloc(2 * 8); a_res[0] = 1; a_res[1] = 0; }
+        gen_retain(c, a_res); arg_results = vec_push(arg_results, a_res);
+        i = i + 1;
+    }
+    let callee_name = 0;
+    if (callee != 0) {
+        if (callee[0] == EXPR_VARIABLE) { callee_name = callee[1]; }
+        else if (callee[0] == EXPR_GET) { callee_name = callee[2]; }
+    }
+    let reg = freshen_reg(c);
+    if (callee_name != 0) {
+        if (is_intrinsic_name(callee_name)) {
+            if (gen_intrinsic_call(c, callee_name, arg_results, reg, arg_count)) {
+                let res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
+                return res;
+            }
+        }
+    }
+
+    if (callee_name != 0 && (is_defined(c, callee_name) || is_extern(c, callee_name))) {
+        print_raw_str("    %r"); print_raw(reg); print_raw_str(" = call i64 @");
+        if (is_extern(c, callee_name) == 0 && str_equal(callee_name, "sys_str_equal") == 0) {
+            print_raw_str("_eq_");
+        }
+        print_raw_str(callee_name); print_raw_str("(");
+        let k = 0; while (k < arg_count) {
+            let a_res = vec_get(arg_results, k); print_raw_str("i64 ");
+            if (a_res[0]) { print_raw_str("%r"); } print_raw(a_res[1]);
+            if (k < arg_count - 1) { print_raw_str(", "); } k = k + 1;
+        }
+        emit_ln(")");
+    } else {
+        // Dynamic call
+        let callee_res = gen_expr(c, callee);
+        let callee_ptr = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(callee_ptr); print_raw_str(" = inttoptr i64 ");
+        if (callee_res[0]) { print_raw_str("%r"); } print_raw(callee_res[1]); emit_ln(" to ptr");
+        print_raw_str("    %r"); print_raw(reg); print_raw_str(" = call i64 %r"); print_raw(callee_ptr); print_raw_str("(");
+        let k = 0; while (k < arg_count) {
+            let a_res = vec_get(arg_results, k); print_raw_str("i64 ");
+            if (a_res[0]) { print_raw_str("%r"); } print_raw(a_res[1]);
+            if (k < arg_count - 1) { print_raw_str(", "); } k = k + 1;
+        }
+        emit_ln(")");
+    }
+    let k = 0; while (k < arg_count) { gen_release(c, vec_get(arg_results, k)); k = k + 1; }
+    let res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg; return res;
+}
+
+fn gen_expr_index(c, expr) {
+    let arr = gen_expr(c, expr[1]); let idx = gen_expr(c, expr[2]);
+    if (arr == 0 || idx == 0) { return 0; }
+    let check_reg = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(check_reg); print_raw_str(" = icmp eq i64 ");
+    if (arr[0]) { print_raw_str("%r"); } print_raw(arr[1]); emit_ln(", 0");
+    let l_ok = freshen_label(c);
+    print_raw_str("    br i1 %r"); print_raw(check_reg); print_raw_str(", label %Label_PanicNull, label %Label_"); print_raw(l_ok); emit_ln("");
+    print_raw_str("Label_"); print_raw(l_ok); print_raw_str(":\n");
+    let arr_ptr = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(arr_ptr); print_raw_str(" = inttoptr i64 ");
+    if (arr[0]) { print_raw_str("%r"); } print_raw(arr[1]); emit_ln(" to ptr");
+    let ll_ptr = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(ll_ptr); print_raw_str(" = getelementptr i64, ptr %r"); print_raw(arr_ptr); print_raw_str(", i64 ");
+    if (idx[0]) { print_raw_str("%r"); } print_raw(idx[1]); emit_ln("");
+    let val = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(val); print_raw_str(" = load i64, ptr %r"); print_raw(ll_ptr); emit_ln("");
+    let res = sys_malloc(2 * 8); res[0] = 1; res[1] = val; gen_retain(c, res); return res;
+}
+
+fn gen_expr_get(c, expr) {
+    let obj = gen_expr(c, expr[1]); if (obj == 0) { return 0; }
+    let field_name = expr[2]; let check_reg = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(check_reg); print_raw_str(" = icmp eq i64 ");
+    if (obj[0]) { print_raw_str("%r"); } print_raw(obj[1]); emit_ln(", 0");
+    let l_ok = freshen_label(c);
+    print_raw_str("    br i1 %r"); print_raw(check_reg); print_raw_str(", label %Label_PanicNull, label %Label_"); print_raw(l_ok); emit_ln("");
+    print_raw_str("Label_"); print_raw(l_ok); print_raw_str(":\n");
+    let offset_entry = map_get(Global_Field_Map, field_name);
+    if (offset_entry == 0) {
+        write(2, "Codegen Error: Unknown field: ", 29);
+        write(2, field_name, sys_strlen(field_name));
+        write(2, "\n", 1);
+        exit(1);
+    }
+    let offset = offset_entry[0]; let obj_ptr = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(obj_ptr); print_raw_str(" = inttoptr i64 ");
+    if (obj[0]) { print_raw_str("%r"); } print_raw(obj[1]); emit_ln(" to ptr");
+    let field_ptr = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(field_ptr); print_raw_str(" = getelementptr i64, ptr %r"); print_raw(obj_ptr); print_raw_str(", i64 ");
+    print_raw(offset); emit_ln("");
+    let val_reg = freshen_reg(c);
+    print_raw_str("    %r"); print_raw(val_reg); print_raw_str(" = load i64, ptr %r"); print_raw(field_ptr); emit_ln("");
+    let res = sys_malloc(2 * 8); res[0] = 1; res[1] = val_reg; gen_retain(c, res); return res;
+}
+
+fn gen_expr_assignment(c, expr) {
+    let target = expr[1]; let value = gen_expr(c, expr[2]);
+    if (target == 0 || value == 0) { return 0; }
+    if (target[0] == EXPR_VARIABLE) {
+        let name = target[1]; let found_local = 0;
+        if (c[4]) {
+            let locals = c[4]; let v_idx = vec_size(locals) - 1;
+            while (v_idx >= 0) {
+                let entry = vec_get(locals, v_idx);
+                if (entry) {
+                    if (str_equal(entry[0], name)) {
+                        let old_reg = freshen_reg(c);
+                        print_raw_str("    %r"); print_raw(old_reg); print_raw_str(" = load i64, ptr %p"); print_raw(entry[1]); emit_ln("");
+                        if (value) { gen_retain(c, value); }
+                        print_raw_str("    store i64 "); if (value[0]) { print_raw_str("%r"); } print_raw(value[1]);
+                        print_raw_str(", ptr %p"); print_raw(entry[1]); emit_ln("");
+                        let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_reg; gen_release(c, old_res);
+                        found_local = 1; v_idx = -1;
+                    } else { v_idx = v_idx - 1; }
+                } else { v_idx = v_idx - 1; }
+            }
+        }
+        if (found_local == 0) {
+            let old_reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(old_reg); print_raw_str(" = load i64, ptr @Global_"); print_raw_str(name); emit_ln("");
+            if (value) { gen_retain(c, value); }
+            print_raw_str("    store i64 "); if (value[0]) { print_raw_str("%r"); } print_raw(value[1]);
+            print_raw_str(", ptr @Global_"); print_raw_str(name); emit_ln("");
+            let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_reg; gen_release(c, old_res);
+        }
+    } else if (target[0] == EXPR_INDEX) {
+        let arr = gen_expr(c, target[1]); let idx = gen_expr(c, target[2]);
+        if (arr == 0) { return 0; }
+        if (idx == 0) { return 0; }
+        let arr_ptr = freshen_reg(c); print_raw_str("    %r"); print_raw(arr_ptr); print_raw_str(" = inttoptr i64 ");
+        if (arr[0]) { print_raw_str("%r"); } print_raw(arr[1]); emit_ln(" to ptr");
+        let ll_ptr = freshen_reg(c); print_raw_str("    %r"); print_raw(ll_ptr); print_raw_str(" = getelementptr i64, ptr %r"); print_raw(arr_ptr); print_raw_str(", i64 ");
+        if (idx[0]) { print_raw_str("%r"); } print_raw(idx[1]); emit_ln("");
+        let old_reg = freshen_reg(c); print_raw_str("    %r"); print_raw(old_reg); print_raw_str(" = load i64, ptr %r"); print_raw(ll_ptr); emit_ln("");
+        if (value) { gen_retain(c, value); }
+        print_raw_str("    store i64 "); if (value[0]) { print_raw_str("%r"); } print_raw(value[1]);
+        print_raw_str(", ptr %r"); print_raw(ll_ptr); emit_ln("");
+        let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_reg; gen_release(c, old_res);
+    } else if (target[0] == EXPR_GET) {
+        let obj_assign_result = gen_expr(c, target[1]);
+        if (obj_assign_result == 0) { return 0; }
+        let field_name = target[2];
+        let offset_entry = map_get(Global_Field_Map, field_name);
+        if (offset_entry == 0) {
+            write(2, "Codegen Error: Unknown field in assignment: ", 44);
+            write(2, field_name, sys_strlen(field_name));
+            write(2, "\n", 1);
+            exit(1);
+        }
+        let offset = offset_entry[0];
+        let obj_ptr = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(obj_ptr); print_raw_str(" = inttoptr i64 ");
+        if (obj_assign_result[0]) { print_raw_str("%r"); } print_raw(obj_assign_result[1]); emit_ln(" to ptr");
+        let field_ptr = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(field_ptr); print_raw_str(" = getelementptr i64, ptr %r"); print_raw(obj_ptr); print_raw_str(", i64 ");
+        print_raw(offset); emit_ln("");
+        let old_reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(old_reg); print_raw_str(" = load i64, ptr %r"); print_raw(field_ptr); emit_ln("");
+        if (value) { gen_retain(c, value); }
+        print_raw_str("    store i64 ");
+        if (value[0]) { print_raw_str("%r"); } print_raw(value[1]);
+        print_raw_str(", ptr %r"); print_raw(field_ptr); emit_ln("");
+        let old_res_get = sys_malloc(2 * 8); old_res_get[0] = 1; old_res_get[1] = old_reg;
+        gen_release(c, old_res_get);
+    }
+    return value;
+}
+
+fn gen_stmt(c, stmt) {
+    if (stmt == 0) { return 0; }
+    let type = stmt[0];
+    let name = 0; let value = 0; let l_ptr = 0; let existing = 0;
+    let vars = 0; let j = 0; let v_sz = 0; let v_entry = 0;
+    let val_reg = 0; let body = 0; let i = 0; let size = 0;
+    let cond = 0; let l_then = 0; let l_else = 0; let l_cont = 0;
+    let cond_reg = 0; let l_start = 0; let l_body = 0; let l_ret = 0;
+    let ret_val = 0; let entry = 0; let a_res = 0; let f = 0;
+    let res = 0; let args = 0; let arg_val = 0; let c_flows = 0;
+    let c_logic = 0; let f_name = 0; let i_arg = 0; let p_name = 0;
+    let sig_res = 0; let sig_ptr = 0; let reg = 0; let fields = 0;
+    let icmp_res = 0; let a_size = 0; let k_size = 0; let v_sz = 0;
+    let target = 0; let value = 0; let old_reg = 0; let obj_assign_result = 0;
+    let field_name = 0; let offset_entry = 0; let offset = 0; let obj_ptr = 0;
+    let field_ptr = 0; let arr = 0; let idx = 0; let arr_ptr = 0; let ll_ptr = 0;
+    let check_reg = 0; let l_ok = 0; let l_cond = 0; let l_end = 0;
+    let val = 0; let existing = 0; let vars = 0; let j = 0; let v_entry = 0;
+    let e_entry = 0; let e_node = 0; let c_roles = 0;
+    let f_init = 0; let f_cond = 0; let f_step = 0; let f_body = 0;
+    let k = 0; 
+
+    if (type == STMT_EXPRESSION) { gen_expr(c, stmt[1]); }
+    else if (type == STMT_LET) {
+        name = stmt[1];
+        value = stmt[2];
+        l_ptr = 0;
+        
+
+        existing = 0;
+        vars = c[4];
+        if (vars) {
+            j = 0; v_sz = vec_size(vars);
+            while (j < v_sz) {
+                v_entry = vec_get(vars, j);
+                if (str_equal(v_entry[0], name)) { existing = v_entry; j = v_sz; }
+                j = j + 1;
+            }
+        }
+
+        if (existing) {
+            l_ptr = existing[1];
+        } else if (c[4]) { 
+            l_ptr = freshen_ptr(c);
+            print_raw_str("    %p"); print_raw(l_ptr); emit_ln(" = alloca i64");
+            print_raw_str("    store i64 0, ptr %p"); print_raw(l_ptr); emit_ln("");
+            entry = sys_malloc(2 * 8); entry[0] = name; entry[1] = l_ptr;
+            c[4] = vec_push(c[4], entry);
+        }
+
+        val_reg = gen_expr(c, value);
+        if (val_reg) { gen_retain(c, val_reg); }
+        
+        if (c[4]) { 
+            print_raw_str("    store i64 "); 
+            if (val_reg) { if (val_reg[0]) { print_raw_str("%r"); } print_raw(val_reg[1]); }
+            else { print_raw_str("0"); }
+            print_raw_str(", ptr %p"); print_raw(l_ptr); emit_ln("");
+        } else { 
+            print_raw_str("    store i64 ");
+            if (val_reg) { if (val_reg[0]) { print_raw_str("%r"); } print_raw(val_reg[1]); }
+            else { print_raw_str("0"); }
+            print_raw_str(", ptr @Global_"); print_raw_str(name); emit_ln("");
+        }
+        return 0;
+    } else if (type == STMT_BLOCK) {
+        body = stmt[1];
+        i = 0; size = vec_size(body);
+        while (i < size) { 
+            gen_stmt(c, vec_get(body, i)); 
+            i = i + 1; 
+        }
+    } else if (type == STMT_IF) {
+        cond = gen_expr(c, stmt[1]); l_then = freshen_label(c); l_else = freshen_label(c); l_cont = freshen_label(c);
+        cond_reg = cond[1];
+        if (cond[0] == 0) {
+            reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = icmp ne i64 "); print_raw(cond[1]); emit_ln(", 0");
+            cond_reg = reg;
+        } else {
+            reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = icmp ne i64 %r"); print_raw(cond[1]); emit_ln(", 0");
+            cond_reg = reg;
+        }
+        print_raw_str("    br i1 %r"); print_raw(cond_reg); print_raw_str(", label %Label_"); print_raw(l_then); print_raw_str(", label %Label_"); print_raw(l_else); emit_ln("");
+        print_raw_str("Label_"); print_raw(l_then); print_raw_str(":\n");
+        gen_stmt(c, stmt[2]);
+        print_raw_str("    br label %Label_"); print_raw(l_cont); emit_ln("");
+        print_raw_str("Label_"); print_raw(l_else); print_raw_str(":\n");
+        if (stmt[3]) { gen_stmt(c, stmt[3]); }
+        print_raw_str("    br label %Label_"); print_raw(l_cont); emit_ln("");
+        print_raw_str("Label_"); print_raw(l_cont); print_raw_str(":\n");
+    } else if (type == STMT_WHILE) {
+        l_start = freshen_label(c); l_body = freshen_label(c); l_cont = freshen_label(c);
+        print_raw_str("    br label %Label_"); print_raw(l_start); emit_ln("");
+        print_raw_str("Label_"); print_raw(l_start); print_raw_str(":\n");
+        // Preemption Check
+        let r_wh_pre = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(r_wh_pre); print_raw_str(" = load volatile i32, ptr @g_needs_yield\n");
+        let r_wh_check = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(r_wh_check); print_raw_str(" = icmp ne i32 %r"); print_raw(r_wh_pre); print_raw_str(", 0\n");
+        let l_prey_wh = freshen_label(c);
+        print_raw_str("    br i1 %r"); print_raw(r_wh_check); print_raw_str(", label %Preywh_"); print_raw(l_prey_wh); print_raw_str(", label %Checkwh_"); print_raw(l_prey_wh); emit_ln("");
+        print_raw_str("Preywh_"); print_raw(l_prey_wh); print_raw_str(":\n");
+        emit_ln("    store i32 0, ptr @g_needs_yield");
+        emit_ln("    call i64 @_eq_fiber_yield()");
+        print_raw_str("    br label %Checkwh_"); print_raw(l_prey_wh); emit_ln("");
+        print_raw_str("Checkwh_"); print_raw(l_prey_wh); print_raw_str(":\n");
+        cond = gen_expr(c, stmt[1]);
+        cond_reg = cond[1];
+        if (cond[0] == 0) {
+            reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = icmp ne i64 "); print_raw(cond[1]); emit_ln(", 0");
+            cond_reg = reg;
+        } else {
+            reg = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = icmp ne i64 %r"); print_raw(cond[1]); emit_ln(", 0");
+            cond_reg = reg;
+        }
+        print_raw_str("    br i1 %r"); print_raw(cond_reg); print_raw_str(", label %Label_"); print_raw(l_body); print_raw_str(", label %Label_"); print_raw(l_cont); emit_ln("");
+        print_raw_str("Label_"); print_raw(l_body); print_raw_str(":\n");
+        gen_stmt(c, stmt[2]);
+        print_raw_str("    br label %Label_"); print_raw(l_start); emit_ln("");
+        print_raw_str("Label_"); print_raw(l_cont); print_raw_str(":\n");
+    } else if (type == STMT_FOR) {
+        f_init = stmt[1]; f_cond = stmt[2]; f_step = stmt[3]; f_body = stmt[4];
+        l_start = freshen_label(c); l_body = freshen_label(c); l_cont = freshen_label(c);
+        if (f_init) { gen_stmt(c, f_init); }
+        print_raw_str("    br label %Label_"); print_raw(l_start); emit_ln("");
+        print_raw_str("Label_"); print_raw(l_start); print_raw_str(":\n");
+        // Preemption Check Hook
+        let r_f_pre = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(r_f_pre); print_raw_str(" = load volatile i32, ptr @g_needs_yield\n");
+        let r_f_check = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(r_f_check); print_raw_str(" = icmp ne i32 %r"); print_raw(r_f_pre); print_raw_str(", 0\n");
+        let l_pre_real_f = freshen_label(c);
+        print_raw_str("    br i1 %r"); print_raw(r_f_check); print_raw_str(", label %Preempt_"); print_raw(l_pre_real_f); print_raw_str(", label %Check_"); print_raw(l_pre_real_f); emit_ln("");
+        print_raw_str("Preempt_"); print_raw(l_pre_real_f); print_raw_str(":\n");
+        emit_ln("    store i32 0, ptr @g_needs_yield");
+        emit_ln("    call i64 @_eq_fiber_yield()");
+        print_raw_str("    br label %Check_"); print_raw(l_pre_real_f); emit_ln("");
+        print_raw_str("Check_"); print_raw(l_pre_real_f); print_raw_str(":\n");
+        if (f_cond) {
+            cond = gen_expr(c, f_cond);
+            cond_reg = cond[1];
+            if (cond[0] == 0) {
+                reg = freshen_reg(c);
+                print_raw_str("    %r"); print_raw(reg); print_raw_str(" = icmp ne i64 "); print_raw(cond[1]); emit_ln(", 0");
+                cond_reg = reg;
+            } else {
+                reg = freshen_reg(c);
+                print_raw_str("    %r"); print_raw(reg); print_raw_str(" = icmp ne i64 %r"); print_raw(cond[1]); emit_ln(", 0");
+                cond_reg = reg;
+            }
+            print_raw_str("    br i1 %r"); print_raw(cond_reg); print_raw_str(", label %Label_"); print_raw(l_body); print_raw_str(", label %Label_"); print_raw(l_cont); emit_ln("");
+        } else {
+            print_raw_str("    br label %Label_"); print_raw(l_body); emit_ln("");
+        }
+        print_raw_str("Label_"); print_raw(l_body); print_raw_str(":\n");
+        gen_stmt(c, f_body);
+        if (f_step) { gen_expr(c, f_step); }
+        print_raw_str("    br label %Label_"); print_raw(l_start); emit_ln("");
+        print_raw_str("Label_"); print_raw(l_cont); print_raw_str(":\n");
+    } else if (type == STMT_RETURN) {
+        if (stmt[1]) {
+            res = gen_expr(c, stmt[1]);
+            gen_release_locals(c, c[4]);
+            print_raw_str("    ret i64 "); if (res[0]) { print_raw_str("%r"); } print_raw(res[1]); emit_ln("");
+        } else { 
+            gen_release_locals(c, c[4]);
+            emit_ln("    ret i64 0"); 
+        }
+    } else if (type == STMT_PRINT) {
+        res = gen_expr(c, stmt[1]);
+        print_raw_str("    call i64 (ptr, ...) @printf(ptr @fmt_print, i64 ");
+        if (res[0]) { print_raw_str("%r"); } print_raw(res[1]); emit_ln(")");
+    }
+    if (type == STMT_STRUCT || type == STMT_AGENT || type == STMT_RESOURCE) {
+        fields = stmt[2]; 
+        if (type == STMT_AGENT) { fields = stmt[AGENT_FIELDS]; }
+        if (type == STMT_RESOURCE) { fields = map_keys(stmt[2]); }
+        j = 0; v_sz = vec_size(fields);
+        f_name = 0; entry = 0;
+        while (j < v_sz) {
+            f_name = vec_get(fields, j);
+            entry = sys_malloc(16); entry[0] = j;
+            map_put(Global_Field_Map, f_name, entry);
+            j = j + 1;
+        }
+    } else if (type == STMT_EVENT || type == STMT_COMMITMENT || type == STMT_POLICY || type == STMT_TRANSFORMATION || type == STMT_VALUATOR) {
+        name = stmt[EVENT_NAME];
+        p_name = "event_";
+        if (type == STMT_COMMITMENT) { p_name = "commitment_"; name = stmt[COMMITMENT_NAME]; }
+        if (type == STMT_POLICY) { p_name = "policy_"; }
+        if (type == STMT_TRANSFORMATION) { p_name = "transformation_"; name = stmt[TRANSFORMATION_NAME]; }
+        if (type == STMT_VALUATOR) { p_name = "valuator_"; name = stmt[VALUATOR_NAME]; }
+        
+        print_raw_str("define void @"); print_raw_str(p_name); print_raw_str(name); print_raw_str("(i64 %args) {\nentry:\n");
+        print_raw_str("    %p_args = alloca i64\n    store i64 %args, ptr %p_args\n");
+        print_raw_str("    ; REA: Increment logical clock\n");
+        print_raw_str("    %clock_old = load i64, ptr @__technical_clock\n");
+        print_raw_str("    %clock_new = add i64 %clock_old, 1\n");
+        print_raw_str("    store i64 %clock_new, ptr @__technical_clock\n");
+
+        print_raw_str("    ; REA: Role-based access control check\n");
+        let c_roles = stmt[EVENT_ROLES];
+        if (type == STMT_COMMITMENT) { c_roles = stmt[COMMITMENT_ROLES]; }
+        if (type == STMT_TRANSFORMATION) { c_roles = stmt[TRANSFORMATION_ROLES]; }
+        if (c_roles && vec_size(c_roles) > 0) {
+            let c_r_str = vec_get(c_roles, 0);
+            let c_label = gen_string_label(c, c_r_str);
+            print_raw_str("    call i64 @sys_verify_role(ptr @str."); print_raw(c_label); emit_ln(")");
+        } else {
+            print_raw_str("    call i64 @sys_verify_role(ptr null)\n");
+        }
+        
+        c_logic = stmt[EVENT_LOGIC];
+        if (type == STMT_COMMITMENT) { c_logic = stmt[COMMITMENT_LOGIC]; }
+        if (type == STMT_TRANSFORMATION) { c_logic = stmt[TRANSFORMATION_LOGIC]; }
+        if (type == STMT_VALUATOR) { c_logic = stmt[VALUATOR_BODY]; }
+        if (c_logic) {
+            print_raw_str("    ; REA: Start logic block\n");
+            gen_stmt(c, c_logic);
+            print_raw_str("    ; REA: Logic block complete\n");
+        }
+
+        if (type == STMT_POLICY || type == STMT_VALUATOR) {
+
+        } else {
+            c_flows = stmt[EVENT_FLOWS];
+            if (type == STMT_COMMITMENT) { c_flows = stmt[COMMITMENT_FLOWS]; }
+            if (type == STMT_TRANSFORMATION) { c_flows = stmt[TRANSFORMATION_FLOWS]; }
+            k = 0; k_size = vec_size(c_flows);
+            f = 0; res = 0; name = 0; val = 0; a_res = 0;
+            while (k < k_size) {
+                f = vec_get(c_flows, k);
+                a_res = gen_expr(c, f[FLOW_AMOUNT]);
+                print_raw_str("    ; REA: Audit flow: "); print_raw_str(f[FLOW_RES]); print_raw_str("\n");
+                print_raw_str("    call void @sys_audit_flow(i64 "); print_raw(f[FLOW_TYPE]); 
+                print_raw_str(", i64 ");
+                if (a_res[0]) { print_raw_str("%r"); } print_raw(a_res[1]);
+                print_raw_str(", ptr null, ptr null, ptr null");
+                emit_ln(")");
+                k = k + 1;
+            }
+        }
+        print_raw_str("    ret void\n}\n\n");
+    } else if (type == STMT_EXECUTE) {
+        name = stmt[1];
+        // Arguments passed as vectors/pointers
+        print_raw_str("    call void @sys_verify_duality()\n");
+        print_raw_str("    call void @event_"); print_raw_str(name); print_raw_str("(i64 0)\n");
+    } else if (type == STMT_REVERSE) {
+        name = stmt[1];
+        print_raw_str("    ; REA: Reverse event: "); print_raw_str(name); print_raw_str("\n");
+        print_raw_str("    call void @sys_reverse_event(ptr null)\n");
+    } else if (type == STMT_EXCHANGE) {
+        name = stmt[1];
+        print_raw_str("    ; REA: Exchange agreement: "); print_raw_str(name); print_raw_str("\n");
+    } else if (type == STMT_ASSERT) {
+        res = gen_expr(c, stmt[1]);
+        l_then = freshen_label(c); l_cont = freshen_label(c);
+        reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(reg); print_raw_str(" = icmp eq i64 ");
+        if (res[0]) { print_raw_str("%r"); } print_raw(res[1]); emit_ln(", 0");
+        print_raw_str("    br i1 %r"); print_raw(reg); print_raw_str(", label %Label_"); print_raw(l_then); print_raw_str(", label %Label_"); print_raw(l_cont); emit_ln("");
+        print_raw_str("Label_"); print_raw(l_then); print_raw_str(":\n");
+        print_raw_str("    call i64 @write(i64 2, ptr @str_assert_fail, i64 18)\n");
+        emit_ln("    call void @exit(i64 1)");
+        print_raw_str("    br label %Label_"); print_raw(l_cont); emit_ln("");
+        print_raw_str("Label_"); print_raw(l_cont); print_raw_str(":\n");
+    }
+    return 0;
+}
+
+fn codegen_new(trace_enabled, incremental) {
+    let c = sys_malloc(10 * 8);
+    c[0] = 1; c[1] = 1; c[2] = vec_new(4096); c[3] = vec_new(1024); c[4] = 0;
+    c[5] = vec_new(1024); 
+    c[6] = 1 - incremental;
+    if (incremental == 1) { c[6] = 0; } else { c[6] = 1; }
+    if (Global_Field_Map == 0) { Global_Field_Map = map_new(2000); }
+    
+    gen_string_label(c, "0");
+    gen_string_label(c, "1");
+    gen_string_label(c, "");
+    
+    return c;
+}
+
+fn gen_program(c, ast) {
+    let size = 0; let i = 0; let stmt = 0; let name = 0; let params = 0; let p_size = 0;
+    let j = 0; let k = 0; let k_size = 0; let p_name = 0; let l_ptr = 0; let k_entry = 0;
+    let body = 0; let g_stmt = 0; let s_type = 0; let strings = 0; let s_size = 0;
+    let i_str = 0; let s_val = 0;
+
+    let os = sys_os();
+    if (os == 2) {
+        print_raw_str("target triple = \"x86_64-pc-win32-gnu\"\n");
+    } else {
+        print_raw_str("target triple = \"x86_64-pc-linux-gnu\"\n");
+    }
+    emit_ln("@fmt_print = private unnamed_addr constant [6 x i8] c\"%lld\\0A\\00\"");
+    emit_ln("@fmt_s = private unnamed_addr constant [3 x i8] c\"%s\\00\"");
+    emit_ln("@fmt_d = private unnamed_addr constant [5 x i8] c\"%lld\\00\"");
+    print_raw_str("@__equis_argc = external global i64\n");
+    print_raw_str("@__equis_argv = external global ptr\n");
+    emit_ln("@__technical_clock = global i64 0");
+    emit_ln("@str_assert_fail = private unnamed_addr constant [19 x i8] c\"ASSERTION FAILED!\\0A\\00\"");
+    emit_ln("@g_needs_yield = external global i32");
+    
+    size = vec_size(ast); i = 0;
+    while (i < size) {
+        stmt = vec_get(ast, i);
+        if (stmt != 0) {
+            if (stmt[0] == STMT_EXTERN) {
+                name = stmt[1]; params = stmt[2]; p_size = vec_size(params);
+                c[3] = vec_push(c[3], name);
+                print_raw_str("declare i64 @"); print_raw_str(name); print_raw_str("(");
+                j = 0; while (j < p_size) { print_raw_str("i64"); if (j < p_size - 1) { print_raw_str(", "); } j = j + 1; }
+                print_raw_str(")\n");
+            }
+            if (stmt[0] == STMT_FUNCTION) {
+                c[5] = vec_push(c[5], stmt[1]);
+            }
+            if (stmt[0] == STMT_LET) {
+                print_raw_str("@Global_"); print_raw_str(stmt[1]); emit_ln(" = global i64 0");
+            }
+            if (stmt[0] == STMT_STRUCT || stmt[0] == STMT_AGENT || stmt[0] == STMT_RESOURCE) {
+                gen_stmt(c, stmt);
+            }
+        }
+        i = i + 1;
+    }
+    
+    if (is_extern(c, "write") == 0) { print_raw_str("declare i64 @write(i64, i64, i64)\n"); c[3] = vec_push(c[3], "write"); }
+    if (is_extern(c, "exit") == 0) { print_raw_str("declare void @exit(i64)\n"); c[3] = vec_push(c[3], "exit"); }
+    if (is_extern(c, "malloc") == 0) { print_raw_str("declare i64 @malloc(i64)\n"); c[3] = vec_push(c[3], "malloc"); }
+    if (is_extern(c, "free") == 0) { print_raw_str("declare void @free(i64)\n"); c[3] = vec_push(c[3], "free"); }
+    print_raw_str("declare i64 @_eq_set_char(i64, i64, i64)\n");
+    if (is_extern(c, "printf") == 0) { print_raw_str("declare i64 @printf(i64, ...)\n"); c[3] = vec_push(c[3], "printf"); }
+    if (is_extern(c, "sys_audit_flow") == 0) { print_raw_str("declare i64 @sys_audit_flow(i64, i64, ptr, ptr, ptr)\n"); c[3] = vec_push(c[3], "sys_audit_flow"); }
+    if (is_extern(c, "sys_verify_sig") == 0) { print_raw_str("declare i64 @sys_verify_sig(ptr, ptr)\n"); c[3] = vec_push(c[3], "sys_verify_sig"); }
+    if (is_extern(c, "sys_panic_null") == 0) { print_raw_str("declare i64 @sys_panic_null()\n"); c[3] = vec_push(c[3], "sys_panic_null"); }
+    if (is_extern(c, "sys_panic") == 0) { print_raw_str("declare void @sys_panic(ptr)\n"); c[3] = vec_push(c[3], "sys_panic"); }
+    if (is_extern(c, "sys_pin") == 0) { print_raw_str("declare i64 @sys_pin(i64)\n"); c[3] = vec_push(c[3], "sys_pin"); }
+
+    if (is_extern(c, "sys_strlen") == 0) { print_raw_str("declare i64 @sys_strlen(i64)\n"); c[3] = vec_push(c[3], "sys_strlen"); }
+    if (is_extern(c, "sys_str_equal") == 0) { print_raw_str("declare i64 @sys_str_equal(i64, i64)\n"); c[3] = vec_push(c[3], "sys_str_equal"); }
+    if (is_extern(c, "read") == 0) { print_raw_str("declare i64 @read(i64, i64, i64)\n"); c[3] = vec_push(c[3], "read"); }
+    if (is_extern(c, "open") == 0) { print_raw_str("declare i64 @open(i64, i64, i64)\n"); c[3] = vec_push(c[3], "open"); }
+    if (is_extern(c, "close") == 0) { print_raw_str("declare i64 @close(i64)\n"); c[3] = vec_push(c[3], "close"); }
+    if (is_extern(c, "lseek") == 0) { print_raw_str("declare i64 @lseek(i64, i64, i64)\n"); c[3] = vec_push(c[3], "lseek"); }
+
+    if (is_extern(c, "sys_write_raw") == 0) { print_raw_str("declare i64 @sys_write_raw(i64, i64, i64)\n"); c[3] = vec_push(c[3], "sys_write_raw"); }
+
+    if (is_extern(c, "sys_read_entire_file") == 0) { print_raw_str("declare i64 @sys_read_entire_file(i64)\n"); c[3] = vec_push(c[3], "sys_read_entire_file"); }
+    if (is_extern(c, "sys_get_argc") == 0) { print_raw_str("declare i64 @sys_get_argc()\n"); c[3] = vec_push(c[3], "sys_get_argc"); }
+    if (is_extern(c, "sys_get_argv") == 0) { print_raw_str("declare i64 @sys_get_argv(i64)\n"); c[3] = vec_push(c[3], "sys_get_argv"); }
+    if (is_extern(c, "sys_time") == 0) { print_raw_str("declare i64 @sys_time()\n"); c[3] = vec_push(c[3], "sys_time"); }
+    if (is_extern(c, "sys_reverse_event") == 0) { print_raw_str("declare void @sys_reverse_event(ptr)\n"); c[3] = vec_push(c[3], "sys_reverse_event"); }
+    if (is_extern(c, "_eq_fiber_yield") == 0) { print_raw_str("declare i64 @_eq_fiber_yield()\n"); c[3] = vec_push(c[3], "_eq_fiber_yield"); }
+
+
+    
+    i = 0;
+    while (i < size) {
+        stmt = vec_get(ast, i);
+        if (stmt) {
+            if (stmt[0] == STMT_FUNCTION) {
+                name = stmt[1]; params = stmt[2]; body = stmt[3]; p_size = vec_size(params);
+                write(2, "      Func: ", 12); write(2, name, sys_strlen(name)); write(2, "\n", 1);
+                print_raw_str("define i64 @_eq_"); print_raw_str(name); print_raw_str("(");
+                j = 0;
+                while (j < p_size) {
+                    print_raw_str("i64 %Arg_"); print_raw_str(vec_get(params, j));
+                    if (j < p_size - 1) { print_raw_str(", "); } j = j + 1;
+                }
+                print_raw_str(") {\nentry:\n");
+                c[0] = 1; c[4] = vec_new(1024);
+
+                // Preemption Check Hook
+                let r_pre = freshen_reg(c);
+                print_raw_str("    %r"); print_raw(r_pre); print_raw_str(" = load volatile i32, ptr @g_needs_yield\n");
+                let r_check = freshen_reg(c);
+                print_raw_str("    %r"); print_raw(r_check); print_raw_str(" = icmp ne i32 %r"); print_raw(r_pre); print_raw_str(", 0\n");
+                print_raw_str("    br i1 %r"); print_raw(r_check); print_raw_str(", label %yield_preempt, label %start_fn\n");
+                print_raw_str("yield_preempt:\n");
+                emit_ln("    store i32 0, ptr @g_needs_yield");
+                emit_ln("    call i64 @_eq_fiber_yield()");
+                emit_ln("    br label %start_fn");
+                print_raw_str("start_fn:\n");
+
+                k = 0;
+                p_name = 0; l_ptr = 0; k_entry = 0;
+                while (k < p_size) {
+                    p_name = vec_get(params, k); l_ptr = freshen_ptr(c);
+                    print_raw_str("    %p"); print_raw(l_ptr); emit_ln(" = alloca i64");
+                    print_raw_str("    call i64 @sys_retain(i64 %Arg_"); print_raw_str(p_name); emit_ln(")");
+                    print_raw_str("    store i64 %Arg_"); print_raw_str(p_name); print_raw_str(", ptr %p"); print_raw(l_ptr); emit_ln("");
+                    k_entry = sys_malloc(2 * 8); k_entry[0] = p_name; k_entry[1] = l_ptr;
+                    c[4] = vec_push(c[4], k_entry);
+                    k = k + 1;
+                }
+                gen_stmt(c, body);
+                gen_release_locals(c, c[4]);
+                print_raw_str("    ret i64 0\nLabel_PanicNull:\n    call i64 @sys_panic_null()\n    unreachable\n}\n\n");
+            }
+            if (stmt[0] == STMT_EVENT) {
+                gen_stmt(c, stmt);
+            }
+        }
+        i = i + 1;
+    }
+    
+    if (c[6] == 1) {
+        if (is_defined(c, "__equis_pre_intern") == 0) {
+            print_raw_str("define i64 @_eq___equis_pre_intern() {\nentry:\n    ret i64 0\n}\n\n");
+        }
+        print_raw_str("define void @_eq___equis_init_globals() {\nentry:\n");
+        print_raw_str("    %_pre_intern_res = call i64 @_eq___equis_pre_intern()\n");
+        c[0] = 1; c[4] = 0;
+        i = 0;
+        g_stmt = 0; s_type = 0;
+        while (i < size) {
+            g_stmt = vec_get(ast, i);
+            s_type = g_stmt[0];
+            if (s_type == STMT_LET || s_type == STMT_EXPRESSION || s_type == STMT_EXECUTE || s_type == STMT_ASSERT || s_type == STMT_PRINT || s_type == STMT_REVERSE || s_type == STMT_STRUCT || s_type == STMT_AGENT || s_type == STMT_RESOURCE) { gen_stmt(c, g_stmt); }
+            i = i + 1;
+        }
+        print_raw_str("    ret void\nLabel_PanicNull:\n    call i64 @sys_panic_null()\n    unreachable\n}\n\n");
+        
+        if (is_defined(c, "main_routine") == 0) {
+            print_raw_str("define i64 @_eq_main_routine() {\nentry:\n    ret i64 0\n}\n\n");
+        }
+        print_raw_str("define void @_eq___equis_cleanup_globals() {\nentry:\n    ret void\n}\n\n");
+    }
+    
+    strings = c[2]; s_size = vec_size(strings); i_str = 0;
+    while (i_str < s_size) {
+        s_val = vec_get(strings, i_str);
+        print_raw_str("@str."); print_raw(i_str); print_raw_str(" = private unnamed_addr constant [");
+        print_raw(gen_escaped_len(s_val)); print_raw_str(" x i8] c\"");
+        print_escaped_str(s_val); print_raw_str("\\00\"\n"); i_str = i_str + 1;
+    }
+}

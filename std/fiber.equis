@@ -1,0 +1,77 @@
+use "std/sys.equis";
+use "std/string.equis";
+use "std/collections.equis";
+extern fn _setjmp(env);
+extern fn longjmp(env, val);
+let Fiber_Queue = 0;
+let Current_Fiber = 0;
+let Scheduler_Buf = 0;
+fn fiber_init() {
+    if (Fiber_Queue == 0) {
+        Fiber_Queue = vec_new(16);
+        Scheduler_Buf = sys_malloc(512);
+    }
+}
+fn fiber_spawn(f_ptr) {
+    fiber_init();
+    let fiber = sys_malloc(80);
+    fiber[0] = vec_size(Fiber_Queue);
+    fiber[1] = f_ptr;
+    fiber[2] = 0;
+    fiber[3] = 0;
+    fiber[4] = sys_malloc(512);
+    Fiber_Queue = vec_push(Fiber_Queue, fiber);
+    return fiber;
+}
+fn fiber_yield() {
+    let fiber = Current_Fiber;
+    if (fiber) {
+        if (_setjmp(fiber[4]) == 0) {
+            longjmp(Scheduler_Buf, 1);
+        }
+    }
+}
+fn fiber_exit() {
+    let fiber = Current_Fiber;
+    if (fiber) {
+        fiber[3] = 3;
+        longjmp(Scheduler_Buf, 1);
+    }
+}
+fn fiber_scheduler_run() {
+    let loop = 1;
+    while (loop) {
+        let size = vec_size(Fiber_Queue);
+        let i = 0;
+        let active = 0;
+        while (i < size) {
+            let fiber = vec_get(Fiber_Queue, i);
+            if (fiber[3] < 3) {
+                active = 1;
+                Current_Fiber = fiber;
+                if (_setjmp(Scheduler_Buf) == 0) {
+                    if (fiber[3] == 0) {
+                        fiber[3] = 1;
+                        let f = fiber[1];
+                        f();
+                        fiber_exit();
+                    } else {
+                        longjmp(fiber[4], 1);
+                    }
+                }
+            }
+            i = i + 1;
+        }
+        if (active == 0) { loop = 0; }
+    }
+}
+fn fiber_new(stack_size) {
+    return fiber_spawn(0); 
+}
+fn fiber_switch(old, new) {
+    fiber_yield(); 
+}
+
+fn fiber_preempt_enable(ms) {
+    sys_fiber_preempt_setup(ms);
+}

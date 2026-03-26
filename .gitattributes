@@ -1,0 +1,16 @@
+*.equis linguist-language=Equis
+compiler/*.equis linguist-language=Equis
+
+
+*.ll linguist-generated=true
+ledger.ev linguist-generated=true
+eq-core linguist-binary=true
+eq-core.exe linguist-binary=true
+
+# Ignore local dev artifacts
+.gemini/
+.agents/
+brain/
+eq.ps1 linguist-language=PowerShell
+install.sh linguist-language=Shell
+install.ps1 linguist-language=PowerShell

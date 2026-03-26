@@ -1,0 +1,60 @@
+use "std/sys.equis";
+fn arena_new(initial_size) {
+    return arena_new_owned(initial_size, 0);
+}
+fn arena_new_owned(initial_size, owner_id) {
+    let a = sys_malloc(8 * 8);
+    let buf = sys_malloc(initial_size);
+    a[0] = buf;
+    a[1] = buf;
+    a[2] = buf + initial_size;
+    a[3] = 0;
+    a[4] = owner_id;
+    return a;
+}
+fn arena_alloc(a, size) {
+    let owner = a[4];
+    if (owner != 0) {
+        if (sys_get_agent() != owner) {
+            print_err("Security Violation: Unauthorized memory access by Agent ");
+            print_raw_stderr(sys_get_agent());
+            print_err(" to Arena owned by Agent ");
+            print_raw_stderr(owner);
+            print_err("\n");
+            exit(1);
+        }
+    }
+    let aligned_size = (size + 15) / 16 * 16;
+    sys_assert(aligned_size >= size, "Arena error: allocation size overflow");
+    if (a[1] + aligned_size > a[2]) {
+        let current_capacity = a[2] - a[0];
+        let new_size = current_capacity * 2;
+        if (new_size < aligned_size) { new_size = aligned_size * 2; }
+        let next_arena = arena_new(new_size);
+        let old_base = a[0];
+        let old_curr = a[1];
+        let old_end = a[2];
+        let old_next = a[3];
+        let link = sys_malloc(4 * 16);
+        link[0] = old_base; link[1] = old_curr; link[2] = old_end; link[3] = old_next;
+        a[0] = next_arena[0];
+        a[1] = next_arena[1];
+        a[2] = next_arena[2];
+        a[3] = link;
+        sys_free(next_arena);
+    }
+    let p = a[1];
+    a[1] = a[1] + aligned_size;
+    return p;
+}
+fn arena_free_all(a) {
+    let curr = a;
+    while (curr != 0) {
+        let __eq_next_ptr = curr[3];
+        sys_free(curr[0]);
+        if (curr != a) { sys_free(curr); }
+        curr = __eq_next_ptr;
+    }
+    a[1] = a[0];
+    a[3] = 0;
+}

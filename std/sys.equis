@@ -1,0 +1,101 @@
+extern fn time(tloc);
+extern fn printf(fmt, val);
+extern fn sys_mkdir(path);
+
+let mut __global_print_buf = 0;
+extern fn open(path, flags, mode);
+extern fn read(fd, buf, count);
+extern fn write(fd, buf, count);
+extern fn close(fd);
+extern fn exit(code);
+extern fn sys_ptr_add(p, o);
+extern fn sys_get_argc();
+extern fn sys_get_argv(i);
+extern fn sys_reverse_event(p);
+extern fn sys_malloc(size);
+extern fn sys_realloc(p, size);
+extern fn sys_free(p);
+extern fn sys_retain(p);
+extern fn sys_release(p);
+extern fn sys_assert(cond, msg);
+struct Result {
+    ok;
+    err;
+    value;
+}
+extern fn sys_panic(msg);
+extern fn sys_panic_null();
+extern fn sys_panic_overflow();
+extern fn sys_pin(p);
+extern fn lseek(fd, offset, whence);
+extern fn sys_set_agent(id);
+extern fn sys_get_agent();
+extern fn sys_set_word(p, idx, val);
+extern fn sys_get_word(p, idx);
+extern fn sys_audit_flow(type_id, amount, res, src, dest);
+extern fn sys_verify_sig(payload, sig);
+extern fn sys_verify_role(role);
+extern fn sys_add_role(role);
+extern fn sys_verify_duality();
+extern fn sys_read_entire_file(path);
+extern fn sys_rename(old, new);
+extern fn sys_chan_new(size);
+extern fn sys_chan_send(chan, val);
+extern fn sys_chan_recv(chan);
+extern fn sys_pgsql_connect(conninfo);
+extern fn sys_pgsql_exec(conn, query);
+extern fn sys_pgsql_get_val(res, row, col);
+extern fn sys_pgsql_clear(res);
+extern fn sys_pgsql_finish(conn);
+extern fn sys_socket_create();
+extern fn sys_socket_connect(s, host, port);
+extern fn sys_socket_send(s, buf, len);
+extern fn sys_socket_recv(s, buf, len);
+extern fn sys_socket_close(s);
+extern fn sys_fiber_preempt_setup(ms);
+fn sys_write(fd, buf, count) {
+    return write(fd, buf, count);
+}
+fn print_raw(mut n) {
+    if (n == 0) { write(1, "0", 1); return 0; }
+    if (n < 0) { write(1, "-", 1); n = 0 - n; }
+    let buf = sys_malloc(64);
+    let mut i = 62;
+    set_char(buf, 63, 0);
+    let digit = 0;
+    while (n > 0) {
+        digit = n - ((n / 10) * 10);
+        set_char(buf, i, digit + 48);
+        n = n / 10;
+        i = i - 1;
+    }
+    write(1, buf + i + 1, 62 - i);
+    sys_free(buf);
+}
+extern fn print_raw_stderr(s);
+extern fn print_int_stderr(n);
+extern fn sys_strlen(s);
+fn print_raw_str(s) {
+    if (s == 0) { return 0; }
+    let len = sys_strlen(s);
+    write(1, s, len);
+}
+fn print_err(s) {
+    if (s == 0) { return 0; }
+    let len = sys_strlen(s);
+    write(2, s, len);
+}
+extern fn sys_os();
+
+fn sys_path_separator() {
+    if (sys_os() == 2) { return "\\"; }
+    return "/";
+}
+
+fn sys_os_name() {
+    let o = sys_os();
+    if (o == 1) { return "Linux"; }
+    if (o == 2) { return "Windows"; }
+    if (o == 3) { return "macOS"; }
+    return "Unknown";
+}

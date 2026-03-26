@@ -1,0 +1,53 @@
+#!/bin/bash
+
+
+
+abspath() {
+    local target=$1
+    if [ -d "$target" ]; then
+        (cd "$target" && pwd)
+    elif [ -f "$target" ]; then
+        (cd "$(dirname "$target")" && echo "$(pwd)/$(basename "$target")")
+    else
+        echo "$target"
+    fi
+}
+SCRIPT_PATH=$(abspath "$0")
+SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
+
+CMD=$1
+shift
+
+case $CMD in
+    init)
+        echo -e "{\n  \"name\": \"$(basename $(pwd))\",\n  \"version\": \"0.1.0\",\n  \"dependencies\": {}\n}" > equis.json
+        echo "Initialized equis.json"
+        ;;
+    get)
+        if [ -z "$1" ]; then
+            echo "Usage: epm get <repo_url>"
+            exit 1
+        fi
+        REPO=$1
+        NAME=$(basename $REPO .git)
+        mkdir -p .equis/packages
+        cd .equis/packages
+        if [ -d "$NAME" ]; then
+            cd "$NAME" && git pull
+        else
+            git clone "$REPO" "$NAME"
+        fi
+        echo "Package $NAME installed to .equis/packages/$NAME"
+        ;;
+    run)
+        if [ -f "$SCRIPT_DIR/eq" ]; then
+            "$SCRIPT_DIR/eq" run "$@"
+        else
+            eq run "$@"
+        fi
+        ;;
+    *)
+        echo "Usage: epm [init|get|run]"
+        exit 1
+        ;;
+esac

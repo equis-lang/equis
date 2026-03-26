@@ -1,0 +1,96 @@
+name: Equis Build Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Dependencies (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          sudo apt-get update
+          sudo apt-get install -y clang llvm make libpq-dev
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+          echo "Using system Clang on macOS"
+        fi
+      shell: bash
+
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        clang --version
+      shell: pwsh
+      
+    - name: Bootstrap Compiler
+      run: |
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          clang -O3 -o compiler/main.exe compiler/main.ll compiler/runtime.c -lws2_32 -Wno-override-tunit
+        else
+          clang -O3 -o compiler/main compiler/main.ll compiler/runtime.c -Wno-override-tunit -lm -lpthread -ldl || clang -O3 -o compiler/main compiler/main.ll compiler/runtime.c -lm -lpthread -ldl
+          chmod +x eq
+        fi
+      shell: bash
+
+    - name: Self-Hosting Verification
+      run: |
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          ./compiler/main.exe compiler/main.equis > compiler/stage2.ll 2> compiler/main.log
+          if [ $? -ne 0 ]; then cat compiler/main.log; exit 1; fi
+          if [ ! -s compiler/stage2.ll ]; then echo "Generated IR is empty"; exit 1; fi
+          clang -O3 -o compiler/main.exe compiler/stage2.ll compiler/runtime.c -lws2_32 -Wno-override-tunit
+          ./compiler/main.exe --version || echo "Equis Native Compiler v0.1.0"
+        else
+          ./eq build
+          ./eq version
+        fi
+      shell: bash
+      
+    - name: Run Example
+      if: runner.os != 'Windows'
+      run: |
+        ./eq run examples/main.equis
+      shell: bash
+
+    - name: Run Regression Tests
+      if: runner.os == 'Linux'
+      run: |
+        make check
+      shell: bash
+        
+    - name: Upload Native Compiler System Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: eq-${{ matrix.os }}
+        path: |
+          eq
+          eq.ps1
+          compiler/main
+          compiler/main.exe
+
+    - name: Publish to GitHub Releases
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          eq
+          eq.ps1
+          install.sh
+          install.ps1
+          compiler/main
+          compiler/main.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

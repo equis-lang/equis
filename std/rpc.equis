@@ -1,0 +1,31 @@
+
+
+use "std/net.equis";
+use "std/json.equis";
+use "std/chan.equis";
+
+fn rpc_serve(port, handler) {
+    let s = sys_socket_create();
+
+    return 0;
+}
+
+fn rpc_call(host, port, method, params) {
+    let s = net_connect(host, port);
+    if (s == 0) return 0;
+    
+    let id = sys_time();
+    let req = str_concat("{\"jsonrpc\":\"2.0\",\"method\":\"", method);
+    req = str_concat(req, "\",\"params\":");
+    req = str_concat(req, json_encode(params));
+    req = str_concat(req, ",\"id\":");
+    req = str_concat(req, str_from_int(id));
+    req = str_concat(req, "}");
+    
+    net_send(s, req);
+    let res_raw = net_recv(s, 4096);
+    sys_socket_close(s);
+    
+    if (res_raw == 0) return 0;
+    return json_decode(res_raw);
+}

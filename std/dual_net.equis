@@ -1,0 +1,41 @@
+use "std/sys.equis";
+use "std/string.equis";
+
+Agent Node roles { "REMOTE" } {
+    addr;
+}
+
+struct CommitmentInfo {
+    id;
+    flow_hash;
+    status; 
+}
+
+fn verify_dual(peer_addr, event_id) {
+    let s = sys_socket_create();
+    if (s < 0) { return 0; }
+    if (sys_socket_connect(s, peer_addr, 8080) < 0) {
+        sys_socket_close(s);
+        return 0;
+    }
+    let req = str_concat("VERIFY_DUAL ", event_id);
+    sys_socket_send(s, req, str_len(req));
+    let buf = sys_malloc(64);
+    let n = sys_socket_recv(s, buf, 64);
+    sys_socket_close(s);
+    if (n > 0) {
+        return str_equal(buf, "OK");
+    }
+    return 0;
+}
+
+fn commit_event(id, hash) {
+    let c = sys_malloc(3 * 8); 
+    c.id = id;
+    c.flow_hash = hash;
+    c.status = 1;
+
+    print_raw_str("Local commitment prepared: ");
+    print_raw_str(c.id);
+    print_raw_str("\n");
+}

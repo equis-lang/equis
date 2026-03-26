@@ -1,0 +1,141 @@
+use "std/sys.equis";
+use "std/string.equis";
+use "std/collections.equis";
+use "std/fixed.equis";
+let JSON_TYPE_STRING = 1;
+let JSON_TYPE_INT = 2;
+let JSON_TYPE_OBJECT = 3;
+let JSON_TYPE_ARRAY = 4;
+fn json_new() { return map_new(20); }
+fn json_put_str(m, k, v) { map_put(m, k, json_item_str(v)); }
+fn json_put_int(m, k, v) { map_put(m, k, json_item_int(v)); }
+fn json_put_obj(m, k, v) { map_put(m, k, json_item_obj(v)); }
+fn json_put_array(m, k, v) { map_put(m, k, json_item_array(v)); }
+fn json_item_str(v) { let n = sys_malloc(2 * 8); n[0] = JSON_TYPE_STRING; n[1] = v; return n; }
+fn json_item_int(v) { let n = sys_malloc(2 * 8); n[0] = JSON_TYPE_INT; n[1] = v; return n; }
+fn json_item_obj(v) { let n = sys_malloc(2 * 8); n[0] = JSON_TYPE_OBJECT; n[1] = v; return n; }
+fn json_item_array(v) { let n = sys_malloc(2 * 8); n[0] = JSON_TYPE_ARRAY; n[1] = v; return n; }
+fn json_serialize_value(item) {
+    if (item == 0) { return "null"; }
+    let type = item[0];
+    let val = item[1];
+    if (type == JSON_TYPE_STRING) { return str_concat("\"", str_concat(val, "\"")); }
+    if (type == JSON_TYPE_INT) { return str_from_int(val); }
+    if (type == JSON_TYPE_OBJECT) { return json_serialize(val); }
+    if (type == JSON_TYPE_ARRAY) {
+        let s = "[";
+        let i = 0; let n = vec_size(val);
+        while (i < n) {
+            s = str_concat(s, json_serialize_value(vec_get(val, i)));
+            if (i < n - 1) { s = str_concat(s, ","); }
+            i = i + 1;
+        }
+        return str_concat(s, "]");
+    }
+    return "null";
+}
+fn json_serialize(m) {
+    let s = "{";
+    let keys = map_keys(m);
+    let i = 0; let size = vec_size(keys);
+    while (i < size) {
+        let k = vec_get(keys, i);
+        let v = map_get(m, k);
+        s = str_concat(s, "\"");
+        s = str_concat(s, k);
+        s = str_concat(s, "\":");
+        s = str_concat(s, json_serialize_value(v));
+        if (i < size - 1) { s = str_concat(s, ","); }
+        i = i + 1;
+    }
+    return str_concat(s, "}");
+}
+fn json_parse(s) {
+    let m = 0;
+    m = map_new(20);
+    let n = 0;
+    n = sys_strlen(s);
+    let i = 0;
+    let state = 0;
+    let k_start = 0;
+    let v_start = 0;
+    let current_key = 0;
+    let is_quoted = 0;
+    while (i < n) {
+        let c = 0;
+        c = get_char(s, i);
+        if (state == 0) {
+            if (c == 34) { k_start = i + 1; state = 1; }
+        }
+        else if (state == 1) {
+            if (c == 34) {
+                let k_len = 0;
+                k_len = i - k_start;
+                current_key = sys_malloc(k_len + 1);
+                let k = 0;
+                while (k < k_len) {
+                    set_char(current_key, k, get_char(s, k_start + k));
+                    k = k + 1;
+                }
+                set_char(current_key, k_len, 0);
+                state = 2;
+            }
+        }
+        else if (state == 2) {
+            if (c == 58) { state = 3; }
+        }
+        else if (state == 3) {
+            if (c != 32) {
+                if (c == 34) { is_quoted = 1; v_start = i + 1; }
+                else { is_quoted = 0; v_start = i; }
+                state = 4;
+            }
+        }
+        else if (state == 4) {
+            let finished = 0;
+            if (is_quoted) { if (c == 34) { finished = 1; } }
+            else {
+                if (c == 44) { finished = 1; }
+                if (c == 125) { finished = 1; }
+                if (c == 32) { finished = 1; }
+            }
+            if (finished) {
+                let v_len = 0;
+                v_len = i - v_start;
+                let val = 0;
+                val = sys_malloc(v_len + 1);
+                let k2 = 0;
+                while (k2 < v_len) {
+                    set_char(val, k2, get_char(s, v_start + k2));
+                    k2 = k2 + 1;
+                }
+                set_char(val, v_len, 0);
+                map_put(m, current_key, val);
+                state = 0;
+            }
+        }
+        i = i + 1;
+    }
+    return m;
+}
+fn json_get_int(m, k) {
+    let s = 0;
+    s = map_get(m, k);
+    if (s == 0) { return 0; }
+    return str_to_int_internal(s);
+}
+fn json_get_str(m, k) { return map_get(m, k); }
+fn str_to_int_internal(s) {
+    if (s == 0) { return 0; }
+    let res = 0;
+    let i = 0;
+    let sign = 1;
+    if (get_char(s, 0) == 45) { sign = -1; i = 1; }
+    while (get_char(s, i) != 0) {
+        let c = 0;
+        c = get_char(s, i);
+        if (c >= 48) { if (c <= 57) { res = (res * 10) + (c - 48); } }
+        i = i + 1;
+    }
+    return res * sign;
+}

@@ -1,0 +1,30 @@
+
+
+extern fn sys_socket_create();
+extern fn sys_socket_connect(s, host, port);
+extern fn sys_socket_send(s, buf, len);
+extern fn sys_socket_recv(s, buf, len);
+extern fn sys_socket_close(s);
+
+fn net_connect(host, port) {
+    let s = sys_socket_create();
+    if (sys_socket_connect(s, host, port) < 0) {
+        return 0;
+    }
+    return s;
+}
+
+fn net_send(s, data) {
+    return sys_socket_send(s, data, str_len(data));
+}
+
+fn net_recv(s, len) {
+    let buf = sys_malloc(len + 1);
+    let n = sys_socket_recv(s, buf, len);
+    if (n <= 0) {
+        sys_free(buf);
+        return 0;
+    }
+    set_char(buf, n, 0);
+    return buf;
+}

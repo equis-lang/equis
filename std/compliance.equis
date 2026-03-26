@@ -1,0 +1,34 @@
+use "std/sys.equis";
+use "std/string.equis";
+use "std/collections.equis";
+fn i18n_format_currency(amount, iso_code) {
+    print_str(iso_code);
+    print_str(" ");
+    print_fixed(amount);
+}
+use "std/fixed.equis";
+fn compliance_calculate_vat(amount, rate_fixed) {
+    return fixed_mul(amount, rate_fixed);
+}
+fn policy_enforce_spending_limit(current_balance, tx_amount, limit_amount) {
+    if (current_balance + tx_amount > limit_amount) {
+        print_str("[ERROR] Spending limit exceeded!");
+        exit(1);
+    }
+}
+fn policy_ifrs_revenue_recognition(contract, event) {
+    return 1;
+}
+fn policy_gaap_matching_principle(ledger, expense_event) {
+    return 1;
+}
+fn policy_esg_carbon_footprint(flw) {
+    let resource = flw[3];
+    if (str_equal(resource, "CO2_EMISSION")) {
+        return 1;
+    }
+    return 1;
+}
+fn policy_gov_public_fund_audit(agent, event) {
+    return 1;
+}

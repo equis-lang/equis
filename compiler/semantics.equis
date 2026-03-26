@@ -1,0 +1,632 @@
+use "std/sys.equis";
+use "std/string.equis";
+use "std/collections.equis";
+use "std/intern.equis";
+use "compiler/constants.equis";
+use "compiler/analyzer.equis";
+fn get_expr_type(a, expr) {
+    return 0;
+}
+fn verify_type_match(a, expected, actual_node, line, col) {
+    if (expected == 0) { return 1; }
+    let actual = get_expr_type(a, actual_node);
+    if (actual == 0) { return 1; } 
+    if (expected != actual) {
+         let is_match = 0;
+         if (expected > 1000 && actual > 1000) { is_match = str_equal(expected, actual); }
+         if (is_match == 0) {
+            let msg = str_concat("Type Mismatch: Expected variable of type '", str_from_int(expected));
+            if (expected > 1000) { msg = str_concat("Type Mismatch: Expected '", expected); }
+            msg = str_concat(msg, "' but found '");
+            if (actual > 1000) { msg = str_concat(msg, actual); }
+            else { msg = str_concat(msg, str_from_int(actual)); }
+            msg = str_concat(msg, "'");
+            analyze_error_internal(a, msg, line, col);
+         }
+    }
+    return 1;
+}
+fn analyze_expr(a, expr) {
+    if (expr == 0) { return 0; }
+    let type = 0;
+    let name = 0;
+    let res = 0;
+    let args = 0;
+    let i = 0;
+    let size = 0;
+    let target = 0;
+    let obj = 0;
+    type = expr[0];
+    if (type == EXPR_VARIABLE) {
+        let name = expr[1];
+        let res = analyzer_resolve(a, name);
+        if (res == 0) {
+            analyze_undeclared_internal(a, name, expr[2], expr[3]);
+        } else {
+            if (res[4]) {
+                if (map_get(a[7], name)) {
+                    analyze_error_internal(a, "Linearity Error: Resource has already been consumed.", expr[2], expr[3]);
+                }
+                map_put(a[7], name, 1);
+            }
+        }
+    } else if (type == EXPR_BINARY) {
+        analyze_expr(a, expr[1]);
+        analyze_expr(a, expr[3]);
+    } else if (type == EXPR_UNARY) {
+        let op = expr[UNARY_OP];
+        if (op == TOKEN_AMPERSAND) {
+            let target = expr[UNARY_RIGHT];
+            if (target[0] != EXPR_VARIABLE && target[0] != EXPR_INDEX && target[0] != EXPR_GET) {
+                analyze_error_internal(a, "Address-of (&) requires an L-value (variable, array, or property).", expr[UNARY_LINE], expr[UNARY_COL]);
+            }
+        }
+        analyze_expr(a, expr[UNARY_RIGHT]);
+    } else if (type == EXPR_CALL) {
+        let callee = expr[1];
+        let generics = expr[CALL_GENERICS];
+        if (generics) {
+            if (callee[0] == EXPR_VARIABLE) {
+                let gen_name = callee[1];
+                let mangled = analyzer_specialize(a, gen_name, generics);
+                if (mangled) {
+                    callee[1] = mangled; 
+                }
+            }
+        }
+        analyze_expr(a, callee);
+        args = expr[2];
+        i = 0;
+        size = vec_size(args);
+        let arg = 0;
+        while (i < size) {
+           arg = vec_get(args, i);
+           analyze_expr(a, arg);
+           i = i + 1;
+        }
+
+        if (callee[0] == EXPR_VARIABLE) {
+            let entry = analyzer_resolve(a, callee[1]);
+            if (entry) {
+                let node = entry[1];
+                if (node) {
+                    let p_types = 0;
+                    if (node[0] == STMT_FUNCTION) { p_types = node[FUNC_PARAMS_TYPES]; }
+                    else if (node[0] == STMT_EXTERN) { p_types = node[EXTERN_PARAMS_TYPES]; }
+                    if (p_types) {
+                        if (vec_size(args) != vec_size(p_types)) {
+                            analyze_error_internal(a, "Argument count mismatch.", expr[3], expr[4]);
+                        } else {
+                            let k = 0; let k_size = vec_size(args);
+                            while (k < k_size) {
+                                verify_type_match(a, vec_get(p_types, k), vec_get(args, k), expr[3], expr[4]);
+                                k = k + 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } else if (type == EXPR_INDEX) {
+        analyze_expr(a, expr[1]);
+        analyze_expr(a, expr[2]);
+    } else if (type == EXPR_ASSIGNMENT) {
+        let target = expr[1];
+        analyze_expr(a, target);
+        analyze_expr(a, expr[2]);
+        if (target[0] == EXPR_VARIABLE) {
+            let name = target[1];
+            let res = analyzer_resolve(a, name);
+            if (res) {
+                if (res[3] == 0) {
+                    analyze_error_internal(a, "Immutability Error: Cannot reassign to immutable variable.", expr[3], expr[4]);
+                }
+            }
+            if (a[2]) {
+                if (analyzer_is_global(a, target[1])) {
+                    analyze_error_internal(a, "Modification of global state inside event logic is prohibited.", expr[VAR_LINE], expr[VAR_COL]);
+                }
+            }
+        } else if (target[0] == EXPR_INDEX) {
+            if (a[2]) {
+                let obj = target[1];
+                if (obj[0] == EXPR_VARIABLE) {
+                    if (analyzer_is_global(a, obj[1])) {
+                        analyze_error_internal(a, "Modification of indexed global state inside event logic is prohibited.", expr[INDEX_LINE], expr[INDEX_COL]);
+                    }
+                }
+            }
+        } else if (target[0] == EXPR_GET) {
+            if (a[2]) {
+                let obj = target[1];
+                if (obj[0] == EXPR_VARIABLE) {
+                    if (analyzer_is_global(a, obj[1])) {
+                        analyze_error_internal(a, "Modification of global properties inside event logic is prohibited.", expr[GET_LINE], expr[GET_COL]);
+                    }
+                }
+            }
+        }
+    } else if (type == EXPR_GET) {
+        analyze_expr(a, expr[1]);
+    } else if (type == EXPR_TRY) {
+        analyze_expr(a, expr[1]);
+
+
+    }
+}
+fn analyze_stmt(a, stmt) {
+    let type = 0;
+    let stmts = 0;
+    let i = 0;
+    let size = 0;
+    let params = 0;
+    let p_size = 0;
+    let events = 0;
+    let e_entry = 0;
+    let e_node = 0;
+    let args = 0;
+    let has_sig = 0;
+    let sig_agent_name = 0;
+    let required_roles = 0;
+    let a_entry = 0;
+    let a_node = 0;
+    let agent_roles = 0;
+    let r = 0;
+    let authorized = 0;
+    let req_role = 0;
+    let ar = 0;
+    let a_role = 0;
+    if (stmt == 0) { return 0; }
+    type = stmt[0];
+    if (type == STMT_EXPRESSION) {
+        analyze_expr(a, stmt[1]);
+    } else if (type == STMT_LET) {
+        analyze_expr(a, stmt[LET_VAL]);
+        let explicit_type = stmt[LET_TYPE];
+        let inferred_type = explicit_type;
+        if (explicit_type == 0) {
+            inferred_type = get_expr_type(a, stmt[LET_VAL]);
+        }
+        if (explicit_type) {
+            verify_type_match(a, explicit_type, stmt[LET_VAL], stmt[LET_LINE], stmt[LET_COL]);
+        }
+        analyzer_define(a, stmt[LET_NAME], 0, inferred_type, stmt[LET_IS_MUT], stmt[LET_IS_RESOURCE]);
+    } else if (type == STMT_BLOCK) {
+        analyzer_begin_scope(a);
+        stmts = stmt[1];
+        i = 0;
+        size = vec_size(stmts);
+        let s = 0;
+        while (i < size) {
+            s = vec_get(stmts, i);
+            analyze_stmt(a, s);
+            i = i + 1;
+        }
+        analyzer_end_scope(a);
+    } else if (type == STMT_IF) {
+        analyze_expr(a, stmt[1]);
+        analyze_stmt(a, stmt[2]);
+        if (stmt[3]) {
+            analyze_stmt(a, stmt[3]);
+        }
+    } else if (type == STMT_WHILE) {
+        analyze_expr(a, stmt[1]);
+        analyze_stmt(a, stmt[2]);
+    } else if (type == STMT_RETURN) {
+        if (stmt[1]) { analyze_expr(a, stmt[1]); }
+        if (a[6]) {
+            let ret_type = a[6][FUNC_RETURN_TYPE];
+            if (ret_type) {
+                if (stmt[1] == 0) { analyze_error_internal(a, "Control Flow Error: Function has declared return type but returns nothing.", stmt[2], stmt[3]); }
+                else { verify_type_match(a, ret_type, stmt[1], stmt[2], stmt[3]); }
+            }
+        }
+    } else if (type == STMT_FUNCTION) {
+        analyzer_define(a, stmt[FUNC_NAME], stmt, stmt[FUNC_RETURN_TYPE], 0, 0);
+        let prev_func = a[6];
+        a[6] = stmt;
+        analyzer_begin_scope(a);
+        params = stmt[FUNC_PARAMS];
+        let p_types = stmt[FUNC_PARAMS_TYPES];
+        i = 0;
+        p_size = vec_size(params);
+        while (i < p_size) {
+            analyzer_define(a, vec_get(params, i), 0, vec_get(p_types, i), 0, 0);
+            i = i + 1;
+        }
+        analyze_stmt(a, stmt[FUNC_BODY]);
+        analyzer_end_scope(a);
+        a[6] = prev_func;
+    } else if (type == STMT_EXTERN) {
+        analyzer_define(a, stmt[EXTERN_NAME], stmt, stmt[EXTERN_RETURN_TYPE], 0, 0);
+    } else if (type == STMT_STRUCT) {
+        analyzer_define(a, stmt[1], stmt, 0, 0, 0);
+    } else if (type == STMT_AGENT) {
+        analyzer_define(a, stmt[AGENT_NAME], stmt, 0, 0, 0);
+        if (stmt[AGENT_IMPLEMENTS]) {
+            verify_interface_implementation(a, stmt[AGENT_IMPLEMENTS], stmt, stmt[AGENT_LINE], stmt[AGENT_COL]);
+        }
+    } else if (type == STMT_RESOURCE) {
+        analyzer_define(a, stmt[1], stmt, 0, 0, 0);
+    } else if (type == STMT_INTERFACE) {
+    } else if (type == STMT_EVENT) {
+        analyze_event_duality(a, stmt);
+    } else if (type == STMT_COMMITMENT) {
+        analyze_event_duality(a, stmt);
+    } else if (type == STMT_POLICY) {
+        analyzer_define(a, stmt[1], stmt, 0, 0, 0);
+        analyze_stmt(a, stmt[2]);
+    } else if (type == STMT_REVERSE) {
+        if (analyzer_resolve(a, stmt[1]) == 0) { analyze_error_internal(a, "Unknown event to reverse", stmt[3], stmt[4]); }
+    } else if (type == STMT_EXCHANGE) {
+        analyzer_define(a, stmt[EXCHANGE_NAME], stmt, 0, 0, 0);
+        events = stmt[EXCHANGE_EVENTS]; let i = 0; let size = vec_size(events);
+        while (i < size) {
+            if (analyzer_resolve(a, vec_get(events, i)) == 0) { analyze_error_internal(a, "Unknown event in exchange", stmt[EXCHANGE_LINE], stmt[EXCHANGE_COL]); }
+            i = i + 1;
+        }
+    } else if (type == STMT_TRANSFORMATION) {
+        analyze_event_duality(a, stmt);
+    } else if (type == STMT_VALUATOR) {
+        analyzer_define(a, stmt[VALUATOR_NAME], stmt, 0, 0, 0);
+        if (stmt[VALUATOR_IMPLEMENTS]) {
+            verify_interface_implementation(a, stmt[VALUATOR_IMPLEMENTS], stmt, stmt[VALUATOR_LINE], stmt[VALUATOR_COL]);
+        }
+        analyze_stmt(a, stmt[VALUATOR_BODY]);
+    } else if (type == STMT_EXECUTE) {
+        e_entry = analyzer_resolve(a, stmt[1]);
+        if (e_entry == 0) { analyze_error_internal(a, "Execution Violation: Unknown target event.", stmt[3], stmt[4]); return 0; }
+        e_node = e_entry[1];
+        args = stmt[2]; let i = 0; let size = vec_size(args);
+        has_sig = 0;
+        sig_agent_name = 0;
+        while (i < size) {
+            if (str_equal(vec_get(args, i), "sig")) {
+                has_sig = 1;
+                if (i + 1 < size) { sig_agent_name = vec_get(args, i + 1); }
+            }
+            i = i + 2;
+        }
+        if (has_sig == 0) {
+            analyze_error_internal(a, "Instruction execution requires a 'sig' (Digital Signature).", stmt[3], stmt[4]);
+        }
+        if (e_node != 0) {
+            if (e_node[0] == STMT_EVENT) {
+                required_roles = e_node[EVENT_ROLES];
+                if (required_roles) {
+                    if (sig_agent_name == 0) { analyze_error_internal(a, "Legal Violation: Event requires a signatory agent with specific roles.", stmt[3], stmt[4]); }
+                    a_entry = analyzer_resolve(a, sig_agent_name);
+                    if (a_entry == 0) { analyze_error_internal(a, "Legal Violation: Signatory agent not found.", stmt[3], stmt[4]); return 0; }
+                    a_node = a_entry[1];
+                    agent_roles = 0;
+                    if (a_node != 0) {
+                        let w = 0;
+                        while (w < 7) {
+                            w = w + 1;
+                        }
+                        if (a_node[0] == STMT_AGENT) { agent_roles = a_node[AGENT_ROLES]; }
+                    }
+                r = 0; let r_size = vec_size(required_roles);
+                authorized = 0;
+                while (r < r_size) {
+                    req_role = vec_get(required_roles, r);
+                    if (agent_roles) {
+                        ar = 0; let ar_size = vec_size(agent_roles);
+                        while (ar < ar_size) {
+                             a_role = vec_get(agent_roles, ar);
+                             if (str_equal(a_role, req_role)) { authorized = 1; }
+                             ar = ar + 1;
+                        }
+                    }
+                    r = r + 1;
+                }
+                if (authorized == 0) {
+                    analyze_error_internal(a, "Legal Violation: Agent lacks required roles for this Event (Non-Compliant Executive).", stmt[3], stmt[4]);
+                }
+            }
+          }
+        }
+    } else if (type == STMT_ASSERT) {
+        analyze_expr(a, stmt[1]);
+    }
+}
+fn analyze_event_duality(a, stmt) {
+    let name = 0;
+    let c_logic = 0;
+    let c_flows = 0;
+    let line = 0;
+    let e_fulfills = 0;
+    let size = 0;
+    let has_in = 0;
+    let has_out = 0;
+    let balance_map = 0;
+    let i = 0;
+    let f_node = 0;
+    let type = 0;
+    let amount_expr = 0;
+    let amount = 0;
+    let res_name = 0;
+    let res_entry = 0;
+    let f_agent = 0;
+    let t_agent = 0;
+    let interned_res = 0;
+    let current_bal_entry = 0;
+    let current_bal = 0;
+    let new_bal_entry = 0;
+    let v_name = 0;
+    let res_keys = 0;
+    let k = 0;
+    let k_size = 0;
+    let r_key = 0;
+    let r_bal_entry = 0;
+    let r_bal = 0;
+    let authorized_valuator = 0;
+    let v_entry = 0;
+    let v_node = 0;
+    name = stmt[1];
+    c_logic = stmt[2];
+    c_flows = stmt[3];
+    line = stmt[4];
+    let col = stmt[5];
+    e_fulfills = 0;
+    if (stmt[0] == STMT_EVENT) { e_fulfills = stmt[6]; }
+    if (e_fulfills) {
+        if (analyzer_resolve(a, e_fulfills) == 0) {
+            analyze_error_internal(a, "Legal Violation: Fulfillment target (Commitment) not found.", line, col);
+        }
+    } else if (stmt[0] == STMT_EVENT) {
+        if (str_equal(name, "Genesis") == 0) {
+            analyze_error_internal(a, "Event must fulfill a commitment or contract.", line, col);
+        }
+    }
+    analyzer_define(a, name, stmt, 0, 0, 0);
+    if (c_logic) {
+        analyzer_begin_scope(a);
+        a[2] = 1;
+        analyze_stmt(a, c_logic);
+        a[2] = 0;
+        analyzer_end_scope(a);
+    }
+    size = vec_size(c_flows);
+    if (size == 0) { return 0; }
+    has_in = 0;
+    has_out = 0;
+    balance_map = map_new(16);
+    i = 0;
+    while (i < size) {
+        f_node = vec_get(c_flows, i);
+        type = f_node[1];
+        amount_expr = f_node[2];
+        amount = 0;
+        if (amount_expr[0] == EXPR_LITERAL) {
+            amount = amount_expr[1];
+            if (amount <= 0) { analyze_error_internal(a, "Flow amount must be positive.", f_node[6], f_node[7]); }
+        }
+        res_name = f_node[3];
+        res_entry = analyzer_resolve(a, res_name);
+        if (res_entry == 0) { analyze_error_internal(a, "Resource must be declared before use.", f_node[6], f_node[7]); }
+        f_agent = f_node[4];
+        t_agent = f_node[5];
+        if (analyzer_resolve(a, f_agent) == 0) { analyze_error_internal(a, "Sovereignty Violation: Source Agent must be declared.", f_node[6], f_node[7]); }
+        if (analyzer_resolve(a, t_agent) == 0) { analyze_error_internal(a, "Sovereignty Violation: Destination Agent must be declared.", f_node[6], f_node[7]); }
+        if (intern_string(f_agent) == intern_string(t_agent)) {
+            analyze_error_internal(a, "Agent cannot flow resource to self.", line, col);
+        }
+        interned_res = intern_string(res_name);
+        current_bal_entry = map_get(balance_map, interned_res);
+        current_bal = 0;
+        if (current_bal_entry) { current_bal = current_bal_entry[0]; }
+        if (type == TOKEN_IN) {
+            has_in = 1;
+            current_bal = current_bal + amount;
+        }
+        if (type == TOKEN_OUT) {
+            has_out = 1;
+            current_bal = current_bal - amount;
+        }
+        new_bal_entry = sys_malloc(8);
+        new_bal_entry[0] = current_bal;
+        map_put(balance_map, interned_res, new_bal_entry);
+        i = i + 1;
+    }
+    v_name = 0;
+    if (stmt[0] == STMT_EVENT) { v_name = stmt[7]; }
+    if (stmt[0] == STMT_COMMITMENT) { v_name = stmt[5]; }
+    res_keys = map_keys(balance_map);
+    k = 0;
+    k_size = vec_size(res_keys);
+    while (k < k_size) {
+        r_key = vec_get(res_keys, k);
+        r_bal_entry = map_get(balance_map, r_key);
+        r_bal = r_bal_entry[0];
+        if (r_bal != 0) {
+            authorized_valuator = 0;
+            if (v_name != 0) {
+                v_entry = analyzer_resolve(a, v_name);
+                if (v_entry) {
+                    v_node = v_entry[1];
+                    if (v_node) {
+                        if (v_node[0] == STMT_VALUATOR || v_node[0] == STMT_FUNCTION) {
+                            authorized_valuator = 1;
+                        }
+                    }
+                }
+            }
+                if (authorized_valuator == 0) {
+                if (v_name == 0) {
+                    analyze_error_internal(a, "Resource balance mismatch. Every resource must be balanced in a single Event unless part of a verified Exchange/Valuator.", line, col);
+                } else {
+                    analyze_error_internal(a, "Economic Violation: Unauthorized or Unknown Valuator/Exchange used to bypass duality.", line, col);
+                }
+            }
+        }
+        k = k + 1;
+    }
+    if (has_in + has_out == 1) {
+        analyze_error_internal(a, "REA Duality Violation: Economic Event must have reciprocal flows (In and Out).", line, col);
+    }
+}
+fn verify_interface_implementation(a, i_name, target, line, col) {
+    let i_entry = 0;
+    let i_stmt = 0;
+    let methods = 0;
+    let m_i = 0;
+    let m_size = 0;
+    let method = 0;
+    let m_name = 0;
+    let m_params = 0;
+    let m_p_size = 0;
+    let found = 0;
+    let body = 0;
+    let stmts = 0;
+    let s_i = 0;
+    let s = 0;
+    i_entry = analyzer_resolve(a, i_name);
+    if (i_entry == 0) { analyze_error_internal(a, "Contract Violation: Implementation of unknown interface.", line, col); }
+    i_stmt = i_entry[1];
+    if (i_stmt[0] != STMT_INTERFACE) { analyze_error_internal(a, "Contract Violation: Target is not an interface.", line, col); }
+    methods = i_stmt[2];
+    m_i = 0;
+    m_size = vec_size(methods);
+    while (m_i < m_size) {
+        method = vec_get(methods, m_i);
+        m_name = method[0];
+        m_params = method[1];
+        m_p_size = vec_size(m_params);
+        found = 0;
+        if (target[0] == STMT_VALUATOR) {
+            body = target[2];
+            stmts = body[1];
+            s_i = 0; let s_size = vec_size(stmts);
+            while (s_i < s_size) {
+                s = vec_get(stmts, s_i);
+                if (s[0] == STMT_FUNCTION) {
+                    if (str_equal(s[1], m_name)) {
+                        found = 1;
+                        if (vec_size(s[2]) != m_p_size) {
+                            analyze_error_internal(a, "Contract Violation: Method parameter count mismatch.", line, col);
+                        }
+                    }
+                }
+                s_i = s_i + 1;
+            }
+        } else if (target[0] == STMT_AGENT) {
+            found = 1;
+        }
+            if (found == 0) {
+            analyze_error_internal(a, "Contract Violation: Missing interface method implementation.", line, col);
+            }
+        m_i = m_i + 1;
+    }
+}
+fn analyze_program(a, ast) {
+    let i = 0;
+    let size = 0;
+    let stmt = 0;
+    let type = 0;
+    let params = 0;
+    let k = 0;
+    let p_size = 0;
+    let name = 0;
+    i = 0;
+    size = vec_size(ast);
+    while (i < size) {
+        let loop_stmt = vec_get(ast, i);
+        let loop_type = loop_stmt[0];
+        if (loop_type == STMT_FUNCTION || loop_type == STMT_EXTERN || loop_type == STMT_LET || loop_type == STMT_STRUCT || loop_type == STMT_AGENT || loop_type == STMT_RESOURCE || loop_type == STMT_EVENT || loop_type == STMT_COMMITMENT || loop_type == STMT_POLICY || loop_type == STMT_EXCHANGE || loop_type == STMT_TRANSFORMATION || loop_type == STMT_VALUATOR || loop_type == STMT_INTERFACE) {
+            analyzer_define(a, loop_stmt[1], loop_stmt, 0, 0, 0);
+        }
+        i = i + 1;
+    }
+    i = 0;
+    while (i < size) {
+        let loop_stmt_2 = vec_get(ast, i);
+        let loop_type_2 = loop_stmt_2[0];
+        if (loop_type_2 == STMT_FUNCTION) {
+            analyzer_begin_scope(a);
+            let params_2 = loop_stmt_2[2];
+            k = 0;
+            p_size = vec_size(params_2);
+            while (k < p_size) {
+                analyzer_define(a, vec_get(params_2, k), 0, 0, 0, 0);
+                k = k + 1;
+            }
+            analyze_stmt(a, loop_stmt_2[3]);
+            analyzer_end_scope(a);
+        } else if (loop_type_2 == STMT_EXTERN) {
+            let name_2 = loop_stmt_2[1];
+            if (str_equal(name_2, "system")) { analyze_error_internal(a, "Security Violation: Access to 'system' is blocked.", loop_stmt_2[3], loop_stmt_2[4]); }
+            if (str_equal(name_2, "execv")) { analyze_error_internal(a, "Security Violation: Access to 'exec' family is blocked.", loop_stmt_2[3], loop_stmt_2[4]); }
+            if (str_equal(name_2, "popen")) { analyze_error_internal(a, "Security Violation: Access to 'popen' is blocked.", loop_stmt_2[3], loop_stmt_2[4]); }
+            if (str_equal(name_2, "fork")) { analyze_error_internal(a, "Security Violation: Access to 'fork' is blocked.", loop_stmt_2[3], loop_stmt_2[4]); }
+        } else if (loop_type_2 == STMT_LET) {
+            if (loop_stmt_2[2]) { analyze_expr(a, loop_stmt_2[2]); }
+        } else {
+            analyze_stmt(a, loop_stmt_2);
+        }
+        i = i + 1;
+    }
+}
+fn analyzer_substitute_types(a, node, generics, types) {
+    if (node == 0) { return 0; }
+    let type = node[0];
+    if (type == EXPR_VARIABLE) {
+        let name = node[1];
+        let i = 0; let size = vec_size(generics);
+        while (i < size) {
+            if (str_equal(name, vec_get(generics, i))) {
+                node[1] = vec_get(types, i);
+                return 1;
+            }
+            i = i + 1;
+        }
+    } else if (type == EXPR_CALL) {
+        analyzer_substitute_types(a, node[1], generics, types);
+        let args = node[2]; let i = 0; while (i < vec_size(args)) { analyzer_substitute_types(a, vec_get(args, i), generics, types); i = i + 1; }
+    } else if (type == STMT_BLOCK) {
+        let stmts = node[1]; let i = 0; while (i < vec_size(stmts)) { analyzer_substitute_types(a, vec_get(stmts, i), generics, types); i = i + 1; }
+    } else if (type == STMT_LET) {
+        analyzer_substitute_types(a, node[2], generics, types);
+    } else if (type == EXPR_BINARY) {
+        analyzer_substitute_types(a, node[1], generics, types);
+        analyzer_substitute_types(a, node[3], generics, types);
+    } else if (type == STMT_RETURN) {
+        analyzer_substitute_types(a, node[1], generics, types);
+    }
+    return 0;
+}
+fn analyzer_specialize(a, gen_func_name, types) {
+    let entry = analyzer_resolve(a, gen_func_name);
+    if (entry == 0) { return 0; }
+    let func_node = entry[1];
+    let generics = func_node[FUNC_GENERICS];
+    if (generics == 0) { return gen_func_name; }
+    
+
+    let mangled = gen_func_name;
+    let i = 0; let size = vec_size(types);
+    while (i < size) {
+        mangled = str_concat(mangled, "_m_");
+        mangled = str_concat(mangled, vec_get(types, i));
+        i = i + 1;
+    }
+    mangled = intern_string(mangled);
+    
+
+    if (map_get(a[5], mangled)) { return mangled; }
+    
+
+    let new_func = analyzer_copy_node(a, func_node);
+    new_func[FUNC_NAME] = mangled;
+    new_func[FUNC_GENERICS] = 0; 
+    analyzer_substitute_types(a, new_func[FUNC_BODY], generics, types);
+    
+
+    map_put(a[5], mangled, new_func);
+    
+
+    analyzer_define(a, mangled, new_func, 0, 0, 0);
+    analyze_stmt(a, new_func);
+    
+    return mangled;
+}

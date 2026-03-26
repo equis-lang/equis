@@ -1,0 +1,22 @@
+use "std/sys.equis";
+
+fn db_connect(conninfo) {
+    return sys_pgsql_connect(conninfo);
+}
+
+fn db_query(conn, sql) {
+    let res = sys_pgsql_exec(conn, sql);
+    return res;
+}
+
+fn db_get(res, row, col) {
+    return sys_pgsql_get_val(res, row, col);
+}
+
+fn db_clear(res) {
+    sys_pgsql_clear(res);
+}
+
+fn db_close(conn) {
+    sys_pgsql_finish(conn);
+}

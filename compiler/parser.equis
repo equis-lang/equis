@@ -1,0 +1,1195 @@
+use "std/sys.equis";
+use "std/string.equis";
+use "std/collections.equis";
+use "compiler/constants.equis";
+fn parser_new(tokens) {
+    let p = 0;
+    p = sys_malloc(8 * 8);
+    p[0] = tokens;
+    p[1] = 0;
+    p[2] = vec_size(tokens);
+    p[3] = 0;
+    return p;
+}
+fn parser_is_at_end(p) {
+    let tok = 0;
+    if (p[1] >= p[2]) { return 1; }
+    tok = vec_get(p[0], p[1]);
+    return tok[0] == TOKEN_EOF;
+}
+fn parser_peek(p) {
+    return vec_get(p[0], p[1]);
+}
+fn parser_previous(p) {
+    return vec_get(p[0], p[1] - 1);
+}
+fn parser_advance(p) {
+    if (parser_is_at_end(p) == 0) { p[1] = p[1] + 1; }
+    return parser_previous(p);
+}
+fn parser_check(p, type) {
+    let tok = 0;
+    if (parser_is_at_end(p)) { return 0; }
+    tok = parser_peek(p);
+    return tok[0] == type;
+}
+fn parser_match(p, type) {
+    if (parser_check(p, type)) {
+        parser_advance(p);
+        return 1;
+    }
+    return 0;
+}
+fn parser_parse_generics(p) {
+    if (parser_match(p, TOKEN_LESS)) {
+        let list = vec_new(INITIAL_VEC_CAP);
+        let more = 1;
+        while (more && parser_check(p, TOKEN_IDENTIFIER)) {
+            let tok = parser_consume(p, TOKEN_IDENTIFIER, "Expected generic type identifier");
+            list = vec_push(list, tok[1]);
+            if (parser_match(p, TOKEN_COMMA) == 0) { more = 0; }
+        }
+        parser_consume(p, TOKEN_GREATER, "Expected '>' after generic parameters");
+        return list;
+    }
+    return 0;
+}
+fn parser_error(p, msg) {
+    let tok = 0;
+    tok = parser_peek(p);
+    write(2, "error: ", 7);
+    write(2, msg, sys_strlen(msg));
+    write(2, "\n", 1);
+    exit(1);
+}
+fn parser_consume(p, type, msg) {
+    let tok = 0;
+    if (parser_check(p, type)) { return parser_advance(p); }
+    tok = parser_peek(p);
+    write(2, "\x1b[1;31merror\x1b[0m\x1b[1m: ", 18);
+    write(2, msg, sys_strlen(msg));
+    write(2, "\x1b[0m\n", 5);
+    write(2, "  \x1b[1;34m-->\x1b[0m line ", 15);
+    print_int_stderr(tok[2]);
+    write(2, ":", 1);
+    print_int_stderr(tok[3]);
+    write(2, "\n", 1);
+    write(2, "   \x1b[1;34m|\x1b[0m\n", 10);
+    write(2, "   \x1b[1;34m|\x1b[0m Found lexeme '\x1b[1;33m", 28);
+    write(2, tok[1], sys_strlen(tok[1]));
+    write(2, "\x1b[0m' (type ", 11);
+    print_int_stderr(tok[0]);
+    write(2, ")\n", 2);
+    write(2, "   \x1b[1;34m|\x1b[0m\n\n", 10);
+    exit(1);
+}
+fn expr_binary(left, op, right, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = EXPR_BINARY;
+    node[BINARY_LEFT] = left;
+    node[BINARY_OP] = op;
+    node[BINARY_RIGHT] = right;
+    node[BINARY_LINE] = line;
+    node[BINARY_COL] = col;
+    return node;
+}
+fn expr_literal(val, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = EXPR_LITERAL;
+    node[LITERAL_VAL] = val;
+    node[LITERAL_LINE] = line;
+    node[LITERAL_COL] = col;
+    return node;
+}
+fn expr_string_literal(val, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = EXPR_STRING_LITERAL;
+    node[LITERAL_VAL] = val;
+    node[LITERAL_LINE] = line;
+    node[LITERAL_COL] = col;
+    return node;
+}
+fn expr_variable(name, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = EXPR_VARIABLE;
+    node[VAR_NAME] = name;
+    node[VAR_LINE] = line;
+    node[VAR_COL] = col;
+    return node;
+}
+fn expr_call(callee, args, line, col, generics) {
+    let node = 0;
+    node = sys_malloc(8 * 8); 
+    node[AST_TYPE] = EXPR_CALL;
+    node[CALL_CALLEE] = callee;
+    node[CALL_ARGS] = args;
+    node[CALL_LINE] = line;
+    node[CALL_COL] = col;
+    node[CALL_GENERICS] = generics;
+    return node;
+}
+fn expr_try(expr, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = EXPR_TRY;
+    node[1] = expr;
+    node[2] = line;
+    node[3] = col;
+    return node;
+}
+fn expr_index(obj, idx, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = EXPR_INDEX;
+    node[INDEX_OBJ] = obj;
+    node[INDEX_IDX] = idx;
+    node[INDEX_LINE] = line;
+    node[INDEX_COL] = col;
+    return node;
+}
+fn expr_assignment(target, value, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = EXPR_ASSIGNMENT;
+    node[ASSIGN_TARGET] = target;
+    node[ASSIGN_VALUE] = value;
+    node[ASSIGN_LINE] = line;
+    node[ASSIGN_COL] = col;
+    return node;
+}
+fn expr_get(object, name, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = EXPR_GET;
+    node[GET_OBJ] = object;
+    node[GET_NAME] = name;
+    node[GET_LINE] = line;
+    node[GET_COL] = col;
+    return node;
+}
+fn stmt_expression(expr, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_EXPRESSION;
+    node[1] = expr;
+    node[2] = line;
+    node[3] = col;
+    return node;
+}
+fn parse_type(p) {
+    let is_fallible = 0;
+    if (parser_match(p, TOKEN_QUESTION)) { is_fallible = 1; }
+    let type = 0;
+    if (parser_match(p, TOKEN_I64)) { type = TOKEN_I64; }
+    else if (parser_match(p, TOKEN_F64)) { type = TOKEN_F64; }
+    else if (parser_match(p, TOKEN_BOOL)) { type = TOKEN_BOOL; }
+    else if (parser_match(p, TOKEN_PTR)) { type = TOKEN_PTR; }
+    else if (parser_match(p, TOKEN_IDENTIFIER)) { type = (parser_previous(p))[1]; }
+    
+    if (parser_match(p, TOKEN_QUESTION)) { is_fallible = 1; }
+    return type;
+}
+fn stmt_let(name, value, type, line, col, is_mut, is_res) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_LET;
+    node[LET_NAME] = name;
+    node[LET_VAL] = value;
+    node[LET_TYPE] = type;
+    node[LET_LINE] = line;
+    node[LET_COL] = col;
+    node[LET_IS_MUT] = is_mut;
+    node[LET_IS_RESOURCE] = is_res;
+    return node;
+}
+fn stmt_if(cond, then, els, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_IF;
+    node[IF_COND] = cond;
+    node[IF_THEN] = then;
+    node[IF_ELSE] = els;
+    node[IF_LINE] = line;
+    node[IF_COL] = col;
+    return node;
+}
+fn stmt_while(cond, body, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_WHILE;
+    node[WHILE_COND] = cond;
+    node[WHILE_BODY] = body;
+    node[WHILE_LINE] = line;
+    node[WHILE_COL] = col;
+    return node;
+}
+fn stmt_return(val, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_RETURN;
+    node[1] = val;
+    node[2] = line;
+    node[3] = col;
+    return node;
+}
+fn stmt_block(stmts, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_BLOCK;
+    node[1] = stmts;
+    node[2] = line;
+    node[3] = col;
+    return node;
+}
+fn stmt_print(expr, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_PRINT;
+    node[1] = expr;
+    node[2] = line;
+    node[3] = col;
+    return node;
+}
+fn stmt_interface(name, methods, line, col) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_INTERFACE;
+    node[1] = name;
+    node[2] = methods;
+    node[3] = line;
+    node[4] = col;
+    return node;
+}
+fn stmt_function(name, params, body, line, col, generics, param_types, return_type, params_mut) {
+    let node = 0;
+    node = sys_malloc(10 * 8);
+    node[AST_TYPE] = STMT_FUNCTION;
+    node[FUNC_NAME] = name;
+    node[FUNC_PARAMS] = params;
+    node[FUNC_BODY] = body;
+    node[FUNC_LINE] = line;
+    node[FUNC_COL] = col;
+    node[FUNC_GENERICS] = generics;
+    node[FUNC_PARAMS_TYPES] = param_types;
+    node[FUNC_RETURN_TYPE] = return_type;
+    node[FUNC_PARAMS_MUT] = params_mut;
+    return node;
+}
+fn stmt_extern(name, params, line, col, param_types, return_type) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_EXTERN;
+    node[EXTERN_NAME] = name;
+    node[EXTERN_PARAMS] = params;
+    node[EXTERN_LINE] = line;
+    node[EXTERN_COL] = col;
+    node[EXTERN_PARAMS_TYPES] = param_types;
+    node[EXTERN_RETURN_TYPE] = return_type;
+    return node;
+}
+fn stmt_struct(name, fields, line, col, generics) {
+    let node = 0;
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_STRUCT;
+    node[STRUCT_NAME] = name;
+    node[STRUCT_BODY] = fields;
+    node[STRUCT_LINE] = line;
+    node[STRUCT_COL] = col;
+    node[STRUCT_GENERICS] = generics;
+    return node;
+}
+fn parse_primary(p) {
+    let expr = 0;
+    let tok = 0;
+    if (parser_match(p, TOKEN_NUMBER)) {
+        tok = parser_previous(p);
+        let s = tok[1];
+        let i = 0; let has_dot = 0;
+        while (get_char(s, i) != 0) {
+            if (get_char(s, i) == 46) { has_dot = 1; }
+            i = i + 1;
+        }
+        if (has_dot) {
+            return expr_literal(str_to_fixed_internal(s, 1000000), tok[2], tok[3]);
+        } else {
+            return expr_literal(str_to_int(s), tok[2], tok[3]);
+        }
+    }
+    if (parser_match(p, TOKEN_STRING)) {
+        tok = parser_previous(p);
+        return expr_string_literal(tok[1], tok[2], tok[3]);
+    }
+    if (parser_match(p, TOKEN_IDENTIFIER)) {
+        tok = parser_previous(p);
+        return expr_variable(tok[1], tok[2], tok[3]);
+    }
+    if (parser_match(p, TOKEN_LPARENT)) {
+        expr = parse_expression(p);
+        parser_consume(p, TOKEN_RPARENT, "Expect ')' after expression.");
+        return expr;
+    }
+    tok = parser_peek(p);
+    parser_consume(p, 999, "Expect expression.");
+}
+fn parse_call(p) {
+    let expr = 0;
+    let loop = 0;
+    let args = 0;
+    let more = 0;
+    let r_parent = 0;
+    let idx = 0;
+    let r_bracket = 0;
+    let name = 0;
+    let tok = 0;
+    expr = parse_primary(p);
+    loop = 1;
+    while (loop) {
+        if (parser_match(p, TOKEN_LPARENT)) {
+            args = vec_new(INITIAL_VEC_CAP);
+            if (parser_check(p, TOKEN_RPARENT) == 0) {
+                more = 1;
+                while (more) {
+                    args = vec_push(args, parse_expression(p));
+                    if (parser_match(p, TOKEN_COMMA) == 0) { more = 0; }
+                }
+            }
+            r_parent = parser_consume(p, TOKEN_RPARENT, "Expect ')' after arguments.");
+            expr = expr_call(expr, args, r_parent[2], r_parent[3], 0);
+        } else if (parser_match(p, TOKEN_LBRACKET)) {
+            idx = parse_expression(p);
+            r_bracket = parser_consume(p, TOKEN_RBRACKET, "Expect ']' after index.");
+            expr = expr_index(expr, idx, r_bracket[2], r_bracket[3]);
+        } else if (parser_match(p, TOKEN_DOT)) {
+            name = parser_consume(p, TOKEN_IDENTIFIER, "Expect property name after '.'.");
+            expr = expr_get(expr, name[1], name[2], name[3]);
+        } else if (parser_match(p, TOKEN_QUESTION)) {
+            let q_tok = parser_previous(p);
+            expr = expr_try(expr, q_tok[2], q_tok[3]);
+        } else {
+            loop = 0;
+        }
+    }
+    return expr;
+}
+fn parse_unary(p) {
+    let op = 0;
+    let right = 0;
+    let node = 0;
+    let tok = 0;
+    if (parser_match(p, TOKEN_BANG) || parser_match(p, TOKEN_MINUS) || parser_match(p, TOKEN_ASTERISK) || parser_match(p, TOKEN_AMPERSAND)) {
+        tok = parser_previous(p);
+        op = tok[0];
+        right = parse_unary(p);
+        node = sys_malloc(8 * 8);
+        node[AST_TYPE] = EXPR_UNARY;
+        node[UNARY_OP] = op;
+        node[UNARY_RIGHT] = right;
+        node[UNARY_LINE] = tok[2];
+        node[UNARY_COL] = tok[3];
+        return node;
+    }
+    return parse_call(p);
+}
+fn parse_multiplication(p) {
+    let expr = 0;
+    let op = 0;
+    let right = 0;
+    let tok = 0;
+    expr = parse_unary(p);
+    while (parser_match(p, TOKEN_ASTERISK) || parser_match(p, TOKEN_SLASH) || parser_match(p, TOKEN_PERCENT)) {
+        tok = parser_previous(p);
+        op = tok[0];
+        right = parse_unary(p);
+        expr = expr_binary(expr, op, right, tok[2], tok[3]);
+    }
+    return expr;
+}
+fn parse_addition(p) {
+    let expr = 0;
+    let op = 0;
+    let right = 0;
+    let tok = 0;
+    expr = parse_multiplication(p);
+    while (parser_match(p, TOKEN_PLUS) || parser_match(p, TOKEN_MINUS)) {
+        tok = parser_previous(p);
+        op = tok[0];
+        right = parse_multiplication(p);
+        expr = expr_binary(expr, op, right, tok[2], tok[3]);
+    }
+    return expr;
+}
+fn parse_comparison(p) {
+    let expr = 0;
+    let op = 0;
+    let right = 0;
+    let tok = 0;
+    expr = parse_addition(p);
+    while (parser_match(p, TOKEN_GREATER) || parser_match(p, TOKEN_GREATER_EQUAL) || parser_match(p, TOKEN_LESS) || parser_match(p, TOKEN_LESS_EQUAL)) {
+        tok = parser_previous(p);
+        op = tok[0];
+        right = parse_addition(p);
+        expr = expr_binary(expr, op, right, tok[2], tok[3]);
+    }
+    return expr;
+}
+fn parse_equality(p) {
+    let expr = 0;
+    let op = 0;
+    let right = 0;
+    let tok = 0;
+    expr = parse_comparison(p);
+    while (parser_match(p, TOKEN_BANG_EQUAL) || parser_match(p, TOKEN_EQUAL_EQUAL)) {
+        tok = parser_previous(p);
+        op = tok[0];
+        right = parse_comparison(p);
+        expr = expr_binary(expr, op, right, tok[2], tok[3]);
+    }
+    return expr;
+}
+fn parse_and(p) {
+    let expr = 0;
+    let op = 0;
+    let right = 0;
+    let tok = 0;
+    expr = parse_equality(p);
+    while (parser_match(p, TOKEN_AND)) {
+        tok = parser_previous(p);
+        op = tok[0];
+        right = parse_equality(p);
+        expr = expr_binary(expr, op, right, tok[2], tok[3]);
+    }
+    return expr;
+}
+fn parse_or(p) {
+    let expr = 0;
+    let op = 0;
+    let right = 0;
+    let tok = 0;
+    expr = parse_and(p);
+    while (parser_match(p, TOKEN_OR)) {
+        tok = parser_previous(p);
+        op = tok[0];
+        right = parse_and(p);
+        expr = expr_binary(expr, op, right, tok[2], tok[3]);
+    }
+    return expr;
+}
+fn parse_assignment(p) {
+    let expr = 0;
+    let equals = 0;
+    let value = 0;
+    expr = parse_or(p);
+    if (parser_match(p, TOKEN_EQUAL)) {
+        equals = parser_previous(p);
+        value = parse_assignment(p);
+        if (expr[AST_TYPE] == EXPR_VARIABLE) { return expr_assignment(expr, value, equals[2], equals[3]); }
+        if (expr[AST_TYPE] == EXPR_INDEX) { return expr_assignment(expr, value, equals[2], equals[3]); }
+        if (expr[AST_TYPE] == EXPR_GET) { return expr_assignment(expr, value, equals[2], equals[3]); }
+        print_str("Invalid assignment target.");
+        exit(1);
+    }
+    return expr;
+}
+fn parse_expression(p) {
+    if (parser_match(p, TOKEN_TRY)) {
+        let line = parser_previous(p)[2];
+        let col = parser_previous(p)[3];
+        let expr = parse_expression(p);
+        let node = sys_malloc(8 * 8);
+        node[0] = EXPR_TRY;
+        node[TRY_EXPR] = expr;
+        node[3] = line;
+        node[4] = col;
+        return node;
+    }
+    return parse_assignment(p);
+}
+fn parse_statement(p) {
+    let tok = parser_peek(p);
+    if (parser_match(p, TOKEN_IF)) { return parse_if(p); }
+    if (parser_match(p, TOKEN_WHILE)) { return parse_while(p); }
+    if (parser_match(p, TOKEN_FOR)) { return parse_for(p); }
+    if (parser_match(p, TOKEN_LBRACE)) { return parse_block(p); }
+    if (parser_match(p, TOKEN_LET)) { return parse_let(p); }
+    if (parser_match(p, TOKEN_RETURN)) { return parse_return(p); }
+    if (parser_match(p, TOKEN_PRINT)) { return parse_print(p); }
+    if (parser_match(p, TOKEN_USE)) { return parse_use(p); }
+    if (parser_match(p, TOKEN_FN)) { return parse_function(p); }
+    if (parser_match(p, TOKEN_EXTERN)) { return parse_extern(p); }
+    if (parser_match(p, TOKEN_STRUCT)) { return parse_struct_decl(p); }
+    if (parser_match(p, TOKEN_AGENT)) { return parse_agent(p); }
+    if (parser_match(p, TOKEN_RESOURCE)) { return parse_resource(p); }
+    if (parser_match(p, TOKEN_EVENT)) { return parse_event(p); }
+    if (parser_match(p, TOKEN_COMMITMENT)) { return parse_commitment(p); }
+    if (parser_match(p, TOKEN_POLICY)) { return parse_policy(p); }
+    if (parser_match(p, TOKEN_EXECUTE)) { return parse_execute(p); }
+    if (parser_match(p, TOKEN_ASSERT)) { return parse_assert(p); }
+    if (parser_match(p, TOKEN_REVERSE)) { return parse_reverse(p); }
+    if (parser_match(p, TOKEN_EXCHANGE)) { return parse_exchange(p); }
+    if (parser_match(p, TOKEN_TRANSFORMATION)) { return parse_transformation(p); }
+    if (parser_match(p, TOKEN_VALUATOR)) { return parse_valuator(p); }
+    if (parser_match(p, TOKEN_INTERFACE)) { return parse_interface(p); }
+    return parse_expression_statement(p);
+}
+fn parse_expression_statement(p) {
+    let expr = 0;
+    let tok = 0;
+    expr = parse_expression(p);
+    tok = parser_previous(p); 
+    parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after expression.");
+    return stmt_expression(expr, tok[2], tok[3]);
+}
+fn parse_for(p) {
+    let tok = parser_previous(p);
+    let line = tok[2];
+    parser_consume(p, TOKEN_LPARENT, "Expect '(' after 'for'.");
+    let init = 0;
+    if (parser_match(p, TOKEN_SEMICOLON) == 0) {
+        if (parser_match(p, TOKEN_LET)) { init = parse_let(p); }
+        else { init = parse_expression_statement(p); }
+    }
+    let cond = 0;
+    if (parser_check(p, TOKEN_SEMICOLON) == 0) { cond = parse_expression(p); }
+    parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after loop condition.");
+    let step = 0;
+    if (parser_check(p, TOKEN_RPARENT) == 0) { step = parse_expression(p); }
+    parser_consume(p, TOKEN_RPARENT, "Expect ')' after for clauses.");
+    let body = parse_statement(p);
+    let node = sys_malloc(8 * 8);
+    node[0] = STMT_FOR;
+    node[1] = init;
+    node[2] = cond;
+    node[3] = step;
+    node[4] = body;
+    node[5] = line;
+    return node;
+}
+fn parse_let(p) {
+    let tok = 0;
+    let name = 0;
+    let type = 0;
+    let value = 0;
+    let is_mut = 0;
+    let is_res = 0;
+    tok = parser_previous(p); 
+    let loop = 1;
+    while (loop) {
+        if (parser_match(p, TOKEN_MUT)) { is_mut = 1; }
+        else if (parser_match(p, TOKEN_RESOURCE)) { is_res = 1; }
+        else { loop = 0; }
+    }
+    name = parser_consume(p, TOKEN_IDENTIFIER, "Expect variable name.");
+    type = 0;
+    if (parser_match(p, TOKEN_COLON)) {
+        type = parse_type(p);
+        if (type == 0) { parser_error(p, "Expect type after ':'."); }
+    }
+    value = 0;
+    if (parser_match(p, TOKEN_EQUAL)) { value = parse_expression(p); }
+    parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after variable declaration.");
+    return stmt_let(name[1], value, type, tok[2], tok[3], is_mut, is_res);
+}
+fn parse_if(p) {
+    let tok = 0;
+    let cond = 0;
+    let then = 0;
+    let els = 0;
+    tok = parser_previous(p);
+    parser_consume(p, TOKEN_LPARENT, "Expect '(' after 'if'.");
+    cond = parse_expression(p);
+    parser_consume(p, TOKEN_RPARENT, "Expect ')' after condition.");
+    then = parse_statement(p);
+    els = 0;
+    if (parser_match(p, TOKEN_ELSE)) { els = parse_statement(p); }
+    return stmt_if(cond, then, els, tok[2], tok[3]);
+}
+fn parse_while(p) {
+    let tok = 0;
+    let cond = 0;
+    let body = 0;
+    tok = parser_previous(p);
+    parser_consume(p, TOKEN_LPARENT, "Expect '(' after 'while'.");
+    cond = parse_expression(p);
+    parser_consume(p, TOKEN_RPARENT, "Expect ')' after condition.");
+    body = parse_statement(p);
+    return stmt_while(cond, body, tok[2], tok[3]);
+}
+fn parse_use(p) {
+    let line = 0;
+    let path = 0;
+    let node = 0;
+    let tok = 0;
+    tok = parser_previous(p);
+    line = tok[2];
+    if (parser_check(p, TOKEN_STRING)) {
+        path = parser_advance(p)[1];
+    } else {
+        path = parser_consume(p, TOKEN_IDENTIFIER, "Expect module path string or identifier.")[1];
+        while (parser_match(p, TOKEN_COLON_COLON)) {
+            path = str_concat(path, "/");
+            path = str_concat(path, (parser_consume(p, TOKEN_IDENTIFIER, "Expect identifier after '::'.")[1]));
+        }
+        path = str_concat(path, ".equis");
+    }
+    parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after module path.");
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_USE;
+    node[1] = path;
+    node[2] = line;
+    return node;
+}
+fn parse_struct_decl(p) {
+    let tok = 0;
+    let name_tok = 0;
+    let fields = 0;
+    let field_name = 0;
+    let generics = 0;
+    tok = parser_previous(p); 
+    name_tok = parser_consume(p, TOKEN_IDENTIFIER, "Expect struct name.");
+    generics = parser_parse_generics(p);
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before struct body.");
+    fields = vec_new(64);
+    while (parser_is_at_end(p) == 0 && parser_check(p, TOKEN_RBRACE) == 0) {
+        field_name = parser_consume(p, TOKEN_IDENTIFIER, "Expect field name.");
+        fields = vec_push(fields, field_name[1]);
+        parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after field name.");
+    }
+    parser_consume(p, TOKEN_RBRACE, "Expect '}' after struct body.");
+    return stmt_struct(name_tok[1], fields, tok[2], tok[3], generics);
+}
+fn parse_agent(p) {
+    let tok = 0;
+    let name = 0;
+    let a_implements = 0;
+    let a_roles = 0;
+    let fields = 0;
+    let field_name_tok = 0;
+    let node = 0;
+    tok = parser_previous(p); 
+    name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Agent name.");
+    a_implements = 0;
+    if (parser_match(p, TOKEN_IMPLEMENTS)) {
+        a_implements = parser_consume(p, TOKEN_IDENTIFIER, "Expect interface name.")[1];
+    }
+    a_roles = 0;
+    if (parser_match(p, TOKEN_ROLES)) {
+        parser_consume(p, TOKEN_LBRACE, "Expect '{' before Agent roles.");
+        a_roles = vec_new(INITIAL_VEC_CAP);
+        while (parser_is_at_end(p) == 0 && parser_check(p, TOKEN_RBRACE) == 0) {
+            a_roles = vec_push(a_roles, parser_consume(p, TOKEN_STRING, "Expect role name.")[1]);
+            parser_match(p, TOKEN_COMMA);
+        }
+        parser_consume(p, TOKEN_RBRACE, "Expect '}' after Agent roles.");
+    }
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before Agent body.");
+    fields = vec_new(64);
+    while (parser_is_at_end(p) == 0 && parser_check(p, TOKEN_RBRACE) == 0) {
+        field_name_tok = parser_peek(p);
+        parser_advance(p);
+        fields = vec_push(fields, field_name_tok[1]);
+        if (parser_match(p, TOKEN_COLON)) {
+            if (parser_match(p, TOKEN_IDENTIFIER)) {}
+            else { parser_consume(p, TOKEN_STRING, "Expect type or unit string."); }
+        }
+        parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after field name.");
+    }
+    parser_consume(p, TOKEN_RBRACE, "Expect '}' after Agent body.");
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_AGENT;
+    node[AGENT_NAME] = name[1];
+    node[AGENT_FIELDS] = fields;
+    node[AGENT_LINE] = tok[2];
+    node[AGENT_COL] = tok[3];
+    node[AGENT_ROLES] = a_roles;
+    node[AGENT_IMPLEMENTS] = a_implements;
+    return node;
+}
+fn parse_resource(p) {
+    let tok = 0;
+    let name = 0;
+    let metadata = 0;
+    let field_name_tok = 0;
+    let val = 0;
+    let node = 0;
+    tok = parser_previous(p); 
+    name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Resource name.");
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before Resource body.");
+    metadata = map_new(500);
+    while (parser_is_at_end(p) == 0 && parser_check(p, TOKEN_RBRACE) == 0) {
+        field_name_tok = parser_peek(p);
+        parser_advance(p);
+        if (parser_match(p, TOKEN_COLON)) {
+             val = 0;
+             if (parser_check(p, TOKEN_NUMBER)) { val = parser_advance(p)[1]; }
+             else if (parser_match(p, TOKEN_IDENTIFIER)) { val = parser_previous(p)[1]; }
+             else { val = parser_consume(p, TOKEN_STRING, "Expect type, unit, or number.")[1]; }
+             map_put(metadata, field_name_tok[1], val);
+        }
+        parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after field name.");
+    }
+    parser_consume(p, TOKEN_RBRACE, "Expect '}' after Resource body.");
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_RESOURCE;
+    node[1] = name[1];
+    node[2] = metadata;
+    node[3] = tok[2];
+    node[4] = tok[3];
+    return node;
+}
+fn parse_execute(p) {
+    let tok = 0;
+    let event_name = 0;
+    let args = 0;
+    let key = 0;
+    let val = 0;
+    let node = 0;
+    tok = parser_previous(p); 
+    event_name = parser_consume(p, TOKEN_IDENTIFIER, "Expect event name.")[1];
+    parser_consume(p, TOKEN_LBRACE, "Expect '{'.");
+    args = vec_new(64);
+    while (parser_is_at_end(p) == 0 && parser_check(p, TOKEN_RBRACE) == 0) {
+        key = parser_consume(p, TOKEN_IDENTIFIER, "Expect key.")[1];
+        parser_consume(p, TOKEN_COLON, "Expect ':'.");
+        val = 0;
+        if (parser_match(p, TOKEN_IDENTIFIER)) { val = parser_previous(p)[1]; }
+        else { val = parser_consume(p, TOKEN_STRING, "Expect value.")[1]; }
+        args = vec_push(args, key);
+        args = vec_push(args, val);
+        if (parser_match(p, TOKEN_COMMA)) {}
+        if (parser_match(p, TOKEN_SEMICOLON)) {}
+    }
+    parser_consume(p, TOKEN_RBRACE, "Expect '}'.");
+    parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after execute.");
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_EXECUTE;
+    node[1] = event_name;
+    node[2] = args;
+    node[3] = tok[2];
+    node[4] = tok[3];
+    return node;
+}
+fn parse_assert(p) {
+    let tok = 0;
+    let expr = 0;
+    let node = 0;
+    tok = parser_previous(p); 
+    expr = parse_expression(p);
+    parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after assert.");
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_ASSERT;
+    node[1] = expr;
+    node[2] = tok[2];
+    node[3] = tok[3];
+    return node;
+}
+fn parse_return(p) {
+    let tok = 0;
+    let val = 0;
+    tok = parser_previous(p); 
+    val = 0;
+    if (parser_check(p, TOKEN_SEMICOLON) == 0) { val = parse_expression(p); }
+    parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after return.");
+    return stmt_return(val, tok[2], tok[3]);
+}
+fn parse_print(p) {
+    let tok = 0;
+    let expr = 0;
+    tok = parser_previous(p); 
+    expr = parse_expression(p);
+    parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after print.");
+    return stmt_print(expr, tok[2], tok[3]);
+}
+fn parse_block(p) {
+    let tok = 0;
+    let stmts = 0;
+    tok = parser_previous(p); 
+    stmts = vec_new(128);
+    while (parser_is_at_end(p) == 0 && parser_check(p, TOKEN_RBRACE) == 0) {
+        stmts = vec_push(stmts, parse_statement(p));
+    }
+    parser_consume(p, TOKEN_RBRACE, "Expect '}' after block.");
+    return stmt_block(stmts, tok[2], tok[3]);
+}
+fn parse_function(p) {
+    let tok = 0;
+    let name_tok = 0;
+    let params = 0;
+    let param_types = 0;
+    let more = 0;
+    let param = 0;
+    let p_type = 0;
+    let body = 0;
+    let generics = 0;
+    let return_type = 0;
+    let params_mut = 0;
+    let is_mut = 0;
+    tok = parser_previous(p); 
+    name_tok = parser_consume(p, TOKEN_IDENTIFIER, "Expect function name.");
+    generics = parser_parse_generics(p);
+    parser_consume(p, TOKEN_LPARENT, "Expect '(' after function name.");
+    params = vec_new(INITIAL_VEC_CAP);
+    param_types = vec_new(INITIAL_VEC_CAP);
+    params_mut = vec_new(INITIAL_VEC_CAP);
+    if (parser_check(p, TOKEN_RPARENT) == 0) {
+        more = 1;
+        while (more) {
+            is_mut = 0;
+            if (parser_match(p, TOKEN_MUT)) { is_mut = 1; }
+            param = parser_consume(p, TOKEN_IDENTIFIER, "Expect parameter name.");
+            p_type = 0;
+            if (parser_match(p, TOKEN_COLON)) {
+                p_type = parse_type(p);
+                if (p_type == 0) { parser_error(p, "Expect type after ':'."); }
+            }
+            params = vec_push(params, param[1]);
+            param_types = vec_push(param_types, p_type);
+            params_mut = vec_push(params_mut, is_mut);
+            if (parser_match(p, TOKEN_COMMA) == 0) { more = 0; }
+        }
+    }
+    parser_consume(p, TOKEN_RPARENT, "Expect ')' after parameters.");
+    return_type = 0;
+    if (parser_match(p, TOKEN_ARROW)) {
+        return_type = parse_type(p);
+        if (return_type == 0) { parser_error(p, "Expect type after '->'."); }
+    }
+    body = parse_statement(p);
+    return stmt_function(name_tok[1], params, body, tok[2], tok[3], generics, param_types, return_type, params_mut);
+}
+fn parse_extern(p) {
+    let tok = 0;
+    let name_tok = 0;
+    let params = 0;
+    let param_types = 0;
+    let more = 0;
+    let param = 0;
+    let p_type = 0;
+    let return_type = 0;
+    tok = parser_previous(p); 
+    parser_consume(p, TOKEN_FN, "Expect 'fn' after 'extern'.");
+    name_tok = parser_consume(p, TOKEN_IDENTIFIER, "Expect function name.");
+    parser_consume(p, TOKEN_LPARENT, "Expect '(' after function name.");
+    params = vec_new(INITIAL_VEC_CAP);
+    param_types = vec_new(INITIAL_VEC_CAP);
+    if (parser_check(p, TOKEN_RPARENT) == 0) {
+        more = 1;
+        while (more) {
+            if (parser_match(p, TOKEN_MUT)) {
+            }
+            param = parser_consume(p, TOKEN_IDENTIFIER, "Expect parameter name.");
+            p_type = 0;
+            if (parser_match(p, TOKEN_COLON)) {
+                p_type = parse_type(p);
+                if (p_type == 0) { parser_error(p, "Expect type after ':'."); }
+            }
+            params = vec_push(params, param[1]);
+            param_types = vec_push(param_types, p_type);
+            if (parser_match(p, TOKEN_COMMA) == 0) { more = 0; }
+        }
+    }
+    parser_consume(p, TOKEN_RPARENT, "Expect ')' after parameters.");
+    return_type = 0;
+    if (parser_match(p, TOKEN_ARROW)) {
+        return_type = parse_type(p);
+        if (return_type == 0) { parser_error(p, "Expect type after '->'."); }
+    }
+    parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after extern.");
+    return stmt_extern(name_tok[1], params, tok[2], tok[3], param_types, return_type);
+}
+fn parse_interface(p) {
+    let tok = 0;
+    let name = 0;
+    let methods = 0;
+    let m_name = 0;
+    let params = 0;
+    let method = 0;
+    tok = parser_previous(p);
+    name = parser_consume(p, TOKEN_IDENTIFIER, "Expect interface name.")[1];
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before interface body.");
+    methods = vec_new(INITIAL_VEC_CAP);
+    while (parser_check(p, TOKEN_RBRACE) == 0) {
+        parser_consume(p, TOKEN_FN, "Expect 'fn' for method declaration.");
+        m_name = parser_consume(p, TOKEN_IDENTIFIER, "Expect method name.")[1];
+        parser_consume(p, TOKEN_LPARENT, "Expect '(' after method name.");
+        params = vec_new(16);
+        if (parser_check(p, TOKEN_RPARENT) == 0) {
+            if (parser_match(p, TOKEN_MUT)) { }
+            params = vec_push(params, parser_consume(p, TOKEN_IDENTIFIER, "Expect parameter name.")[1]);
+            while (parser_match(p, TOKEN_COMMA)) {
+                if (parser_match(p, TOKEN_MUT)) { }
+                params = vec_push(params, parser_consume(p, TOKEN_IDENTIFIER, "Expect parameter name.")[1]);
+            }
+        }
+        parser_consume(p, TOKEN_RPARENT, "Expect ')' after parameters.");
+        parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after method declaration.");
+        method = sys_malloc(8 * 8);
+        method[0] = m_name;
+        method[1] = params;
+        method[2] = tok[2];
+        method[3] = tok[3];
+        methods = vec_push(methods, method);
+    }
+    parser_consume(p, TOKEN_RBRACE, "Expect '}' after interface body.");
+    return stmt_interface(name, methods, tok[2], tok[3]);
+}
+fn parse_program(p) {
+    let decls = 0;
+    decls = vec_new(4096);
+    while (parser_is_at_end(p) == 0) {
+        decls = vec_push(decls, parse_statement(p));
+    }
+    return decls;
+}
+fn parse_event(p) {
+    let tok = 0;
+    let name = 0;
+    let e_fulfills = 0;
+    let e_valuator = 0;
+    let e_roles = 0;
+    let c_logic = 0;
+    let c_flows = 0;
+    let type = 0;
+    let amount = 0;
+    let res_name = 0;
+    let c_from = 0;
+    let c_to = 0;
+    let fnode = 0;
+    let node = 0;
+    tok = parser_previous(p); 
+    name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Event name.");
+    e_fulfills = 0;
+    if (parser_match(p, TOKEN_FULFILLS)) { e_fulfills = parser_consume(p, TOKEN_IDENTIFIER, "Expect Commitment name.")[1]; }
+    e_valuator = 0;
+    if (parser_match(p, TOKEN_EVALUATED_BY)) { e_valuator = parser_consume(p, TOKEN_IDENTIFIER, "Expect Valuator name.")[1]; }
+    e_roles = 0;
+    if (parser_match(p, TOKEN_ROLES)) {
+        parser_consume(p, TOKEN_LBRACE, "Expect '{' before Event roles.");
+        e_roles = vec_new(16);
+        while (parser_check(p, TOKEN_RBRACE) == 0) {
+            e_roles = vec_push(e_roles, parser_consume(p, TOKEN_STRING, "Expect role name.")[1]);
+            parser_match(p, TOKEN_COMMA);
+        }
+        parser_consume(p, TOKEN_RBRACE, "Expect '}' after Event roles.");
+    }
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before Event body.");
+    c_logic = 0;
+    if (parser_match(p, TOKEN_LOGIC)) {
+        parser_consume(p, TOKEN_LBRACE, "Expect '{' before logic body.");
+        c_logic = parse_block(p);
+    }
+    parser_consume(p, TOKEN_FLOW, "Expect 'flow' block.");
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before flows.");
+    c_flows = vec_new(64);
+    while (parser_check(p, TOKEN_RBRACE) == 0) {
+        type = 0;
+        if (parser_match(p, TOKEN_IN)) { type = TOKEN_IN; }
+        else if (parser_match(p, TOKEN_OUT)) { type = TOKEN_OUT; }
+        else { parser_consume(p, 999, "Expect 'in' or 'out'."); }
+        amount = parse_expression(p);
+        res_name = parser_consume(p, TOKEN_IDENTIFIER, "Expect resource name.")[1];
+        parser_consume(p, TOKEN_FROM, "Expect 'from'.");
+        c_from = parser_consume(p, TOKEN_IDENTIFIER, "Expect source agent.")[1];
+        parser_consume(p, TOKEN_TO, "Expect 'to'.");
+        c_to = parser_consume(p, TOKEN_IDENTIFIER, "Expect destination agent.")[1];
+        parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after flow.");
+        fnode = sys_malloc(10 * 8);
+        fnode[AST_TYPE] = STMT_FLOW;
+        fnode[FLOW_TYPE] = type;
+        fnode[FLOW_AMOUNT] = amount;
+        fnode[FLOW_RES] = res_name;
+        fnode[FLOW_FROM] = c_from;
+        fnode[FLOW_TO] = c_to;
+        fnode[FLOW_LINE] = tok[2];
+        fnode[FLOW_COL] = tok[3];
+        fnode[8] = 0;
+        fnode[9] = 0;
+        c_flows = vec_push(c_flows, fnode);
+    }
+    parser_consume(p, TOKEN_RBRACE, "Expect '}' after flow block.");
+    parser_consume(p, TOKEN_RBRACE, "Expect '}' after Event block.");
+    node = sys_malloc(9 * 8);
+    node[AST_TYPE] = STMT_EVENT;
+    node[EVENT_NAME] = name[1];
+    node[EVENT_LOGIC] = c_logic;
+    node[EVENT_FLOWS] = c_flows;
+    node[EVENT_LINE] = tok[2];
+    node[EVENT_COL] = tok[3];
+    node[EVENT_FULFILLS] = e_fulfills;
+    node[EVENT_ROLES] = e_roles;
+    node[EVENT_VALUATOR] = e_valuator;
+    return node;
+}
+fn parse_commitment(p) {
+    let line = 0;
+    let name = 0;
+    let c_valuator = 0;
+    let c_logic = 0;
+    let c_flows = 0;
+    let type = 0;
+    let amount = 0;
+    let res_name = 0;
+    let c_from = 0;
+    let c_to = 0;
+    let fnode = 0;
+    let node = 0;
+    line = parser_previous(p)[2];
+    name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Commitment name.");
+    c_valuator = 0;
+    if (parser_match(p, TOKEN_EVALUATED_BY)) { c_valuator = parser_consume(p, TOKEN_IDENTIFIER, "Expect Valuator name.")[1]; }
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before Commitment body.");
+    c_logic = 0;
+    if (parser_match(p, TOKEN_LOGIC)) {
+        parser_consume(p, TOKEN_LBRACE, "Expect '{' before logic body.");
+        c_logic = parse_block(p);
+    }
+    parser_consume(p, TOKEN_FLOW, "Expect 'flow' block.");
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before flows.");
+    c_flows = vec_new(64);
+    while (parser_check(p, TOKEN_RBRACE) == 0) {
+        type = 0;
+        if (parser_match(p, TOKEN_IN)) { type = TOKEN_IN; }
+        else if (parser_match(p, TOKEN_OUT)) { type = TOKEN_OUT; }
+        else { parser_consume(p, 999, "Expect 'in' or 'out'."); }
+        amount = parse_expression(p);
+        res_name = parser_consume(p, TOKEN_IDENTIFIER, "Expect resource name.")[1];
+        parser_consume(p, TOKEN_FROM, "Expect 'from'.");
+        c_from = parser_consume(p, TOKEN_IDENTIFIER, "Expect source agent.")[1];
+        parser_consume(p, TOKEN_TO, "Expect 'to'.");
+        c_to = parser_consume(p, TOKEN_IDENTIFIER, "Expect destination agent.")[1];
+        parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after flow.");
+        fnode = sys_malloc(9 * 8);
+        fnode[AST_TYPE] = STMT_FLOW;
+        fnode[FLOW_TYPE] = type;
+        fnode[FLOW_AMOUNT] = amount;
+        fnode[FLOW_RES] = res_name;
+        fnode[FLOW_FROM] = c_from;
+        fnode[FLOW_TO] = c_to;
+        fnode[FLOW_LINE] = line;
+        fnode[7] = 0;
+        fnode[8] = 0;
+        c_flows = vec_push(c_flows, fnode);
+    }
+    parser_consume(p, TOKEN_RBRACE, "Expect '}' after flow block.");
+    parser_consume(p, TOKEN_RBRACE, "Expect '}' after Commitment block.");
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_COMMITMENT;
+    node[EVENT_NAME] = name[1];
+    node[EVENT_LOGIC] = c_logic;
+    node[EVENT_FLOWS] = c_flows;
+    node[EVENT_LINE] = line;
+    node[COMMITMENT_VALUATOR] = c_valuator;
+    return node;
+}
+fn parse_policy(p) {
+    let tok = 0;
+    let line = 0;
+    let name = 0;
+    let body = 0;
+    let node = 0;
+    tok = parser_previous(p);
+    line = tok[2];
+    name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Policy name.");
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before Policy body.");
+    parser_consume(p, TOKEN_LOGIC, "Expect 'logic' block.");
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before logic body.");
+    body = parse_block(p);
+    parser_consume(p, TOKEN_RBRACE, "Expect '}' after Policy block.");
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_POLICY;
+    node[1] = name[1];
+    node[2] = body;
+    node[3] = tok[2];
+    node[4] = tok[3];
+    return node;
+}
+fn parse_reverse(p) {
+    let tok = 0;
+    let event_name = 0;
+    let args = 0;
+    let key = 0;
+    let val = 0;
+    let node = 0;
+    tok = parser_previous(p); 
+    event_name = parser_consume(p, TOKEN_IDENTIFIER, "Expect event name.")[1];
+    parser_consume(p, TOKEN_LBRACE, "Expect '{'.");
+    args = vec_new(64);
+    while (parser_check(p, TOKEN_RBRACE) == 0) {
+        key = parser_consume(p, TOKEN_IDENTIFIER, "Expect key.")[1];
+        parser_consume(p, TOKEN_COLON, "Expect ':'.");
+        val = 0;
+        if (parser_match(p, TOKEN_IDENTIFIER)) { val = parser_previous(p)[1]; }
+        else { val = parser_consume(p, TOKEN_STRING, "Expect value.")[1]; }
+        args = vec_push(args, key);
+        args = vec_push(args, val);
+        if (parser_match(p, TOKEN_COMMA)) {}
+        if (parser_match(p, TOKEN_SEMICOLON)) {}
+    }
+    parser_consume(p, TOKEN_RBRACE, "Expect '}'.");
+    parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after reverse.");
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_REVERSE;
+    node[1] = event_name;
+    node[2] = args;
+    node[3] = tok[2];
+    node[4] = tok[3];
+    return node;
+}
+fn parse_exchange(p) {
+    let tok = 0;
+    let name = 0;
+    let events = 0;
+    let ev = 0;
+    let node = 0;
+    tok = parser_previous(p); 
+    name = parser_consume(p, TOKEN_IDENTIFIER, "Expect exchange name.");
+    parser_consume(p, TOKEN_LBRACE, "Expect '{' before exchange body.");
+    events = vec_new(64);
+    while (parser_check(p, TOKEN_RBRACE) == 0) {
+        ev = parser_consume(p, TOKEN_IDENTIFIER, "Expect event name.");
+        events = vec_push(events, ev[1]);
+        parser_consume(p, TOKEN_SEMICOLON, "Expect ';'.");
+    }
+    parser_consume(p, TOKEN_RBRACE, "Expect '}'.");
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_EXCHANGE;
+    node[1] = name[1];
+    node[2] = events;
+    node[3] = tok[2];
+    node[4] = tok[3];
+    return node;
+}
+fn parse_transformation(p) {
+    let line = 0;
+    let node = 0;
+    line = parser_previous(p)[2];
+    node = parse_event(p);
+    node[AST_TYPE] = STMT_TRANSFORMATION;
+    return node;
+}
+fn parse_valuator(p) {
+    let tok = 0;
+    let name = 0;
+    let v_implements = 0;
+    let body = 0;
+    let node = 0;
+    tok = parser_previous(p); 
+    name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Valuator name.");
+    v_implements = 0;
+    if (parser_match(p, TOKEN_IMPLEMENTS)) {
+        v_implements = parser_consume(p, TOKEN_IDENTIFIER, "Expect interface name.")[1];
+    }
+    parser_consume(p, TOKEN_LBRACE, "Expect '{'.");
+    body = parse_block(p);
+    node = sys_malloc(8 * 8);
+    node[AST_TYPE] = STMT_VALUATOR;
+    node[1] = name[1];
+    node[2] = body;
+    node[3] = tok[2];
+    node[4] = tok[3];
+    node[5] = v_implements;
+    return node;
+}

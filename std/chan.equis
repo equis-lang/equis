@@ -1,0 +1,13 @@
+use "std/sys.equis";
+
+fn chan_new(size) {
+    return sys_chan_new(size);
+}
+
+fn chan_send(c, v) {
+    sys_chan_send(c, v);
+}
+
+fn chan_recv(c) {
+    return sys_chan_recv(c);
+}

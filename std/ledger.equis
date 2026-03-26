@@ -1,0 +1,127 @@
+use "std/sys.equis";
+use "std/collections.equis";
+use "std/fixed.equis";
+use "std/string.equis";
+fn ledger_new() {
+    let l = 0;
+    l = sys_malloc(3 * 16);
+    let m0 = 0;
+    m0 = map_new(100);
+    l[0] = m0;
+    let m1 = 0;
+    m1 = map_new(100);
+    l[1] = m1;
+    return l;
+}
+fn ledger_get_key(agent_name, res_name, currency) {
+    let k = 0;
+    k = str_concat(agent_name, ":");
+    k = str_concat(k, res_name);
+    if (currency == 0) { return k; }
+    let k2 = 0;
+    k2 = str_concat(k, ":");
+    let res_k = 0;
+    res_k = str_concat(k2, currency);
+    return res_k;
+}
+fn ledger_update_temporal(l, agent, res, currency, delta, effective_date) {
+    let main_map = 0;
+    main_map = l[0];
+    let date_s = 0;
+    date_s = str_from_int(effective_date);
+    let daily_map = 0;
+    daily_map = map_get(main_map, date_s);
+    if (daily_map == 0) {
+        daily_map = map_new(50);
+        map_put(main_map, date_s, daily_map);
+    }
+    let key = 0;
+    key = ledger_get_key(agent, res, currency);
+    let current = 0;
+    current = map_get(daily_map, key);
+    if (current == 0) {
+        map_put(daily_map, key, delta);
+    } else {
+        let val = 0;
+        val = fixed_add(current, delta);
+        map_put(daily_map, key, val);
+    }
+}
+fn ledger_process_flow(l, flow_type, amount, res, currency, from_agent, to_agent, effective_date) {
+    let f_amount = 0;
+    f_amount = fixed_from_int(amount);
+    ledger_update_temporal(l, to_agent, res, currency, f_amount, effective_date);
+    let neg_amount = 0;
+    neg_amount = fixed_sub(0, f_amount);
+    ledger_update_temporal(l, from_agent, res, currency, neg_amount, effective_date);
+    let hist_map = 0;
+    hist_map = l[1];
+    let v_to = 0;
+    v_to = map_get(hist_map, to_agent);
+    if (v_to == 0) {
+        v_to = vec_new(100);
+        map_put(hist_map, to_agent, v_to);
+    }
+    let entry_to = 0;
+    entry_to = sys_malloc(4 * 16);
+    entry_to[0] = effective_date;
+    entry_to[1] = f_amount;
+    entry_to[2] = from_agent;
+    entry_to[3] = 1;
+    vec_push(v_to, entry_to);
+    let v_from = 0;
+    v_from = map_get(hist_map, from_agent);
+    if (v_from == 0) {
+        v_from = vec_new(100);
+        map_put(hist_map, from_agent, v_from);
+    }
+    let entry_from = 0;
+    entry_from = sys_malloc(4 * 16);
+    entry_from[0] = effective_date;
+    entry_from[1] = f_amount;
+    entry_from[2] = to_agent;
+    entry_from[3] = 0;
+    vec_push(v_from, entry_from);
+}
+fn ledger_balance_at(l, agent, res, currency, target_date) {
+    let total = 0;
+    total = fixed_from_int(0);
+    let main_map = 0;
+    main_map = l[0];
+    let dates = 0;
+    dates = map_keys(main_map);
+    let i = 0;
+    let size = 0;
+    size = vec_size(dates);
+    while (i < size) {
+        let d_s = 0;
+        d_s = vec_get(dates, i);
+        let d = 0;
+        d = str_to_int(d_s);
+        if (d <= target_date) {
+            let daily_map = 0;
+            daily_map = map_get(main_map, d_s);
+            let key = 0;
+            key = ledger_get_key(agent, res, currency);
+            let val = 0;
+            val = map_get(daily_map, key);
+            if (val != 0) {
+                total = fixed_add(total, val);
+            }
+        }
+        i = i + 1;
+    }
+    return total;
+}
+fn ledger_get_entries_for(l, agent) {
+    let hist_map = 0;
+    hist_map = l[1];
+    let v = 0;
+    v = map_get(hist_map, agent);
+    if (v == 0) {
+        let empty = 0;
+        empty = vec_new(1);
+        return empty;
+    }
+    return v;
+}
