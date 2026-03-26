@@ -57,18 +57,5 @@ Standard deterministic structures are supported:
 - `execute Name { arg: val };` sequence for triggering Events.
 - `reverse Name { arg: val };` for initiating compensation transactions.
 
-## 4. Memory Management (ARC)
-Equis utilizes an **Automatic Reference Counting (ARC)** model for heap-allocated objects (Agents, Resources, Vectors, etc.). 
-- **Ownership**: Every object has an internal reference count initialized to 1 upon allocation.
-- **Retention**: Assignment of an object reference to a local variable or global slot triggers a `retain` operation.
-- **Release**: When a reference is overwritten or its scope (function/block) exits, a `release` operation is performed.
-- **Deallocation**: Objects are deterministically freed when their reference count reaches zero.
-
-## 5. Concurrency (Preemptive Fibers)
-High-concurrency logic is managed via **Fibers**—lightweight execution units scheduled by the Equis runtime.
-- **Preemption**: The compiler injects yield hooks into all function entry points and loop boundaries.
-- **Context Switching**: A kernel timer (`SIGALRM`) triggers the scheduler to preempt the current fiber if it exceeds its time slice (default 50ms).
-- **Communication**: Thread-safe channels (`std/chan.equis`) are used for inter-fiber coordination.
-
-## 6. Standard Interfacing
+## 4. Standard Interfacing
 Interaction with external libraries or foreign C ABIs is achieved via `extern fn`. These functions operate at the module level and are constrained by the host environment's security defaults.

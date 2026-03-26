@@ -1,38 +1,52 @@
 use "std/sys.equis";
 use "std/fiber.equis";
 
+// Equis v0.1.0: Preemptive Multitasking Verification
+// 
+// Validates the hardware-timed scheduler and the ability to preempt 
+// long-running computations.
+
+// Watcher Fiber
+// Verifies that the scheduler can perform periodic checks (heartbeats) 
+// while another fiber is occupied.
 fn watcher() {
     let mut i = 0;
     while (true) {
-        print_raw("[Watcher] Heartbeat: ");
-        print_int(i);
-        print_raw("\n");
+        print_raw_str("[Watcher] Heartbeat: ");
+        print_raw(i);
+        print_raw_str("\n");
         i = i + 1;
-        fiber_yield(); // Voluntarily yield to show cooperation
+        fiber_yield(); // Cooperative yield for demonstration
     }
 }
 
+// Heavy Worker Fiber
+// This fiber performs intensive logic without explicit yields. 
+// The system relies on preemptive switching to maintain responsiveness.
 fn busy_worker() {
-    print_raw("[Worker] Starting infinite busy loop...\n");
+    print_raw_str("[Worker] Initiating CPU-bound loop...\n");
     let mut x = 0;
     while (true) {
         x = x + 1;
-        // NO YIELD HERE. 
-        // This loop would block the system if preemption didn't work.
+        // Preemption allows the Watcher fiber to run even with zero yields here.
     }
 }
 
 fn main() {
-    print_raw("--- Equis Preemption Test ---\n");
+    print_raw_str("--- Fiber Preemption Verification ---\n");
     
-    // Set preemption frequency to 50ms (0.05s)
+    // Set preempt interval to 50ms (0.05s)
     sys_fiber_preempt_setup(50); 
     
+    // Spawn system fibers
     fiber_spawn(watcher);
     fiber_spawn(busy_worker);
     
-    // Wait and observe preemption
-    sys_sleep(2000); // Sleep for 2s
-    print_raw("--- Test Complete: Preemption Verified ---\n");
+    // Observer window
+    sys_sleep(2000); // 2s duration for stable verification
+    
+    print_raw_str("\nTest window complete.\n");
     return 0;
 }
+
+main();
