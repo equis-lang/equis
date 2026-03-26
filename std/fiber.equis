@@ -3,9 +3,9 @@ use "std/string.equis";
 use "std/collections.equis";
 extern fn _setjmp(env);
 extern fn longjmp(env, val);
-let Fiber_Queue = 0;
-let Current_Fiber = 0;
-let Scheduler_Buf = 0;
+let mut Fiber_Queue = 0;
+let mut Current_Fiber = 0;
+let mut Scheduler_Buf = 0;
 fn fiber_init() {
     if (Fiber_Queue == 0) {
         Fiber_Queue = vec_new(16);
@@ -39,11 +39,11 @@ fn fiber_exit() {
     }
 }
 fn fiber_scheduler_run() {
-    let loop = 1;
+    let mut loop = 1;
     while (loop) {
         let size = vec_size(Fiber_Queue);
-        let i = 0;
-        let active = 0;
+        let mut i = 0;
+        let mut active = 0;
         while (i < size) {
             let fiber = vec_get(Fiber_Queue, i);
             if (fiber[3] < 3) {

@@ -117,7 +117,7 @@ fn main() {
     let diags = analyzer[4];
     if (diags) {
         if (vec_size(diags) > 0) {
-            let d_idx = 0; let d_sz = vec_size(diags);
+            let mut d_idx = 0; let d_sz = vec_size(diags);
             while (d_idx < d_sz) {
                 let d = vec_get(diags, d_idx);
                 analyze_error(d[0], d[1], d[2]);

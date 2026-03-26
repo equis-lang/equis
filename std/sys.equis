@@ -62,7 +62,7 @@ fn print_raw(mut n) {
     let buf = sys_malloc(64);
     let mut i = 62;
     set_char(buf, 63, 0);
-    let digit = 0;
+    let mut digit = 0;
     while (n > 0) {
         digit = n - ((n / 10) * 10);
         set_char(buf, i, digit + 48);

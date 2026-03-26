@@ -9,17 +9,17 @@ extern fn accept(sockfd, addr, addrlen);
 extern fn send(sockfd, buf, len, flags);
 extern fn recv(sockfd, buf, len, flags);
 extern fn setsockopt(sockfd, level, optname, optval, optlen);
-let http_addr_cache = 0;
-let http_len_cache = 0;
+let mut http_addr_cache = 0;
+let mut http_len_cache = 0;
 fn http_server_new(port) {
-    let fd = 0;
+    let mut fd = 0;
     fd = socket(2, 1, 0);
     if (fd < 0) { return -1; }
     let on = 1;
     setsockopt(fd, 1, 2, on, 4);
-    let addr = 0;
+    let mut addr = 0;
     addr = sys_malloc(16);
-    let k = 0;
+    let mut k = 0;
     while (k < 16) { set_char(addr, k, 0); k = k + 1; }
     set_char(addr, 0, 2);
     set_char(addr, 1, 0);
@@ -27,7 +27,7 @@ fn http_server_new(port) {
     let p_low = port - (p_high * 256);
     set_char(addr, 2, p_high);
     set_char(addr, 3, p_low);
-    let res = 0;
+    let mut res = 0;
     res = bind(fd, addr, 16);
     if (res < 0) { return -1; }
     listen(fd, 5);
@@ -38,25 +38,25 @@ fn http_accept(server_fd) {
     if (http_addr_cache == 0) { http_addr_cache = sys_malloc(16); }
     if (http_len_cache == 0) { http_len_cache = sys_malloc(16); }
     http_len_cache[0] = 16;
-    let client = 0;
+    let mut client = 0;
     client = accept(server_fd, http_addr_cache, http_len_cache);
     return client;
 }
 fn http_parse_request(req_fd) {
-    let buf = 0;
+    let mut buf = 0;
     buf = sys_malloc(2048);
-    let n = 0;
+    let mut n = 0;
     n = recv(req_fd, buf, 2047, 0);
     if (n <= 0) { sys_free(buf); return 0; }
     set_char(buf, n, 0);
-    let method = "";
-    let i = 0;
-    let found_method = 0;
+    let mut method = "";
+    let mut i = 0;
+    let mut found_method = 0;
     while (i < n) {
         if (found_method == 0) {
             if (get_char(buf, i) == 32) {
                 method = sys_malloc(i + 1);
-                let k = 0;
+                let mut k = 0;
                 while (k < i) { set_char(method, k, get_char(buf, k)); k = k + 1; }
                 set_char(method, i, 0);
                 found_method = 1;
@@ -64,28 +64,28 @@ fn http_parse_request(req_fd) {
         }
         i = i + 1;
     }
-    let path = "";
-    let start = 0;
+    let mut path = "";
+    let mut start = 0;
     i = 0;
-    let space_count = 0;
+    let mut space_count = 0;
     while (i < n) {
         if (get_char(buf, i) == 32) {
             space_count = space_count + 1;
             if (space_count == 1) { start = i + 1; }
             else if (space_count == 2) {
-                let path_len = 0;
+                let mut path_len = 0;
                 path_len = i - start;
                 path = sys_malloc(path_len + 1);
-                let k2 = 0;
+                let mut k2 = 0;
                 while (k2 < path_len) { set_char(path, k2, get_char(buf, start + k2)); k2 = k2 + 1; }
                 set_char(path, path_len, 0);
             }
         }
         i = i + 1;
     }
-    let body = "";
+    let mut body = "";
     i = 0;
-    let found_body = 0;
+    let mut found_body = 0;
     while (i < n - 3) {
         if (found_body == 0) {
             if (get_char(buf, i) == 13) {
@@ -95,7 +95,7 @@ fn http_parse_request(req_fd) {
                             let b_ptr = buf + i + 4;
                             let b_len = sys_strlen(b_ptr);
                             body = sys_malloc(b_len + 1);
-                            let k3 = 0;
+                            let mut k3 = 0;
                             while (k3 < b_len) { set_char(body, k3, get_char(b_ptr, k3)); k3 = k3 + 1; }
                             set_char(body, b_len, 0);
                             found_body = 1;
@@ -110,7 +110,7 @@ fn http_parse_request(req_fd) {
     if (str_equal(path, "")) { path = str_concat("", ""); }
     if (str_equal(body, "")) { body = str_concat("", ""); }
     sys_free(buf);
-    let req = 0;
+    let mut req = 0;
     req = sys_malloc(3 * 16);
     req[0] = method;
     req[1] = path;
@@ -134,9 +134,9 @@ fn http_send_response_ext(req_fd, status, content_type, body) {
     let head = "HTTP/1.1 200 OK\r\nContent-Type: ";
     let head2 = str_concat(head, content_type);
     let head3 = str_concat(head2, "\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: GET, POST, OPTIONS\r\nAccess-Control-Allow-Headers: Content-Type\r\nConnection: close\r\n\r\n");
-    let full = 0;
+    let mut full = 0;
     full = str_concat(head3, body);
-    let slen = 0;
+    let mut slen = 0;
     slen = sys_strlen(full);
     send(req_fd, full, slen, 0);
     close(req_fd);

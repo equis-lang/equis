@@ -6,7 +6,7 @@ use "std/collections.equis";
 fn lsp_send(msg_map) {
     let body = json_serialize(msg_map);
     let len = str_len(body);
-    let header = str_concat("Content-Length: ", str_from_int(len));
+    let mut header = str_concat("Content-Length: ", str_from_int(len));
     header = str_concat(header, "\r\n\r\n");
     print_raw_str(header);
     print_raw_str(body);
@@ -22,16 +22,16 @@ fn lsp_find_node_at(node, line, col) {
             }
         }
     } else if (type == EXPR_CALL) {
-        let res = lsp_find_node_at(node[1], line, col);
+        let mut res = lsp_find_node_at(node[1], line, col);
         if (res) { return res; }
-        let args = node[2]; let i = 0; let size = vec_size(args);
+        let mut args = node[2]; let mut i = 0; let size = vec_size(args);
         while (i < size) {
             res = lsp_find_node_at(vec_get(args, i), line, col);
             if (res) { return res; }
             i = i + 1;
         }
     } else if (type == EXPR_BINARY) {
-        let res = lsp_find_node_at(node[BINARY_LEFT], line, col);
+        let mut res = lsp_find_node_at(node[BINARY_LEFT], line, col);
         if (res) { return res; }
         res = lsp_find_node_at(node[BINARY_RIGHT], line, col);
         if (res) { return res; }
@@ -47,7 +47,7 @@ fn lsp_find_node_at(node, line, col) {
     return 0;
 }
 fn lsp_find_stmt_at(ast, line, col) {
-    let i = 0; let n = vec_size(ast);
+    let mut i = 0; let n = vec_size(ast);
     while (i < n) {
         let stmt = vec_get(ast, i);
         let type = stmt[0];
@@ -77,8 +77,8 @@ fn lsp_publish_diagnostics(uri, a) {
     json_put_str(res, "method", "textDocument/publishDiagnostics");
     let params = json_new();
     json_put_str(params, "uri", uri);
-    let diag_list = vec_new(4096);
-    let i = 0; let size = vec_size(diags);
+    let mut diag_list = vec_new(4096);
+    let mut i = 0; let size = vec_size(diags);
     while (i < size) {
         let d = vec_get(diags, i);
         let item = json_new();
@@ -106,12 +106,12 @@ fn lsp_loop() {
     let char_buf = sys_malloc(8);
     while (1) {
 
-        let content_len = 0;
+        let mut content_len = 0;
         let line_buf = sys_malloc(1024);
-        let header_done = 0;
+        let mut header_done = 0;
         while (header_done == 0) {
-            let i = 0;
-            let c = 0;
+            let mut i = 0;
+            let mut c = 0;
             while (i < 1023) {
                 read(0, char_buf, 1);
                 c = get_char(char_buf, 0);
@@ -133,7 +133,7 @@ fn lsp_loop() {
         }
         
         if (content_len > 0) {
-            let total_read = 0;
+            let mut total_read = 0;
             while (total_read < content_len) {
                 let r = read(0, sys_ptr_add(buf, total_read), content_len - total_read);
                 if (r <= 0) { exit(0); }
@@ -199,7 +199,7 @@ fn lsp_loop() {
                         if (content) {
                             let l = lexer_new(content);
                             lexer_scan_tokens(l);
-                            let p = parser_new(l[4], 0);
+                            let p = parser_new(l[4]);
                             let ast = parse_program(p);
                             let a = analyzer_new();
                             analyze_program(a, ast);
@@ -243,7 +243,7 @@ fn lsp_loop() {
                         if (content) {
                             let l = lexer_new(content);
                             lexer_scan_tokens(l);
-                            let p = parser_new(l[4], 0);
+                            let p = parser_new(l[4]);
                             let ast = parse_program(p);
                             let a = analyzer_new();
                             analyze_program(a, ast);
@@ -257,11 +257,11 @@ fn lsp_loop() {
                                         let result = json_new();
                                         let contents = json_new();
                                         json_put_str(contents, "kind", "markdown");
-                                        let type_str = "Unknown Type";
+                                        let mut type_str = "Unknown Type";
                                         if (entry[2] == TOKEN_F64) { type_str = "f64"; }
                                         if (entry[2] == TOKEN_BOOL) { type_str = "bool"; }
                                         if (entry[2] == 0) { type_str = "any/inferred"; }
-                                        let hover_text = str_concat("**Type**: `", type_str);
+                                        let mut hover_text = str_concat("**Type**: `", type_str);
                                         hover_text = str_concat(hover_text, "`");
                                         json_put_str(contents, "value", hover_text);
                                         map_put(result, "contents", json_item_obj(contents));

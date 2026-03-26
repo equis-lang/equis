@@ -15,10 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - High-precision 64-bit fixed-point arithmetic for financial determinism.
 - Automatic Reference Counting (ARC) with deterministic Arena memory model.
 - LLVM backend for native-speed execution.
-- Cross-platform support (Linux, macOS, and experimental Windows support).
+- Bit-identical bootstrap pipeline verified (Stage 3 ≡ Stage 4).
+- Formal trust verification via Diverse Double-Compilation (DDC).
 - Built-in Language Server Protocol (LSP) support.
-- Standard Library with 20 starting modules including networking and ledge compliance.
-- Experimental Windows support via IR post-processing.
+- Standard Library with 20 starting modules including networking and ledger compliance.
+- Experimental Windows and macOS support.
 
 ### Security
 - Blocked unsafe system calls (`system`, `execv`, `popen`, `fork`) at the analyzer level.

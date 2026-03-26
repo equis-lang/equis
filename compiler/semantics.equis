@@ -12,10 +12,10 @@ fn verify_type_match(a, expected, actual_node, line, col) {
     let actual = get_expr_type(a, actual_node);
     if (actual == 0) { return 1; } 
     if (expected != actual) {
-         let is_match = 0;
+         let mut is_match = 0;
          if (expected > 1000 && actual > 1000) { is_match = str_equal(expected, actual); }
          if (is_match == 0) {
-            let msg = str_concat("Type Mismatch: Expected variable of type '", str_from_int(expected));
+            let mut msg = str_concat("Type Mismatch: Expected variable of type '", str_from_int(expected));
             if (expected > 1000) { msg = str_concat("Type Mismatch: Expected '", expected); }
             msg = str_concat(msg, "' but found '");
             if (actual > 1000) { msg = str_concat(msg, actual); }
@@ -28,17 +28,17 @@ fn verify_type_match(a, expected, actual_node, line, col) {
 }
 fn analyze_expr(a, expr) {
     if (expr == 0) { return 0; }
-    let type = 0;
-    let name = 0;
+    let mut type = 0;
+    let mut name = 0;
     let res = 0;
-    let args = 0;
-    let i = 0;
-    let size = 0;
+    let mut args = 0;
+    let mut i = 0;
+    let mut size = 0;
     let target = 0;
     let obj = 0;
     type = expr[0];
     if (type == EXPR_VARIABLE) {
-        let name = expr[1];
+        let mut name = expr[1];
         let res = analyzer_resolve(a, name);
         if (res == 0) {
             analyze_undeclared_internal(a, name, expr[2], expr[3]);
@@ -68,7 +68,7 @@ fn analyze_expr(a, expr) {
         if (generics) {
             if (callee[0] == EXPR_VARIABLE) {
                 let gen_name = callee[1];
-                let mangled = analyzer_specialize(a, gen_name, generics);
+                let mut mangled = analyzer_specialize(a, gen_name, generics);
                 if (mangled) {
                     callee[1] = mangled; 
                 }
@@ -78,7 +78,7 @@ fn analyze_expr(a, expr) {
         args = expr[2];
         i = 0;
         size = vec_size(args);
-        let arg = 0;
+        let mut arg = 0;
         while (i < size) {
            arg = vec_get(args, i);
            analyze_expr(a, arg);
@@ -90,14 +90,14 @@ fn analyze_expr(a, expr) {
             if (entry) {
                 let node = entry[1];
                 if (node) {
-                    let p_types = 0;
+                    let mut p_types = 0;
                     if (node[0] == STMT_FUNCTION) { p_types = node[FUNC_PARAMS_TYPES]; }
                     else if (node[0] == STMT_EXTERN) { p_types = node[EXTERN_PARAMS_TYPES]; }
                     if (p_types) {
                         if (vec_size(args) != vec_size(p_types)) {
-                            // analyze_error_internal(a, "Argument count mismatch.", expr[3], expr[4]);
+                            analyze_error_internal(a, "Argument count mismatch.", expr[3], expr[4]);
                         } else {
-                            let k = 0; let k_size = vec_size(args);
+                            let mut k = 0; let mut k_size = vec_size(args);
                             while (k < k_size) {
                                 verify_type_match(a, vec_get(p_types, k), vec_get(args, k), expr[3], expr[4]);
                                 k = k + 1;
@@ -115,11 +115,11 @@ fn analyze_expr(a, expr) {
         analyze_expr(a, target);
         analyze_expr(a, expr[2]);
         if (target[0] == EXPR_VARIABLE) {
-            let name = target[1];
+            let mut name = target[1];
             let res = analyzer_resolve(a, name);
             if (res) {
                 if (res[3] == 0) {
-                    // analyze_error_internal(a, "Immutability Error: Cannot reassign to immutable variable.", expr[3], expr[4]);
+                    analyze_error_internal(a, "Immutability Error: Cannot reassign to immutable variable.", expr[3], expr[4]);
                 }
             }
             if (a[2]) {
@@ -155,27 +155,27 @@ fn analyze_expr(a, expr) {
     }
 }
 fn analyze_stmt(a, stmt) {
-    let type = 0;
-    let stmts = 0;
-    let i = 0;
-    let size = 0;
-    let params = 0;
-    let p_size = 0;
-    let events = 0;
-    let e_entry = 0;
-    let e_node = 0;
-    let args = 0;
-    let has_sig = 0;
-    let sig_agent_name = 0;
-    let required_roles = 0;
-    let a_entry = 0;
-    let a_node = 0;
-    let agent_roles = 0;
-    let r = 0;
-    let authorized = 0;
-    let req_role = 0;
-    let ar = 0;
-    let a_role = 0;
+    let mut type = 0;
+    let mut stmts = 0;
+    let mut i = 0;
+    let mut size = 0;
+    let mut params = 0;
+    let mut p_size = 0;
+    let mut events = 0;
+    let mut e_entry = 0;
+    let mut e_node = 0;
+    let mut args = 0;
+    let mut has_sig = 0;
+    let mut sig_agent_name = 0;
+    let mut required_roles = 0;
+    let mut a_entry = 0;
+    let mut a_node = 0;
+    let mut agent_roles = 0;
+    let mut r = 0;
+    let mut authorized = 0;
+    let mut req_role = 0;
+    let mut ar = 0;
+    let mut a_role = 0;
     if (stmt == 0) { return 0; }
     type = stmt[0];
     if (type == STMT_EXPRESSION) {
@@ -183,7 +183,7 @@ fn analyze_stmt(a, stmt) {
     } else if (type == STMT_LET) {
         analyze_expr(a, stmt[LET_VAL]);
         let explicit_type = stmt[LET_TYPE];
-        let inferred_type = explicit_type;
+        let mut inferred_type = explicit_type;
         if (explicit_type == 0) {
             inferred_type = get_expr_type(a, stmt[LET_VAL]);
         }
@@ -196,7 +196,7 @@ fn analyze_stmt(a, stmt) {
         stmts = stmt[1];
         i = 0;
         size = vec_size(stmts);
-        let s = 0;
+        let mut s = 0;
         while (i < size) {
             s = vec_get(stmts, i);
             analyze_stmt(a, s);
@@ -228,10 +228,17 @@ fn analyze_stmt(a, stmt) {
         analyzer_begin_scope(a);
         params = stmt[FUNC_PARAMS];
         let p_types = stmt[FUNC_PARAMS_TYPES];
+        let params_mut = stmt[FUNC_PARAMS_MUT];
         i = 0;
         p_size = vec_size(params);
         while (i < p_size) {
-            analyzer_define(a, vec_get(params, i), 0, vec_get(p_types, i), 0, 0);
+            let mut p_mut_flag = 0;
+            if (params_mut) {
+                if (i < vec_size(params_mut)) {
+                    p_mut_flag = vec_get(params_mut, i);
+                }
+            }
+            analyzer_define(a, vec_get(params, i), 0, vec_get(p_types, i), p_mut_flag, 0);
             i = i + 1;
         }
         analyze_stmt(a, stmt[FUNC_BODY]);
@@ -260,7 +267,7 @@ fn analyze_stmt(a, stmt) {
         if (analyzer_resolve(a, stmt[1]) == 0) { analyze_error_internal(a, "Unknown event to reverse", stmt[3], stmt[4]); }
     } else if (type == STMT_EXCHANGE) {
         analyzer_define(a, stmt[EXCHANGE_NAME], stmt, 0, 0, 0);
-        events = stmt[EXCHANGE_EVENTS]; let i = 0; let size = vec_size(events);
+        events = stmt[EXCHANGE_EVENTS]; let mut i = 0; let mut size = vec_size(events);
         while (i < size) {
             if (analyzer_resolve(a, vec_get(events, i)) == 0) { analyze_error_internal(a, "Unknown event in exchange", stmt[EXCHANGE_LINE], stmt[EXCHANGE_COL]); }
             i = i + 1;
@@ -277,7 +284,7 @@ fn analyze_stmt(a, stmt) {
         e_entry = analyzer_resolve(a, stmt[1]);
         if (e_entry == 0) { analyze_error_internal(a, "Execution Violation: Unknown target event.", stmt[3], stmt[4]); return 0; }
         e_node = e_entry[1];
-        args = stmt[2]; let i = 0; let size = vec_size(args);
+        args = stmt[2]; let mut i = 0; let mut size = vec_size(args);
         has_sig = 0;
         sig_agent_name = 0;
         while (i < size) {
@@ -331,38 +338,38 @@ fn analyze_stmt(a, stmt) {
     }
 }
 fn analyze_event_duality(a, stmt) {
-    let name = 0;
-    let c_logic = 0;
-    let c_flows = 0;
-    let line = 0;
-    let e_fulfills = 0;
-    let size = 0;
-    let has_in = 0;
-    let has_out = 0;
-    let balance_map = 0;
-    let i = 0;
-    let f_node = 0;
-    let type = 0;
-    let amount_expr = 0;
-    let amount = 0;
-    let res_name = 0;
-    let res_entry = 0;
-    let f_agent = 0;
-    let t_agent = 0;
-    let interned_res = 0;
-    let current_bal_entry = 0;
-    let current_bal = 0;
-    let new_bal_entry = 0;
-    let v_name = 0;
-    let res_keys = 0;
-    let k = 0;
-    let k_size = 0;
-    let r_key = 0;
-    let r_bal_entry = 0;
-    let r_bal = 0;
-    let authorized_valuator = 0;
-    let v_entry = 0;
-    let v_node = 0;
+    let mut name = 0;
+    let mut c_logic = 0;
+    let mut c_flows = 0;
+    let mut line = 0;
+    let mut e_fulfills = 0;
+    let mut size = 0;
+    let mut has_in = 0;
+    let mut has_out = 0;
+    let mut balance_map = 0;
+    let mut i = 0;
+    let mut f_node = 0;
+    let mut type = 0;
+    let mut amount_expr = 0;
+    let mut amount = 0;
+    let mut res_name = 0;
+    let mut res_entry = 0;
+    let mut f_agent = 0;
+    let mut t_agent = 0;
+    let mut interned_res = 0;
+    let mut current_bal_entry = 0;
+    let mut current_bal = 0;
+    let mut new_bal_entry = 0;
+    let mut v_name = 0;
+    let mut res_keys = 0;
+    let mut k = 0;
+    let mut k_size = 0;
+    let mut r_key = 0;
+    let mut r_bal_entry = 0;
+    let mut r_bal = 0;
+    let mut authorized_valuator = 0;
+    let mut v_entry = 0;
+    let mut v_node = 0;
     name = stmt[1];
     c_logic = stmt[2];
     c_flows = stmt[3];
@@ -467,20 +474,20 @@ fn analyze_event_duality(a, stmt) {
     }
 }
 fn verify_interface_implementation(a, i_name, target, line, col) {
-    let i_entry = 0;
-    let i_stmt = 0;
-    let methods = 0;
-    let m_i = 0;
-    let m_size = 0;
-    let method = 0;
-    let m_name = 0;
-    let m_params = 0;
-    let m_p_size = 0;
-    let found = 0;
-    let body = 0;
-    let stmts = 0;
-    let s_i = 0;
-    let s = 0;
+    let mut i_entry = 0;
+    let mut i_stmt = 0;
+    let mut methods = 0;
+    let mut m_i = 0;
+    let mut m_size = 0;
+    let mut method = 0;
+    let mut m_name = 0;
+    let mut m_params = 0;
+    let mut m_p_size = 0;
+    let mut found = 0;
+    let mut body = 0;
+    let mut stmts = 0;
+    let mut s_i = 0;
+    let mut s = 0;
     i_entry = analyzer_resolve(a, i_name);
     if (i_entry == 0) { analyze_error_internal(a, "Contract Violation: Implementation of unknown interface.", line, col); }
     i_stmt = i_entry[1];
@@ -520,13 +527,13 @@ fn verify_interface_implementation(a, i_name, target, line, col) {
     }
 }
 fn analyze_program(a, ast) {
-    let i = 0;
-    let size = 0;
+    let mut i = 0;
+    let mut size = 0;
     let stmt = 0;
     let type = 0;
     let params = 0;
-    let k = 0;
-    let p_size = 0;
+    let mut k = 0;
+    let mut p_size = 0;
     let name = 0;
     i = 0;
     size = vec_size(ast);
@@ -534,7 +541,20 @@ fn analyze_program(a, ast) {
         let loop_stmt = vec_get(ast, i);
         let loop_type = loop_stmt[0];
         if (loop_type == STMT_FUNCTION || loop_type == STMT_EXTERN || loop_type == STMT_LET || loop_type == STMT_STRUCT || loop_type == STMT_AGENT || loop_type == STMT_RESOURCE || loop_type == STMT_EVENT || loop_type == STMT_COMMITMENT || loop_type == STMT_POLICY || loop_type == STMT_EXCHANGE || loop_type == STMT_TRANSFORMATION || loop_type == STMT_VALUATOR || loop_type == STMT_INTERFACE) {
-            analyzer_define(a, loop_stmt[1], loop_stmt, 0, 0, 0);
+            let mut is_mut = 0;
+            let mut is_res = 0;
+            let mut ret_type = 0;
+            if (loop_type == STMT_LET) {
+                is_mut = loop_stmt[LET_IS_MUT];
+                is_res = loop_stmt[LET_IS_RESOURCE];
+            }
+            if (loop_type == STMT_FUNCTION) {
+                ret_type = loop_stmt[FUNC_RETURN_TYPE];
+            }
+            if (loop_type == STMT_EXTERN) {
+                ret_type = loop_stmt[EXTERN_RETURN_TYPE];
+            }
+            analyzer_define(a, loop_stmt[1], loop_stmt, ret_type, is_mut, is_res);
         }
         i = i + 1;
     }
@@ -544,11 +564,21 @@ fn analyze_program(a, ast) {
         let loop_type_2 = loop_stmt_2[0];
         if (loop_type_2 == STMT_FUNCTION) {
             analyzer_begin_scope(a);
-            let params_2 = loop_stmt_2[2];
+            let params_2 = loop_stmt_2[FUNC_PARAMS];
+            let p_types = loop_stmt_2[FUNC_PARAMS_TYPES];
+            let params_mut_2 = loop_stmt_2[FUNC_PARAMS_MUT];
             k = 0;
             p_size = vec_size(params_2);
             while (k < p_size) {
-                analyzer_define(a, vec_get(params_2, k), 0, 0, 0, 0);
+                let mut pm = 0;
+                if (params_mut_2) {
+                    if (k < vec_size(params_mut_2)) { pm = vec_get(params_mut_2, k); }
+                }
+                let mut pt = 0;
+                if (p_types) {
+                    if (k < vec_size(p_types)) { pt = vec_get(p_types, k); }
+                }
+                analyzer_define(a, vec_get(params_2, k), 0, pt, pm, 0);
                 k = k + 1;
             }
             analyze_stmt(a, loop_stmt_2[3]);
@@ -572,7 +602,7 @@ fn analyzer_substitute_types(a, node, generics, types) {
     let type = node[0];
     if (type == EXPR_VARIABLE) {
         let name = node[1];
-        let i = 0; let size = vec_size(generics);
+        let mut i = 0; let size = vec_size(generics);
         while (i < size) {
             if (str_equal(name, vec_get(generics, i))) {
                 node[1] = vec_get(types, i);
@@ -582,9 +612,9 @@ fn analyzer_substitute_types(a, node, generics, types) {
         }
     } else if (type == EXPR_CALL) {
         analyzer_substitute_types(a, node[1], generics, types);
-        let args = node[2]; let i = 0; while (i < vec_size(args)) { analyzer_substitute_types(a, vec_get(args, i), generics, types); i = i + 1; }
+        let mut args = node[2]; let mut i = 0; while (i < vec_size(args)) { analyzer_substitute_types(a, vec_get(args, i), generics, types); i = i + 1; }
     } else if (type == STMT_BLOCK) {
-        let stmts = node[1]; let i = 0; while (i < vec_size(stmts)) { analyzer_substitute_types(a, vec_get(stmts, i), generics, types); i = i + 1; }
+        let mut stmts = node[1]; let mut i = 0; while (i < vec_size(stmts)) { analyzer_substitute_types(a, vec_get(stmts, i), generics, types); i = i + 1; }
     } else if (type == STMT_LET) {
         analyzer_substitute_types(a, node[2], generics, types);
     } else if (type == EXPR_BINARY) {
@@ -603,8 +633,8 @@ fn analyzer_specialize(a, gen_func_name, types) {
     if (generics == 0) { return gen_func_name; }
     
 
-    let mangled = gen_func_name;
-    let i = 0; let size = vec_size(types);
+    let mut mangled = gen_func_name;
+    let mut i = 0; let size = vec_size(types);
     while (i < size) {
         mangled = str_concat(mangled, "_m_");
         mangled = str_concat(mangled, vec_get(types, i));

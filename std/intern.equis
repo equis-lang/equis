@@ -1,7 +1,7 @@
 use "std/sys.equis";
 use "std/collections.equis";
 use "std/string.equis";
-let __intern_map = 0;
+let mut __intern_map = 0;
 fn __equis_pre_intern() {
     if (__intern_map == 0) {
         __intern_map = map_new(100000);
@@ -20,7 +20,7 @@ fn intern_string(s) {
 
     let len = sys_strlen(s);
     let clone = sys_malloc(len + 1);
-    let i = 0;
+    let mut i = 0;
     while (i < len) {
         set_char(clone, i, get_char(s, i));
         i = i + 1;
@@ -35,7 +35,7 @@ fn intern_string(s) {
 fn intern_cleanup() {
     if (__intern_map == 0) { return 0; }
     let keys = map_keys(__intern_map);
-    let i = 0;
+    let mut i = 0;
     let size = vec_size(keys);
     while (i < size) {
         let k = vec_get(keys, i);

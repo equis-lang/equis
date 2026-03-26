@@ -5,12 +5,12 @@ use "std/intern.equis";
 use "std/arena.equis";
 use "compiler/constants.equis";
 fn analyzer_new() {
-    let a = 0;
-    let arena = 0;
-    let scopes = 0;
-    let global_map = 0;
-    let diagnostics = 0;
-    let monomorphizer = 0;
+    let mut a = 0;
+    let mut arena = 0;
+    let mut scopes = 0;
+    let mut global_map = 0;
+    let mut diagnostics = 0;
+    let mut monomorphizer = 0;
     a = sys_malloc(10 * 8);
     arena = arena_new(1024 * 1024);
     scopes = vec_new(16);
@@ -73,7 +73,7 @@ fn analyzer_add_builtins(a) {
     analyzer_define(a, "analyzer_is_global", 0, 0, 0, 0);
 }
 fn analyzer_begin_scope(a) {
-    let new_map = 0;
+    let mut new_map = 0;
     new_map = map_new(1000);
     a[0] = vec_push(a[0], new_map);
     a[1] = vec_size(a[0]) - 1;
@@ -87,7 +87,7 @@ fn analyzer_end_scope(a) {
 fn analyzer_define(a, name, node, static_type, is_mut, is_res) {
     let scopes = a[0];
     let current_map = vec_get(scopes, a[1]);
-    let entry = sys_malloc(5 * 8);
+    let mut entry = sys_malloc(5 * 8);
     entry[0] = intern_string(name);
     entry[1] = node;
     entry[2] = static_type;
@@ -95,11 +95,11 @@ fn analyzer_define(a, name, node, static_type, is_mut, is_res) {
     entry[4] = is_res;
     map_put(current_map, entry[0], entry);
 }
-let resolve_stat = 0;
+let mut resolve_stat = 0;
 fn analyzer_resolve(a, name) {
-    let i = 0;
-    let scope_map = 0;
-    let entry = 0;
+    let mut i = 0;
+    let mut scope_map = 0;
+    let mut entry = 0;
     if (resolve_stat == 0) { resolve_stat = sys_malloc(16); resolve_stat[0] = 0; }
     resolve_stat[0] = resolve_stat[0] + 1;
     i = a[1];
@@ -114,7 +114,7 @@ fn analyzer_resolve(a, name) {
     return 0;
 }
 fn analyzer_is_global(a, name) {
-    let scope_map = 0;
+    let mut scope_map = 0;
     scope_map = vec_get(a[0], 0);
     if (map_get(scope_map, intern_string(name))) { return 1; }
     return 0;
@@ -132,7 +132,7 @@ fn analyze_error_internal(a, msg, line, col) {
 }
 fn analyze_undeclared_internal(a, name, line, col) {
     if (a[4]) {
-        let msg = str_concat("Undeclared variable '", name);
+        let mut msg = str_concat("Undeclared variable '", name);
         msg = str_concat(msg, "'");
         analyze_error_internal(a, msg, line, col);
         return 0;
@@ -162,7 +162,7 @@ fn analyze_undeclared(name, line, col) {
 fn analyzer_copy_node(a, node) {
     if (node == 0) { return 0; }
     let type = node[0];
-    let new_node = 0;
+    let mut new_node = 0;
     if (type == EXPR_VARIABLE) {
         new_node = analyzer_alloc(a, 4 * 8);
         new_node[0] = EXPR_VARIABLE;
@@ -173,16 +173,16 @@ fn analyzer_copy_node(a, node) {
         new_node = analyzer_alloc(a, 6 * 8);
         new_node[0] = EXPR_CALL;
         new_node[1] = analyzer_copy_node(a, node[1]);
-        let args = node[2]; let new_args = vec_new(vec_size(args));
-        let i = 0; let n_size = vec_size(args);
+        let mut args = node[2]; let mut new_args = vec_new(vec_size(args));
+        let mut i = 0; let n_size = vec_size(args);
         while (i < n_size) { new_args = vec_push(new_args, analyzer_copy_node(a, vec_get(args, i))); i = i + 1; }
         new_node[2] = new_args;
         new_node[3] = node[3]; new_node[4] = node[4]; new_node[5] = node[5];
     } else if (type == STMT_BLOCK) {
         new_node = analyzer_alloc(a, 4 * 8);
         new_node[0] = STMT_BLOCK;
-        let stmts = node[1]; let new_stmts = vec_new(vec_size(stmts));
-        let i = 0; let s_size = vec_size(stmts);
+        let mut stmts = node[1]; let mut new_stmts = vec_new(vec_size(stmts));
+        let mut i = 0; let s_size = vec_size(stmts);
         while (i < s_size) { new_stmts = vec_push(new_stmts, analyzer_copy_node(a, vec_get(stmts, i))); i = i + 1; }
         new_node[1] = new_stmts;
         new_node[2] = node[2]; new_node[3] = node[3];

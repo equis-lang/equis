@@ -16,12 +16,12 @@ fn vec_push(mut vec, value) {
     let mut __eq_cap_val = vec[0];
     let size = vec[1];
     if (size >= __eq_cap_val) {
-        let new_cap = __eq_cap_val * 2;
+        let mut new_cap = __eq_cap_val * 2;
         if (new_cap == 0) { new_cap = 8; }
         vec = sys_realloc(vec, (new_cap + 2) * 8);
         vec[0] = new_cap;
     }
-    let offset = size + 2;
+    let mut offset = size + 2;
     vec[offset] = sys_retain(value);
     vec[1] = size + 1;
     return vec;
@@ -29,7 +29,7 @@ fn vec_push(mut vec, value) {
 fn vec_get(vec, index) {
     if (vec == 0) { return 0; }
     if (index < 0 || index >= vec[1]) { return 0; }
-    let offset = index + 2;
+    let mut offset = index + 2;
     return vec[offset];
 }
 fn vec_size(vec) {
@@ -164,10 +164,10 @@ fn vec_set(vec, index, value) {
 }
 fn vec_remove(vec, index) {
     let size = vec[1];
-    let i = index;
+    let mut i = index;
     let limit = size - 1;
-    let __eq_next_ptr = 0;
-    let val = 0;
+    let mut __eq_next_ptr = 0;
+    let mut val = 0;
     while (i < limit) {
         __eq_next_ptr = i + 1;
         val = vec_get(vec, __eq_next_ptr);
@@ -182,13 +182,13 @@ fn map_remove(m, key) {
     let __eq_cap_val = m[0];
     let h = map_hash(key);
     let quot = h / __eq_cap_val;
-    let rem = h - (quot * __eq_cap_val);
+    let mut rem = h - (quot * __eq_cap_val);
     if (rem < 0) { rem = 0 - rem; }
     let m_off = rem + 1;
-    let entry = m[m_off];
-    let prev = 0;
-    let entry_key = 0;
-    let next_entry = 0;
+    let mut entry = m[m_off];
+    let mut prev = 0;
+    let mut entry_key = 0;
+    let mut next_entry = 0;
     while (entry != 0) {
         entry_key = entry[0];
         if (str_equal(entry_key, key)) {

@@ -28,7 +28,7 @@ fn arena_alloc(a, size) {
     sys_assert(aligned_size >= size, "Arena error: allocation size overflow");
     if (a[1] + aligned_size > a[2]) {
         let current_capacity = a[2] - a[0];
-        let new_size = current_capacity * 2;
+        let mut new_size = current_capacity * 2;
         if (new_size < aligned_size) { new_size = aligned_size * 2; }
         let next_arena = arena_new(new_size);
         let old_base = a[0];
@@ -48,7 +48,7 @@ fn arena_alloc(a, size) {
     return p;
 }
 fn arena_free_all(a) {
-    let curr = a;
+    let mut curr = a;
     while (curr != 0) {
         let __eq_next_ptr = curr[3];
         sys_free(curr[0]);

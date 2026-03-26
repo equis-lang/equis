@@ -30,7 +30,7 @@ fn lexer_add_token(lex, type, text) {
 fn lexer_identifier(lex) {
     while (lexer_is_alphanumeric(lexer_peek(lex))) { lexer_advance(lex); }
     let text = intern_string(str_substring(lex[0], lex[1], lex[2] - lex[1]));
-    let type = TOKEN_IDENTIFIER;
+    let mut type = TOKEN_IDENTIFIER;
     if (str_equal(text, "fn")) { type = TOKEN_FN; }
     else if (str_equal(text, "let")) { type = TOKEN_LET; }
     else if (str_equal(text, "mut")) { type = TOKEN_MUT; }
@@ -91,7 +91,7 @@ fn lexer_string(lex) {
     let source = lex[0];
     let start_pos = lex[2];
     
-    let temp_chars = vec_new(256);
+    let mut temp_chars = vec_new(256);
     while (lexer_peek(lex) != 34 && lexer_is_at_end(lex) == 0) {
         let c = lexer_peek(lex);
         if (c == 92) {
@@ -121,7 +121,7 @@ fn lexer_string(lex) {
     
     let len = vec_size(temp_chars);
     let res = sys_malloc(len + 1);
-    let i = 0;
+    let mut i = 0;
     while (i < len) {
         set_char(res, i, vec_get(temp_chars, i));
         i = i + 1;

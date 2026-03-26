@@ -3,7 +3,7 @@
 ---
 
 ## Formal Specifications
-To maintain industrial standards for financial safety and compiler correctness, Equis is formally specified:
+To ensure financial safety and compiler correctness, Equis is formally specified:
 - **[Formal EBNF Grammar](docs/grammar.ebnf)**: Complete syntax definition.
 - **[Operational Semantics](docs/operational_semantics.md)**: Formal model of REA duality and state transitions.
 
@@ -79,10 +79,7 @@ extern fn sys_malloc(size);
 
 ---
 
-Equis provides native keywords for economic concepts, removing the need for generic boilerplate in accounting logic.
-
-> [!IMPORTANT]
-> **Implementation Note (v0.1.0):** In the current version, `Agent` and `Resource` declarations must be wrapped inside a global initialization function (e.g., `fn setup() { ... }`) for runtime registration.
+Equis provides native keywords for economic concepts, reducing the need for accounting boilerplate.
 
 ### Agents
 An `Agent` represents an entity (person or system). Agents can have specific roles.
@@ -209,7 +206,7 @@ assert(tx_amount > 0); // Stops execution if condition is false
 ```
 
 > [!TIP]
-> Use `if (condition) { print 1; }` during development for immediate numeric tracing in the compiler output.
+> Use `if (condition) { print 1; }` during development for immediate numeric tracing during execution.
 
 ---
 

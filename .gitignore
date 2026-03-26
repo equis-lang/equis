@@ -12,6 +12,7 @@ tests/
 
 *.db
 *.log
+*.txt
 
 .DS_Store
 Thumbs.db
@@ -25,6 +26,8 @@ brain/
 eq-core
 eq-production
 eq-core-boot
+eq-stage1
+eq-stage2
 
 *_test
 simple_test

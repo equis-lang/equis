@@ -29,7 +29,7 @@ fn verify_dual(peer_addr, event_id) {
     return 0;
 }
 
-fn commit_event(id, hash) {
+fn commit_event(mut id, hash) {
     let c = sys_malloc(3 * 8); 
     c.id = id;
     c.flow_hash = hash;

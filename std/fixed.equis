@@ -2,28 +2,28 @@ use "std/sys.equis";
 use "std/string.equis";
 fn FIXED_SCALE() { return 1000000; }
 fn fixed_new(i, f) {
-    let scale = 0;
+    let mut scale = 0;
     scale = FIXED_SCALE();
-    let res = 0;
+    let mut res = 0;
     res = (i * scale) + f;
     return res;
 }
 fn fixed_from_int(n) {
-    let scale = 0;
+    let mut scale = 0;
     scale = FIXED_SCALE();
-    let res = 0;
+    let mut res = 0;
     res = n * scale;
     return res;
 }
 fn fixed_add(a, b) { return a + b; }
 fn fixed_sub(a, b) { return a - b; }
 fn fixed_mul(a, b) {
-    let scale = FIXED_SCALE();
+    let mut scale = FIXED_SCALE();
     let prod = a * b;
-    let q = prod / scale;
-    let r = prod - (q * scale);
+    let mut q = prod / scale;
+    let mut r = prod - (q * scale);
     if (r < 0) { r = 0 - r; }
-    let half = scale / 2;
+    let mut half = scale / 2;
     if (r > half) {
         if (prod < 0) { q = q - 1; }
         else { q = q + 1; }
@@ -37,12 +37,12 @@ fn fixed_mul(a, b) {
     return q;
 }
 fn fixed_div(a, b) {
-    let scale = FIXED_SCALE();
+    let mut scale = FIXED_SCALE();
     let num = a * scale;
-    let q = num / b;
-    let r = num - (q * b);
+    let mut q = num / b;
+    let mut r = num - (q * b);
     if (r < 0) { r = 0 - r; }
-    let half = 0;
+    let mut half = 0;
     if (b < 0) { half = (0 - b) / 2; }
     else { half = b / 2; }
     if (r > half) {
@@ -57,19 +57,19 @@ fn fixed_div(a, b) {
     }
     return q;
 }
-fn fixed_to_str(n) {
-    let s = "";
+fn fixed_to_str(mut n) {
+    let mut s = "";
     if (n < 0) {
         s = "-";
         n = 0 - n;
     }
-    let scale = 0;
+    let mut scale = 0;
     scale = FIXED_SCALE();
-    let i = 0;
+    let mut i = 0;
     i = n / scale;
-    let f = 0;
+    let mut f = 0;
     f = n - (i * scale);
-    let i_str = 0;
+    let mut i_str = 0;
     i_str = str_from_int(i);
     s = str_concat(s, i_str);
     s = str_concat(s, ".");
@@ -78,15 +78,15 @@ fn fixed_to_str(n) {
     if (f < 1000) { s = str_concat(s, "0"); }
     if (f < 100) { s = str_concat(s, "0"); }
     if (f < 10) { s = str_concat(s, "0"); }
-    let f_str = 0;
+    let mut f_str = 0;
     f_str = str_from_int(f);
     s = str_concat(s, f_str);
     return s;
 }
 fn print_fixed(n) {
-    let s = 0;
+    let mut s = 0;
     s = fixed_to_str(n);
-    let slen = 0;
+    let mut slen = 0;
     slen = sys_strlen(s);
     write(1, s, slen);
 }

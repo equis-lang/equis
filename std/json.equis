@@ -11,20 +11,20 @@ fn json_put_str(m, k, v) { map_put(m, k, json_item_str(v)); }
 fn json_put_int(m, k, v) { map_put(m, k, json_item_int(v)); }
 fn json_put_obj(m, k, v) { map_put(m, k, json_item_obj(v)); }
 fn json_put_array(m, k, v) { map_put(m, k, json_item_array(v)); }
-fn json_item_str(v) { let n = sys_malloc(2 * 8); n[0] = JSON_TYPE_STRING; n[1] = v; return n; }
-fn json_item_int(v) { let n = sys_malloc(2 * 8); n[0] = JSON_TYPE_INT; n[1] = v; return n; }
-fn json_item_obj(v) { let n = sys_malloc(2 * 8); n[0] = JSON_TYPE_OBJECT; n[1] = v; return n; }
-fn json_item_array(v) { let n = sys_malloc(2 * 8); n[0] = JSON_TYPE_ARRAY; n[1] = v; return n; }
+fn json_item_str(v) { let mut n = sys_malloc(2 * 8); n[0] = JSON_TYPE_STRING; n[1] = v; return n; }
+fn json_item_int(v) { let mut n = sys_malloc(2 * 8); n[0] = JSON_TYPE_INT; n[1] = v; return n; }
+fn json_item_obj(v) { let mut n = sys_malloc(2 * 8); n[0] = JSON_TYPE_OBJECT; n[1] = v; return n; }
+fn json_item_array(v) { let mut n = sys_malloc(2 * 8); n[0] = JSON_TYPE_ARRAY; n[1] = v; return n; }
 fn json_serialize_value(item) {
     if (item == 0) { return "null"; }
     let type = item[0];
-    let val = item[1];
+    let mut val = item[1];
     if (type == JSON_TYPE_STRING) { return str_concat("\"", str_concat(val, "\"")); }
     if (type == JSON_TYPE_INT) { return str_from_int(val); }
     if (type == JSON_TYPE_OBJECT) { return json_serialize(val); }
     if (type == JSON_TYPE_ARRAY) {
-        let s = "[";
-        let i = 0; let n = vec_size(val);
+        let mut s = "[";
+        let mut i = 0; let mut n = vec_size(val);
         while (i < n) {
             s = str_concat(s, json_serialize_value(vec_get(val, i)));
             if (i < n - 1) { s = str_concat(s, ","); }
@@ -35,11 +35,11 @@ fn json_serialize_value(item) {
     return "null";
 }
 fn json_serialize(m) {
-    let s = "{";
+    let mut s = "{";
     let keys = map_keys(m);
-    let i = 0; let size = vec_size(keys);
+    let mut i = 0; let size = vec_size(keys);
     while (i < size) {
-        let k = vec_get(keys, i);
+        let mut k = vec_get(keys, i);
         let v = map_get(m, k);
         s = str_concat(s, "\"");
         s = str_concat(s, k);
@@ -51,28 +51,28 @@ fn json_serialize(m) {
     return str_concat(s, "}");
 }
 fn json_parse(s) {
-    let m = 0;
+    let mut m = 0;
     m = map_new(20);
-    let n = 0;
+    let mut n = 0;
     n = sys_strlen(s);
-    let i = 0;
-    let state = 0;
-    let k_start = 0;
-    let v_start = 0;
-    let current_key = 0;
-    let is_quoted = 0;
+    let mut i = 0;
+    let mut state = 0;
+    let mut k_start = 0;
+    let mut v_start = 0;
+    let mut current_key = 0;
+    let mut is_quoted = 0;
     while (i < n) {
-        let c = 0;
+        let mut c = 0;
         c = get_char(s, i);
         if (state == 0) {
             if (c == 34) { k_start = i + 1; state = 1; }
         }
         else if (state == 1) {
             if (c == 34) {
-                let k_len = 0;
+                let mut k_len = 0;
                 k_len = i - k_start;
                 current_key = sys_malloc(k_len + 1);
-                let k = 0;
+                let mut k = 0;
                 while (k < k_len) {
                     set_char(current_key, k, get_char(s, k_start + k));
                     k = k + 1;
@@ -92,7 +92,7 @@ fn json_parse(s) {
             }
         }
         else if (state == 4) {
-            let finished = 0;
+            let mut finished = 0;
             if (is_quoted) { if (c == 34) { finished = 1; } }
             else {
                 if (c == 44) { finished = 1; }
@@ -100,11 +100,11 @@ fn json_parse(s) {
                 if (c == 32) { finished = 1; }
             }
             if (finished) {
-                let v_len = 0;
+                let mut v_len = 0;
                 v_len = i - v_start;
-                let val = 0;
+                let mut val = 0;
                 val = sys_malloc(v_len + 1);
-                let k2 = 0;
+                let mut k2 = 0;
                 while (k2 < v_len) {
                     set_char(val, k2, get_char(s, v_start + k2));
                     k2 = k2 + 1;
@@ -119,7 +119,7 @@ fn json_parse(s) {
     return m;
 }
 fn json_get_int(m, k) {
-    let s = 0;
+    let mut s = 0;
     s = map_get(m, k);
     if (s == 0) { return 0; }
     return str_to_int_internal(s);
@@ -127,12 +127,12 @@ fn json_get_int(m, k) {
 fn json_get_str(m, k) { return map_get(m, k); }
 fn str_to_int_internal(s) {
     if (s == 0) { return 0; }
-    let res = 0;
-    let i = 0;
-    let sign = 1;
+    let mut res = 0;
+    let mut i = 0;
+    let mut sign = 1;
     if (get_char(s, 0) == 45) { sign = -1; i = 1; }
     while (get_char(s, i) != 0) {
-        let c = 0;
+        let mut c = 0;
         c = get_char(s, i);
         if (c >= 48) { if (c <= 57) { res = (res * 10) + (c - 48); } }
         i = i + 1;

@@ -3,7 +3,7 @@ use "std/string.equis";
 use "std/collections.equis";
 use "compiler/constants.equis";
 fn parser_new(tokens) {
-    let p = 0;
+    let mut p = 0;
     p = sys_malloc(8 * 8);
     p[0] = tokens;
     p[1] = 0;
@@ -12,7 +12,7 @@ fn parser_new(tokens) {
     return p;
 }
 fn parser_is_at_end(p) {
-    let tok = 0;
+    let mut tok = 0;
     if (p[1] >= p[2]) { return 1; }
     tok = vec_get(p[0], p[1]);
     return tok[0] == TOKEN_EOF;
@@ -28,7 +28,7 @@ fn parser_advance(p) {
     return parser_previous(p);
 }
 fn parser_check(p, type) {
-    let tok = 0;
+    let mut tok = 0;
     if (parser_is_at_end(p)) { return 0; }
     tok = parser_peek(p);
     return tok[0] == type;
@@ -42,10 +42,10 @@ fn parser_match(p, type) {
 }
 fn parser_parse_generics(p) {
     if (parser_match(p, TOKEN_LESS)) {
-        let list = vec_new(INITIAL_VEC_CAP);
-        let more = 1;
+        let mut list = vec_new(INITIAL_VEC_CAP);
+        let mut more = 1;
         while (more && parser_check(p, TOKEN_IDENTIFIER)) {
-            let tok = parser_consume(p, TOKEN_IDENTIFIER, "Expected generic type identifier");
+            let mut tok = parser_consume(p, TOKEN_IDENTIFIER, "Expected generic type identifier");
             list = vec_push(list, tok[1]);
             if (parser_match(p, TOKEN_COMMA) == 0) { more = 0; }
         }
@@ -55,7 +55,7 @@ fn parser_parse_generics(p) {
     return 0;
 }
 fn parser_error(p, msg) {
-    let tok = 0;
+    let mut tok = 0;
     tok = parser_peek(p);
     write(2, "error: ", 7);
     write(2, msg, sys_strlen(msg));
@@ -63,7 +63,7 @@ fn parser_error(p, msg) {
     exit(1);
 }
 fn parser_consume(p, type, msg) {
-    let tok = 0;
+    let mut tok = 0;
     if (parser_check(p, type)) { return parser_advance(p); }
     tok = parser_peek(p);
     write(2, "syntax error: ", 14);
@@ -84,7 +84,7 @@ fn parser_consume(p, type, msg) {
     exit(1);
 }
 fn expr_binary(left, op, right, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = EXPR_BINARY;
     node[BINARY_LEFT] = left;
@@ -95,7 +95,7 @@ fn expr_binary(left, op, right, line, col) {
     return node;
 }
 fn expr_literal(val, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = EXPR_LITERAL;
     node[LITERAL_VAL] = val;
@@ -104,7 +104,7 @@ fn expr_literal(val, line, col) {
     return node;
 }
 fn expr_string_literal(val, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = EXPR_STRING_LITERAL;
     node[LITERAL_VAL] = val;
@@ -113,7 +113,7 @@ fn expr_string_literal(val, line, col) {
     return node;
 }
 fn expr_variable(name, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = EXPR_VARIABLE;
     node[VAR_NAME] = name;
@@ -122,7 +122,7 @@ fn expr_variable(name, line, col) {
     return node;
 }
 fn expr_call(callee, args, line, col, generics) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8); 
     node[AST_TYPE] = EXPR_CALL;
     node[CALL_CALLEE] = callee;
@@ -133,7 +133,7 @@ fn expr_call(callee, args, line, col, generics) {
     return node;
 }
 fn expr_try(expr, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = EXPR_TRY;
     node[1] = expr;
@@ -142,7 +142,7 @@ fn expr_try(expr, line, col) {
     return node;
 }
 fn expr_index(obj, idx, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = EXPR_INDEX;
     node[INDEX_OBJ] = obj;
@@ -152,7 +152,7 @@ fn expr_index(obj, idx, line, col) {
     return node;
 }
 fn expr_assignment(target, value, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = EXPR_ASSIGNMENT;
     node[ASSIGN_TARGET] = target;
@@ -162,7 +162,7 @@ fn expr_assignment(target, value, line, col) {
     return node;
 }
 fn expr_get(object, name, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = EXPR_GET;
     node[GET_OBJ] = object;
@@ -172,7 +172,7 @@ fn expr_get(object, name, line, col) {
     return node;
 }
 fn stmt_expression(expr, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = STMT_EXPRESSION;
     node[1] = expr;
@@ -181,9 +181,9 @@ fn stmt_expression(expr, line, col) {
     return node;
 }
 fn parse_type(p) {
-    let is_fallible = 0;
+    let mut is_fallible = 0;
     if (parser_match(p, TOKEN_QUESTION)) { is_fallible = 1; }
-    let type = 0;
+    let mut type = 0;
     if (parser_match(p, TOKEN_I64)) { type = TOKEN_I64; }
     else if (parser_match(p, TOKEN_F64)) { type = TOKEN_F64; }
     else if (parser_match(p, TOKEN_BOOL)) { type = TOKEN_BOOL; }
@@ -194,7 +194,7 @@ fn parse_type(p) {
     return type;
 }
 fn stmt_let(name, value, type, line, col, is_mut, is_res) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = STMT_LET;
     node[LET_NAME] = name;
@@ -207,7 +207,7 @@ fn stmt_let(name, value, type, line, col, is_mut, is_res) {
     return node;
 }
 fn stmt_if(cond, then, els, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = STMT_IF;
     node[IF_COND] = cond;
@@ -218,7 +218,7 @@ fn stmt_if(cond, then, els, line, col) {
     return node;
 }
 fn stmt_while(cond, body, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = STMT_WHILE;
     node[WHILE_COND] = cond;
@@ -228,7 +228,7 @@ fn stmt_while(cond, body, line, col) {
     return node;
 }
 fn stmt_return(val, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = STMT_RETURN;
     node[1] = val;
@@ -237,7 +237,7 @@ fn stmt_return(val, line, col) {
     return node;
 }
 fn stmt_block(stmts, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = STMT_BLOCK;
     node[1] = stmts;
@@ -246,7 +246,7 @@ fn stmt_block(stmts, line, col) {
     return node;
 }
 fn stmt_print(expr, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = STMT_PRINT;
     node[1] = expr;
@@ -255,7 +255,7 @@ fn stmt_print(expr, line, col) {
     return node;
 }
 fn stmt_interface(name, methods, line, col) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = STMT_INTERFACE;
     node[1] = name;
@@ -265,7 +265,7 @@ fn stmt_interface(name, methods, line, col) {
     return node;
 }
 fn stmt_function(name, params, body, line, col, generics, param_types, return_type, params_mut) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(10 * 8);
     node[AST_TYPE] = STMT_FUNCTION;
     node[FUNC_NAME] = name;
@@ -280,7 +280,7 @@ fn stmt_function(name, params, body, line, col, generics, param_types, return_ty
     return node;
 }
 fn stmt_extern(name, params, line, col, param_types, return_type) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = STMT_EXTERN;
     node[EXTERN_NAME] = name;
@@ -292,7 +292,7 @@ fn stmt_extern(name, params, line, col, param_types, return_type) {
     return node;
 }
 fn stmt_struct(name, fields, line, col, generics) {
-    let node = 0;
+    let mut node = 0;
     node = sys_malloc(8 * 8);
     node[AST_TYPE] = STMT_STRUCT;
     node[STRUCT_NAME] = name;
@@ -303,12 +303,12 @@ fn stmt_struct(name, fields, line, col, generics) {
     return node;
 }
 fn parse_primary(p) {
-    let expr = 0;
-    let tok = 0;
+    let mut expr = 0;
+    let mut tok = 0;
     if (parser_match(p, TOKEN_NUMBER)) {
         tok = parser_previous(p);
         let s = tok[1];
-        let i = 0; let has_dot = 0;
+        let mut i = 0; let mut has_dot = 0;
         while (get_char(s, i) != 0) {
             if (get_char(s, i) == 46) { has_dot = 1; }
             i = i + 1;
@@ -336,15 +336,15 @@ fn parse_primary(p) {
     parser_consume(p, 999, "Expect expression.");
 }
 fn parse_call(p) {
-    let expr = 0;
-    let loop = 0;
-    let args = 0;
-    let more = 0;
-    let r_parent = 0;
-    let idx = 0;
-    let r_bracket = 0;
-    let name = 0;
-    let tok = 0;
+    let mut expr = 0;
+    let mut loop = 0;
+    let mut args = 0;
+    let mut more = 0;
+    let mut r_parent = 0;
+    let mut idx = 0;
+    let mut r_bracket = 0;
+    let mut name = 0;
+    let mut tok = 0;
     expr = parse_primary(p);
     loop = 1;
     while (loop) {
@@ -376,10 +376,10 @@ fn parse_call(p) {
     return expr;
 }
 fn parse_unary(p) {
-    let op = 0;
-    let right = 0;
-    let node = 0;
-    let tok = 0;
+    let mut op = 0;
+    let mut right = 0;
+    let mut node = 0;
+    let mut tok = 0;
     if (parser_match(p, TOKEN_BANG) || parser_match(p, TOKEN_MINUS) || parser_match(p, TOKEN_ASTERISK) || parser_match(p, TOKEN_AMPERSAND)) {
         tok = parser_previous(p);
         op = tok[0];
@@ -395,10 +395,10 @@ fn parse_unary(p) {
     return parse_call(p);
 }
 fn parse_multiplication(p) {
-    let expr = 0;
-    let op = 0;
-    let right = 0;
-    let tok = 0;
+    let mut expr = 0;
+    let mut op = 0;
+    let mut right = 0;
+    let mut tok = 0;
     expr = parse_unary(p);
     while (parser_match(p, TOKEN_ASTERISK) || parser_match(p, TOKEN_SLASH) || parser_match(p, TOKEN_PERCENT)) {
         tok = parser_previous(p);
@@ -409,10 +409,10 @@ fn parse_multiplication(p) {
     return expr;
 }
 fn parse_addition(p) {
-    let expr = 0;
-    let op = 0;
-    let right = 0;
-    let tok = 0;
+    let mut expr = 0;
+    let mut op = 0;
+    let mut right = 0;
+    let mut tok = 0;
     expr = parse_multiplication(p);
     while (parser_match(p, TOKEN_PLUS) || parser_match(p, TOKEN_MINUS)) {
         tok = parser_previous(p);
@@ -423,10 +423,10 @@ fn parse_addition(p) {
     return expr;
 }
 fn parse_comparison(p) {
-    let expr = 0;
-    let op = 0;
-    let right = 0;
-    let tok = 0;
+    let mut expr = 0;
+    let mut op = 0;
+    let mut right = 0;
+    let mut tok = 0;
     expr = parse_addition(p);
     while (parser_match(p, TOKEN_GREATER) || parser_match(p, TOKEN_GREATER_EQUAL) || parser_match(p, TOKEN_LESS) || parser_match(p, TOKEN_LESS_EQUAL)) {
         tok = parser_previous(p);
@@ -437,10 +437,10 @@ fn parse_comparison(p) {
     return expr;
 }
 fn parse_equality(p) {
-    let expr = 0;
-    let op = 0;
-    let right = 0;
-    let tok = 0;
+    let mut expr = 0;
+    let mut op = 0;
+    let mut right = 0;
+    let mut tok = 0;
     expr = parse_comparison(p);
     while (parser_match(p, TOKEN_BANG_EQUAL) || parser_match(p, TOKEN_EQUAL_EQUAL)) {
         tok = parser_previous(p);
@@ -451,10 +451,10 @@ fn parse_equality(p) {
     return expr;
 }
 fn parse_and(p) {
-    let expr = 0;
-    let op = 0;
-    let right = 0;
-    let tok = 0;
+    let mut expr = 0;
+    let mut op = 0;
+    let mut right = 0;
+    let mut tok = 0;
     expr = parse_equality(p);
     while (parser_match(p, TOKEN_AND)) {
         tok = parser_previous(p);
@@ -465,10 +465,10 @@ fn parse_and(p) {
     return expr;
 }
 fn parse_or(p) {
-    let expr = 0;
-    let op = 0;
-    let right = 0;
-    let tok = 0;
+    let mut expr = 0;
+    let mut op = 0;
+    let mut right = 0;
+    let mut tok = 0;
     expr = parse_and(p);
     while (parser_match(p, TOKEN_OR)) {
         tok = parser_previous(p);
@@ -479,9 +479,9 @@ fn parse_or(p) {
     return expr;
 }
 fn parse_assignment(p) {
-    let expr = 0;
-    let equals = 0;
-    let value = 0;
+    let mut expr = 0;
+    let mut equals = 0;
+    let mut value = 0;
     expr = parse_or(p);
     if (parser_match(p, TOKEN_EQUAL)) {
         equals = parser_previous(p);
@@ -496,10 +496,10 @@ fn parse_assignment(p) {
 }
 fn parse_expression(p) {
     if (parser_match(p, TOKEN_TRY)) {
-        let line = parser_previous(p)[2];
+        let mut line = parser_previous(p)[2];
         let col = parser_previous(p)[3];
-        let expr = parse_expression(p);
-        let node = sys_malloc(8 * 8);
+        let mut expr = parse_expression(p);
+        let mut node = sys_malloc(8 * 8);
         node[0] = EXPR_TRY;
         node[TRY_EXPR] = expr;
         node[3] = line;
@@ -509,7 +509,7 @@ fn parse_expression(p) {
     return parse_assignment(p);
 }
 fn parse_statement(p) {
-    let tok = parser_peek(p);
+    let mut tok = parser_peek(p);
     if (parser_match(p, TOKEN_IF)) { return parse_if(p); }
     if (parser_match(p, TOKEN_WHILE)) { return parse_while(p); }
     if (parser_match(p, TOKEN_FOR)) { return parse_for(p); }
@@ -536,30 +536,30 @@ fn parse_statement(p) {
     return parse_expression_statement(p);
 }
 fn parse_expression_statement(p) {
-    let expr = 0;
-    let tok = 0;
+    let mut expr = 0;
+    let mut tok = 0;
     expr = parse_expression(p);
     tok = parser_previous(p); 
     parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after expression.");
     return stmt_expression(expr, tok[2], tok[3]);
 }
 fn parse_for(p) {
-    let tok = parser_previous(p);
-    let line = tok[2];
+    let mut tok = parser_previous(p);
+    let mut line = tok[2];
     parser_consume(p, TOKEN_LPARENT, "Expect '(' after 'for'.");
-    let init = 0;
+    let mut init = 0;
     if (parser_match(p, TOKEN_SEMICOLON) == 0) {
         if (parser_match(p, TOKEN_LET)) { init = parse_let(p); }
         else { init = parse_expression_statement(p); }
     }
-    let cond = 0;
+    let mut cond = 0;
     if (parser_check(p, TOKEN_SEMICOLON) == 0) { cond = parse_expression(p); }
     parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after loop condition.");
-    let step = 0;
+    let mut step = 0;
     if (parser_check(p, TOKEN_RPARENT) == 0) { step = parse_expression(p); }
     parser_consume(p, TOKEN_RPARENT, "Expect ')' after for clauses.");
-    let body = parse_statement(p);
-    let node = sys_malloc(8 * 8);
+    let mut body = parse_statement(p);
+    let mut node = sys_malloc(8 * 8);
     node[0] = STMT_FOR;
     node[1] = init;
     node[2] = cond;
@@ -569,14 +569,14 @@ fn parse_for(p) {
     return node;
 }
 fn parse_let(p) {
-    let tok = 0;
-    let name = 0;
-    let type = 0;
-    let value = 0;
-    let is_mut = 0;
-    let is_res = 0;
+    let mut tok = 0;
+    let mut name = 0;
+    let mut type = 0;
+    let mut value = 0;
+    let mut is_mut = 0;
+    let mut is_res = 0;
     tok = parser_previous(p); 
-    let loop = 1;
+    let mut loop = 1;
     while (loop) {
         if (parser_match(p, TOKEN_MUT)) { is_mut = 1; }
         else if (parser_match(p, TOKEN_RESOURCE)) { is_res = 1; }
@@ -594,10 +594,10 @@ fn parse_let(p) {
     return stmt_let(name[1], value, type, tok[2], tok[3], is_mut, is_res);
 }
 fn parse_if(p) {
-    let tok = 0;
-    let cond = 0;
-    let then = 0;
-    let els = 0;
+    let mut tok = 0;
+    let mut cond = 0;
+    let mut then = 0;
+    let mut els = 0;
     tok = parser_previous(p);
     parser_consume(p, TOKEN_LPARENT, "Expect '(' after 'if'.");
     cond = parse_expression(p);
@@ -608,9 +608,9 @@ fn parse_if(p) {
     return stmt_if(cond, then, els, tok[2], tok[3]);
 }
 fn parse_while(p) {
-    let tok = 0;
-    let cond = 0;
-    let body = 0;
+    let mut tok = 0;
+    let mut cond = 0;
+    let mut body = 0;
     tok = parser_previous(p);
     parser_consume(p, TOKEN_LPARENT, "Expect '(' after 'while'.");
     cond = parse_expression(p);
@@ -619,10 +619,10 @@ fn parse_while(p) {
     return stmt_while(cond, body, tok[2], tok[3]);
 }
 fn parse_use(p) {
-    let line = 0;
-    let path = 0;
-    let node = 0;
-    let tok = 0;
+    let mut line = 0;
+    let mut path = 0;
+    let mut node = 0;
+    let mut tok = 0;
     tok = parser_previous(p);
     line = tok[2];
     if (parser_check(p, TOKEN_STRING)) {
@@ -643,11 +643,11 @@ fn parse_use(p) {
     return node;
 }
 fn parse_struct_decl(p) {
-    let tok = 0;
-    let name_tok = 0;
-    let fields = 0;
-    let field_name = 0;
-    let generics = 0;
+    let mut tok = 0;
+    let mut name_tok = 0;
+    let mut fields = 0;
+    let mut field_name = 0;
+    let mut generics = 0;
     tok = parser_previous(p); 
     name_tok = parser_consume(p, TOKEN_IDENTIFIER, "Expect struct name.");
     generics = parser_parse_generics(p);
@@ -662,13 +662,13 @@ fn parse_struct_decl(p) {
     return stmt_struct(name_tok[1], fields, tok[2], tok[3], generics);
 }
 fn parse_agent(p) {
-    let tok = 0;
-    let name = 0;
-    let a_implements = 0;
-    let a_roles = 0;
-    let fields = 0;
-    let field_name_tok = 0;
-    let node = 0;
+    let mut tok = 0;
+    let mut name = 0;
+    let mut a_implements = 0;
+    let mut a_roles = 0;
+    let mut fields = 0;
+    let mut field_name_tok = 0;
+    let mut node = 0;
     tok = parser_previous(p); 
     name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Agent name.");
     a_implements = 0;
@@ -709,12 +709,12 @@ fn parse_agent(p) {
     return node;
 }
 fn parse_resource(p) {
-    let tok = 0;
-    let name = 0;
-    let metadata = 0;
-    let field_name_tok = 0;
-    let val = 0;
-    let node = 0;
+    let mut tok = 0;
+    let mut name = 0;
+    let mut metadata = 0;
+    let mut field_name_tok = 0;
+    let mut val = 0;
+    let mut node = 0;
     tok = parser_previous(p); 
     name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Resource name.");
     parser_consume(p, TOKEN_LBRACE, "Expect '{' before Resource body.");
@@ -741,12 +741,12 @@ fn parse_resource(p) {
     return node;
 }
 fn parse_execute(p) {
-    let tok = 0;
-    let event_name = 0;
-    let args = 0;
-    let key = 0;
-    let val = 0;
-    let node = 0;
+    let mut tok = 0;
+    let mut event_name = 0;
+    let mut args = 0;
+    let mut key = 0;
+    let mut val = 0;
+    let mut node = 0;
     tok = parser_previous(p); 
     event_name = parser_consume(p, TOKEN_IDENTIFIER, "Expect event name.")[1];
     parser_consume(p, TOKEN_LBRACE, "Expect '{'.");
@@ -773,9 +773,9 @@ fn parse_execute(p) {
     return node;
 }
 fn parse_assert(p) {
-    let tok = 0;
-    let expr = 0;
-    let node = 0;
+    let mut tok = 0;
+    let mut expr = 0;
+    let mut node = 0;
     tok = parser_previous(p); 
     expr = parse_expression(p);
     parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after assert.");
@@ -787,8 +787,8 @@ fn parse_assert(p) {
     return node;
 }
 fn parse_return(p) {
-    let tok = 0;
-    let val = 0;
+    let mut tok = 0;
+    let mut val = 0;
     tok = parser_previous(p); 
     val = 0;
     if (parser_check(p, TOKEN_SEMICOLON) == 0) { val = parse_expression(p); }
@@ -796,16 +796,16 @@ fn parse_return(p) {
     return stmt_return(val, tok[2], tok[3]);
 }
 fn parse_print(p) {
-    let tok = 0;
-    let expr = 0;
+    let mut tok = 0;
+    let mut expr = 0;
     tok = parser_previous(p); 
     expr = parse_expression(p);
     parser_consume(p, TOKEN_SEMICOLON, "Expect ';' after print.");
     return stmt_print(expr, tok[2], tok[3]);
 }
 fn parse_block(p) {
-    let tok = 0;
-    let stmts = 0;
+    let mut tok = 0;
+    let mut stmts = 0;
     tok = parser_previous(p); 
     stmts = vec_new(128);
     while (parser_is_at_end(p) == 0 && parser_check(p, TOKEN_RBRACE) == 0) {
@@ -815,18 +815,18 @@ fn parse_block(p) {
     return stmt_block(stmts, tok[2], tok[3]);
 }
 fn parse_function(p) {
-    let tok = 0;
-    let name_tok = 0;
-    let params = 0;
-    let param_types = 0;
-    let more = 0;
-    let param = 0;
-    let p_type = 0;
-    let body = 0;
-    let generics = 0;
-    let return_type = 0;
-    let params_mut = 0;
-    let is_mut = 0;
+    let mut tok = 0;
+    let mut name_tok = 0;
+    let mut params = 0;
+    let mut param_types = 0;
+    let mut more = 0;
+    let mut param = 0;
+    let mut p_type = 0;
+    let mut body = 0;
+    let mut generics = 0;
+    let mut return_type = 0;
+    let mut params_mut = 0;
+    let mut is_mut = 0;
     tok = parser_previous(p); 
     name_tok = parser_consume(p, TOKEN_IDENTIFIER, "Expect function name.");
     generics = parser_parse_generics(p);
@@ -861,14 +861,14 @@ fn parse_function(p) {
     return stmt_function(name_tok[1], params, body, tok[2], tok[3], generics, param_types, return_type, params_mut);
 }
 fn parse_extern(p) {
-    let tok = 0;
-    let name_tok = 0;
-    let params = 0;
-    let param_types = 0;
-    let more = 0;
-    let param = 0;
-    let p_type = 0;
-    let return_type = 0;
+    let mut tok = 0;
+    let mut name_tok = 0;
+    let mut params = 0;
+    let mut param_types = 0;
+    let mut more = 0;
+    let mut param = 0;
+    let mut p_type = 0;
+    let mut return_type = 0;
     tok = parser_previous(p); 
     parser_consume(p, TOKEN_FN, "Expect 'fn' after 'extern'.");
     name_tok = parser_consume(p, TOKEN_IDENTIFIER, "Expect function name.");
@@ -901,12 +901,12 @@ fn parse_extern(p) {
     return stmt_extern(name_tok[1], params, tok[2], tok[3], param_types, return_type);
 }
 fn parse_interface(p) {
-    let tok = 0;
-    let name = 0;
-    let methods = 0;
-    let m_name = 0;
-    let params = 0;
-    let method = 0;
+    let mut tok = 0;
+    let mut name = 0;
+    let mut methods = 0;
+    let mut m_name = 0;
+    let mut params = 0;
+    let mut method = 0;
     tok = parser_previous(p);
     name = parser_consume(p, TOKEN_IDENTIFIER, "Expect interface name.")[1];
     parser_consume(p, TOKEN_LBRACE, "Expect '{' before interface body.");
@@ -937,7 +937,7 @@ fn parse_interface(p) {
     return stmt_interface(name, methods, tok[2], tok[3]);
 }
 fn parse_program(p) {
-    let decls = 0;
+    let mut decls = 0;
     decls = vec_new(4096);
     while (parser_is_at_end(p) == 0) {
         decls = vec_push(decls, parse_statement(p));
@@ -945,20 +945,20 @@ fn parse_program(p) {
     return decls;
 }
 fn parse_event(p) {
-    let tok = 0;
-    let name = 0;
-    let e_fulfills = 0;
-    let e_valuator = 0;
-    let e_roles = 0;
-    let c_logic = 0;
-    let c_flows = 0;
-    let type = 0;
-    let amount = 0;
-    let res_name = 0;
-    let c_from = 0;
-    let c_to = 0;
-    let fnode = 0;
-    let node = 0;
+    let mut tok = 0;
+    let mut name = 0;
+    let mut e_fulfills = 0;
+    let mut e_valuator = 0;
+    let mut e_roles = 0;
+    let mut c_logic = 0;
+    let mut c_flows = 0;
+    let mut type = 0;
+    let mut amount = 0;
+    let mut res_name = 0;
+    let mut c_from = 0;
+    let mut c_to = 0;
+    let mut fnode = 0;
+    let mut node = 0;
     tok = parser_previous(p); 
     name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Event name.");
     e_fulfills = 0;
@@ -1024,18 +1024,18 @@ fn parse_event(p) {
     return node;
 }
 fn parse_commitment(p) {
-    let line = 0;
-    let name = 0;
-    let c_valuator = 0;
-    let c_logic = 0;
-    let c_flows = 0;
-    let type = 0;
-    let amount = 0;
-    let res_name = 0;
-    let c_from = 0;
-    let c_to = 0;
-    let fnode = 0;
-    let node = 0;
+    let mut line = 0;
+    let mut name = 0;
+    let mut c_valuator = 0;
+    let mut c_logic = 0;
+    let mut c_flows = 0;
+    let mut type = 0;
+    let mut amount = 0;
+    let mut res_name = 0;
+    let mut c_from = 0;
+    let mut c_to = 0;
+    let mut fnode = 0;
+    let mut node = 0;
     line = parser_previous(p)[2];
     name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Commitment name.");
     c_valuator = 0;
@@ -1085,11 +1085,11 @@ fn parse_commitment(p) {
     return node;
 }
 fn parse_policy(p) {
-    let tok = 0;
-    let line = 0;
-    let name = 0;
-    let body = 0;
-    let node = 0;
+    let mut tok = 0;
+    let mut line = 0;
+    let mut name = 0;
+    let mut body = 0;
+    let mut node = 0;
     tok = parser_previous(p);
     line = tok[2];
     name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Policy name.");
@@ -1107,12 +1107,12 @@ fn parse_policy(p) {
     return node;
 }
 fn parse_reverse(p) {
-    let tok = 0;
-    let event_name = 0;
-    let args = 0;
-    let key = 0;
-    let val = 0;
-    let node = 0;
+    let mut tok = 0;
+    let mut event_name = 0;
+    let mut args = 0;
+    let mut key = 0;
+    let mut val = 0;
+    let mut node = 0;
     tok = parser_previous(p); 
     event_name = parser_consume(p, TOKEN_IDENTIFIER, "Expect event name.")[1];
     parser_consume(p, TOKEN_LBRACE, "Expect '{'.");
@@ -1139,11 +1139,11 @@ fn parse_reverse(p) {
     return node;
 }
 fn parse_exchange(p) {
-    let tok = 0;
-    let name = 0;
-    let events = 0;
-    let ev = 0;
-    let node = 0;
+    let mut tok = 0;
+    let mut name = 0;
+    let mut events = 0;
+    let mut ev = 0;
+    let mut node = 0;
     tok = parser_previous(p); 
     name = parser_consume(p, TOKEN_IDENTIFIER, "Expect exchange name.");
     parser_consume(p, TOKEN_LBRACE, "Expect '{' before exchange body.");
@@ -1163,19 +1163,19 @@ fn parse_exchange(p) {
     return node;
 }
 fn parse_transformation(p) {
-    let line = 0;
-    let node = 0;
+    let mut line = 0;
+    let mut node = 0;
     line = parser_previous(p)[2];
     node = parse_event(p);
     node[AST_TYPE] = STMT_TRANSFORMATION;
     return node;
 }
 fn parse_valuator(p) {
-    let tok = 0;
-    let name = 0;
-    let v_implements = 0;
-    let body = 0;
-    let node = 0;
+    let mut tok = 0;
+    let mut name = 0;
+    let mut v_implements = 0;
+    let mut body = 0;
+    let mut node = 0;
     tok = parser_previous(p); 
     name = parser_consume(p, TOKEN_IDENTIFIER, "Expect Valuator name.");
     v_implements = 0;

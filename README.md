@@ -78,10 +78,10 @@ Event Purchase fulfills Order_01 roles { "CONSUMER" } {
 Beyond REA, Equis supports full systems-level programming:
 
 - **Pointers & Mutability** — Explicit `mut` constraints and raw pointer indexing
-- **Concurrency** — Thread-safe channels (`chan_send`, `chan_recv`) and preemptive fibers
-- **Networking** — Native TCP sockets for distributed duality verification
+- **Concurrency** — Thread-safe channels (`chan_send`, `chan_recv`) and checkpoint-based preemptive fibers
+- **Networking** — Sockets support for distributed duality verification
 - **Database** — PostgreSQL connectivity via `libpq`
-- **Atomic I/O** — Crash-safe file writes using `rename` semantics
+- **Atomic I/O** — File operations with crash-safe semantics
 
 ## Quick Start
 

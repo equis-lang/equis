@@ -33,7 +33,7 @@ fn bc_check_expr(bc, expr) {
     } else if (type == EXPR_CALL) {
         bc_check_expr(bc, expr[1]);
         let args = expr[2];
-        let i = 0;
+        let mut i = 0;
         let n = vec_size(args);
         while (i < n) {
             let arg = vec_get(args, i);
@@ -98,7 +98,7 @@ fn bc_check_stmt(bc, stmt) {
         }
     } else if (type == STMT_BLOCK) {
         let stmts = stmt[1];
-        let i = 0; let size = vec_size(stmts);
+        let mut i = 0; let size = vec_size(stmts);
         while (i < size) {
             bc_check_stmt(bc, vec_get(stmts, i));
             i = i + 1;
@@ -118,7 +118,7 @@ fn bc_check_stmt(bc, stmt) {
 }
 
 fn borrow_check_program(bc, ast) {
-    let i = 0; let size = vec_size(ast);
+    let mut i = 0; let size = vec_size(ast);
     while (i < size) {
         bc_check_stmt(bc, vec_get(ast, i));
         i = i + 1;

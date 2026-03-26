@@ -6,32 +6,32 @@ fn str_equal(s1, s2) {
     if (s1 == 0) { if (s2 == 0) { return 1; } return 0; }
     if (s2 == 0) { return 0; }
     if (s1 == s2) { return 1; }
-    let res = 0;
+    let mut res = 0;
     res = strcmp(s1, s2);
     return res == 0;
 }
 fn str_starts_with(s, prefix) {
     if (s == 0) { return 0; }
     if (prefix == 0) { return 1; }
-    let plen = 0;
+    let mut plen = 0;
     plen = sys_strlen(prefix);
-    let slen = 0;
+    let mut slen = 0;
     slen = sys_strlen(s);
     if (slen < plen) { return 0; }
-    let res = 0;
+    let mut res = 0;
     res = strncmp(s, prefix, plen);
     return res == 0;
 }
 fn str_len(s) {
     if (s == 0) { return 0; }
-    let res = 0;
+    let mut res = 0;
     res = sys_strlen(s);
     return res;
 }
 fn str_substring(s, start, len) {
     if (s == 0) { return 0; }
     let res_str = sys_malloc(len + 1);
-    let i = 0;
+    let mut i = 0;
     while (i < len) {
         set_char(res_str, i, get_char(s, start + i));
         i = i + 1;
@@ -51,52 +51,52 @@ fn is_digit(c) {
 }
 fn print_str(s) {
     if (s) {
-        let len = 0;
+        let mut len = 0;
         len = sys_strlen(s);
         write(1, s, len);
     }
 }
 fn str_concat(s1, s2) {
-    let l1 = 0;
+    let mut l1 = 0;
     l1 = sys_strlen(s1);
-    let l2 = 0;
+    let mut l2 = 0;
     l2 = sys_strlen(s2);
-    let out_ptr = 0;
+    let mut out_ptr = 0;
     out_ptr = sys_malloc(l1 + l2 + 1);
-    let i = 0;
-    let c1 = 0;
+    let mut i = 0;
+    let mut c1 = 0;
     while (i < l1) {
         c1 = get_char(s1, i);
         set_char(out_ptr, i, c1);
         i = i + 1;
     }
-    let j = 0;
-    let c2 = 0;
+    let mut j = 0;
+    let mut c2 = 0;
     while (j < l2) {
         c2 = get_char(s2, j);
         set_char(out_ptr, l1 + j, c2);
         j = j + 1;
     }
-    let fin = 0;
+    let mut fin = 0;
     fin = l1 + l2;
     set_char(out_ptr, fin, 0);
     return out_ptr;
 }
-fn str_from_int(n) {
+fn str_from_int(mut n) {
     if (n == 0) { return str_concat("0", ""); }
     let s = sys_malloc(32);
-    let i = 0;
-    let neg = 0;
+    let mut i = 0;
+    let mut neg = 0;
     if (n < 0) { neg = 1; n = 0 - n; }
     
     let digits = vec_new(32);
     while (n > 0) {
-        let d = n - ((n / 10) * 10);
+        let mut d = n - ((n / 10) * 10);
         vec_push(digits, d + 48);
         n = n / 10;
     }
     
-    let p = 0;
+    let mut p = 0;
     if (neg) { set_char(s, p, 45); p = p + 1; }
     
     let size = vec_size(digits);
@@ -111,14 +111,14 @@ fn str_from_int(n) {
 }
 fn str_to_int(s) {
     if (s == 0) { return 0; }
-    let res = 0;
-    let i = 0;
-    let sign = 1;
-    let fc = 0;
+    let mut res = 0;
+    let mut i = 0;
+    let mut sign = 1;
+    let mut fc = 0;
     fc = get_char(s, 0);
     if (fc == 45) { sign = -1; i = 1; }
-    let c = 0;
-    let d = 0;
+    let mut c = 0;
+    let mut d = 0;
     while (get_char(s, i) != 0) {
         c = get_char(s, i);
         d = c - 48;
@@ -131,20 +131,20 @@ fn str_to_int(s) {
 fn str_substring_equal(s, start, len, expected) {
     if (s == 0) { return 0; }
     if (expected == 0) { return 0; }
-    let p = 0;
+    let mut p = 0;
     p = sys_ptr_add(s, start);
-    let res = 0;
+    let mut res = 0;
     res = strncmp(p, expected, len);
     return res == 0;
 }
 fn str_to_fixed_internal(s, scale) {
     if (s == 0) { return 0; }
-    let res = 0;
-    let i = 0;
-    let sign = 1;
+    let mut res = 0;
+    let mut i = 0;
+    let mut sign = 1;
     let fc = get_char(s, 0);
     if (fc == 45) { sign = -1; i = 1; }
-    let integer_part = 0;
+    let mut integer_part = 0;
     while (get_char(s, i) != 0 && get_char(s, i) != 46) {
         let c = get_char(s, i);
         integer_part = (integer_part * 10) + (c - 48);
@@ -153,8 +153,8 @@ fn str_to_fixed_internal(s, scale) {
     res = integer_part * scale;
     if (get_char(s, i) == 46) {
         i = i + 1;
-        let frac_val = 0;
-        let frac_scale = scale / 10;
+        let mut frac_val = 0;
+        let mut frac_scale = scale / 10;
         while (get_char(s, i) != 0 && frac_scale > 0) {
             let c = get_char(s, i);
             frac_val = frac_val + ((c - 48) * frac_scale);

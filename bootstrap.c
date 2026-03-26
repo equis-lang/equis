@@ -75,6 +75,7 @@ void print_char(i64 c);
 void print_int_stderr(i64 n);
 void print_int(i64 n);
 long long sys_write_raw(long long fd, long long buf, long long count);
+long long _eq_g_AGENT_BODY = 0;
 long long _eq_g_AGENT_COL = 0;
 long long _eq_g_AGENT_FIELDS = 0;
 long long _eq_g_AGENT_IMPLEMENTS = 0;
@@ -120,11 +121,18 @@ long long _eq_g_EXPR_CALL = 0;
 long long _eq_g_EXPR_GET = 0;
 long long _eq_g_EXPR_INDEX = 0;
 long long _eq_g_EXPR_LITERAL = 0;
+long long _eq_g_EXPR_MATCH = 0;
+long long _eq_g_EXPR_REFERENCE = 0;
 long long _eq_g_EXPR_STRING_LITERAL = 0;
 long long _eq_g_EXPR_TRY = 0;
 long long _eq_g_EXPR_UNARY = 0;
 long long _eq_g_EXPR_VARIABLE = 0;
-long long _eq_g_EXPR_MATCH = 0;
+long long _eq_g_EXTERN_COL = 0;
+long long _eq_g_EXTERN_LINE = 0;
+long long _eq_g_EXTERN_NAME = 0;
+long long _eq_g_EXTERN_PARAMS = 0;
+long long _eq_g_EXTERN_PARAMS_TYPES = 0;
+long long _eq_g_EXTERN_RETURN_TYPE = 0;
 long long _eq_g_FLOW_AMOUNT = 0;
 long long _eq_g_FLOW_COL = 0;
 long long _eq_g_FLOW_FROM = 0;
@@ -132,15 +140,21 @@ long long _eq_g_FLOW_LINE = 0;
 long long _eq_g_FLOW_RES = 0;
 long long _eq_g_FLOW_TO = 0;
 long long _eq_g_FLOW_TYPE = 0;
+long long _eq_g_FOR_BODY = 0;
+long long _eq_g_FOR_COL = 0;
+long long _eq_g_FOR_COND = 0;
+long long _eq_g_FOR_INIT = 0;
+long long _eq_g_FOR_LINE = 0;
+long long _eq_g_FOR_STEP = 0;
 long long _eq_g_FUNC_BODY = 0;
 long long _eq_g_FUNC_COL = 0;
 long long _eq_g_FUNC_GENERICS = 0;
 long long _eq_g_FUNC_LINE = 0;
 long long _eq_g_FUNC_NAME = 0;
 long long _eq_g_FUNC_PARAMS = 0;
+long long _eq_g_FUNC_PARAMS_MUT = 0;
 long long _eq_g_FUNC_PARAMS_TYPES = 0;
 long long _eq_g_FUNC_RETURN_TYPE = 0;
-long long _eq_g_FUNC_PARAMS_MUT = 0;
 long long _eq_g_GET_COL = 0;
 long long _eq_g_GET_LINE = 0;
 long long _eq_g_GET_NAME = 0;
@@ -159,14 +173,17 @@ long long _eq_g_JSON_TYPE_ARRAY = 0;
 long long _eq_g_JSON_TYPE_INT = 0;
 long long _eq_g_JSON_TYPE_OBJECT = 0;
 long long _eq_g_JSON_TYPE_STRING = 0;
+long long _eq_g_PATTERN_LITERAL = 0;
+long long _eq_g_PATTERN_VARIABLE = 0;
+long long _eq_g_PATTERN_VARIANT = 0;
+long long _eq_g_PATTERN_WILDCARD = 0;
 long long _eq_g_LET_COL = 0;
+long long _eq_g_LET_IS_MUT = 0;
+long long _eq_g_LET_IS_RESOURCE = 0;
 long long _eq_g_LET_LINE = 0;
 long long _eq_g_LET_NAME = 0;
 long long _eq_g_LET_TYPE = 0;
 long long _eq_g_LET_VAL = 0;
-long long _eq_g_LET_IS_MUT = 0;
-long long _eq_g_LET_IS_RESOURCE = 0;
-long long _eq_g_TRY_EXPR = 0;
 long long _eq_g_LITERAL_COL = 0;
 long long _eq_g_LITERAL_LINE = 0;
 long long _eq_g_LITERAL_VAL = 0;
@@ -174,21 +191,28 @@ long long _eq_g_Magic_Free = 0;
 long long _eq_g_Magic_GetChar = 0;
 long long _eq_g_Magic_Malloc = 0;
 long long _eq_g_Magic_SetChar = 0;
+long long _eq_g_Magic_StrConcat = 0;
+long long _eq_g_Magic_StrEqual = 0;
+long long _eq_g_REF_COL = 0;
+long long _eq_g_REF_EXPR = 0;
+long long _eq_g_REF_IS_MUT = 0;
+long long _eq_g_REF_LINE = 0;
 long long _eq_g_STMT_AGENT = 0;
 long long _eq_g_STMT_ASSERT = 0;
 long long _eq_g_STMT_ASSIGN = 0;
 long long _eq_g_STMT_BLOCK = 0;
 long long _eq_g_STMT_COMMITMENT = 0;
+long long _eq_g_STMT_ENUM = 0;
 long long _eq_g_STMT_EVENT = 0;
 long long _eq_g_STMT_EXCHANGE = 0;
 long long _eq_g_STMT_EXECUTE = 0;
 long long _eq_g_STMT_EXPRESSION = 0;
 long long _eq_g_STMT_EXTERN = 0;
 long long _eq_g_STMT_FLOW = 0;
+long long _eq_g_STMT_FOR = 0;
 long long _eq_g_STMT_FUNCTION = 0;
 long long _eq_g_STMT_IF = 0;
 long long _eq_g_STMT_INTERFACE = 0;
-long long _eq_g_STMT_ENUM = 0;
 long long _eq_g_STMT_LET = 0;
 long long _eq_g_STMT_LOGIC = 0;
 long long _eq_g_STMT_POLICY = 0;
@@ -206,8 +230,6 @@ long long _eq_g_STRUCT_COL = 0;
 long long _eq_g_STRUCT_GENERICS = 0;
 long long _eq_g_STRUCT_LINE = 0;
 long long _eq_g_STRUCT_NAME = 0;
-long long _eq_g_Magic_StrEqual = 0;
-long long _eq_g_String_Map = 0;
 long long _eq_g_TOKEN_AGENT = 0;
 long long _eq_g_TOKEN_AND = 0;
 long long _eq_g_TOKEN_ASSERT = 0;
@@ -215,10 +237,12 @@ long long _eq_g_TOKEN_ASTERISK = 0;
 long long _eq_g_TOKEN_BANG = 0;
 long long _eq_g_TOKEN_BANG_EQUAL = 0;
 long long _eq_g_TOKEN_BOOL = 0;
+long long _eq_g_TOKEN_BREAK = 0;
 long long _eq_g_TOKEN_COLON = 0;
 long long _eq_g_TOKEN_COLON_COLON = 0;
 long long _eq_g_TOKEN_COMMA = 0;
 long long _eq_g_TOKEN_COMMITMENT = 0;
+long long _eq_g_TOKEN_CONTINUE = 0;
 long long _eq_g_TOKEN_DOT = 0;
 long long _eq_g_TOKEN_ELSE = 0;
 long long _eq_g_TOKEN_EOF = 0;
@@ -230,8 +254,10 @@ long long _eq_g_TOKEN_EXCHANGE = 0;
 long long _eq_g_TOKEN_EXECUTE = 0;
 long long _eq_g_TOKEN_EXTERN = 0;
 long long _eq_g_TOKEN_F64 = 0;
+long long _eq_g_TOKEN_FAT_ARROW = 0;
 long long _eq_g_TOKEN_FLOW = 0;
 long long _eq_g_TOKEN_FN = 0;
+long long _eq_g_TOKEN_FOR = 0;
 long long _eq_g_TOKEN_FROM = 0;
 long long _eq_g_TOKEN_FULFILLS = 0;
 long long _eq_g_TOKEN_GREATER = 0;
@@ -242,7 +268,6 @@ long long _eq_g_TOKEN_IF = 0;
 long long _eq_g_TOKEN_IMPLEMENTS = 0;
 long long _eq_g_TOKEN_ENUM = 0;
 long long _eq_g_TOKEN_MATCH = 0;
-long long _eq_g_TOKEN_FAT_ARROW = 0;
 long long _eq_g_TOKEN_IN = 0;
 long long _eq_g_TOKEN_INTERFACE = 0;
 long long _eq_g_TOKEN_LBRACE = 0;
@@ -266,9 +291,9 @@ long long _eq_g_TOKEN_RBRACE = 0;
 long long _eq_g_TOKEN_RBRACKET = 0;
 long long _eq_g_TOKEN_RESOURCE = 0;
 long long _eq_g_TOKEN_TRY = 0;
+long long _eq_g_TOKEN_UNDERSCORE = 0;
 long long _eq_g_TOKEN_AMPERSAND = 0;
 long long _eq_g_TOKEN_AMPERSAND_MUT = 0;
-long long _eq_g_EXPR_REFERENCE = 0;
 long long _eq_g_TOKEN_RETURN = 0;
 long long _eq_g_TOKEN_REVERSE = 0;
 long long _eq_g_TOKEN_ROLES = 0;
@@ -287,12 +312,15 @@ long long _eq_g_TOKEN_ARROW = 0;
 long long _eq_g_TOKEN_LSHIFT = 0;
 long long _eq_g_TOKEN_PTR = 0;
 long long _eq_g_TOKEN_BITOR = 0;
+long long _eq_g_String_Map = 0;
 long long _eq_g_TRANSFORMATION_COL = 0;
 long long _eq_g_TRANSFORMATION_FLOWS = 0;
 long long _eq_g_TRANSFORMATION_LINE = 0;
 long long _eq_g_TRANSFORMATION_LOGIC = 0;
 long long _eq_g_TRANSFORMATION_NAME = 0;
 long long _eq_g_TRANSFORMATION_ROLES = 0;
+long long _eq_g_TRY_EXPR = 0;
+long long _eq_g_TRY_IS_CHECKED = 0;
 long long _eq_g_UNARY_COL = 0;
 long long _eq_g_UNARY_LINE = 0;
 long long _eq_g_UNARY_OP = 0;
@@ -309,8 +337,6 @@ long long _eq_g_WHILE_BODY = 0;
 long long _eq_g_WHILE_COL = 0;
 long long _eq_g_WHILE_COND = 0;
 long long _eq_g_WHILE_LINE = 0;
-long long _eq_g___global_print_buf = 0;
-long long _eq_g___intern_map = 0;
 long long _eq_g_compile_depth = 0;
 long long _eq_g_global_ast_buffer = 0;
 long long _eq_g_include_paths = 0;
@@ -318,6 +344,8 @@ long long _eq_g_incremental_flag = 0;
 long long _eq_g_loaded_files = 0;
 long long _eq_g_print_buf = 0;
 long long _eq_g_resolve_stat = 0;
+long long _eq_g___global_print_buf = 0;
+long long _eq_g___intern_map = 0;
 long long sys_ptr_add(long long p, long long o);
 long long sys_strlen(long long s);
 long long sys_malloc(long long s);
@@ -364,7 +392,7 @@ long long __attribute__((noinline)) _eq_analyzer_add_builtins(long long a);
 long long __attribute__((noinline)) _eq_analyzer_alloc(long long a,long long size);
 long long __attribute__((noinline)) _eq_analyzer_begin_scope(long long a);
 long long __attribute__((noinline)) _eq_analyzer_copy_node(long long a,long long node);
-long long __attribute__((noinline)) _eq_analyzer_define(long long a,long long name,long long node,long long static_type);
+long long __attribute__((noinline)) _eq_analyzer_define(long long a,long long name,long long node,long long static_type,long long is_mut,long long is_res);
 long long __attribute__((noinline)) _eq_analyzer_end_scope(long long a);
 long long __attribute__((noinline)) _eq_analyzer_is_global(long long a,long long name);
 long long __attribute__((noinline)) _eq_analyzer_new();
@@ -530,7 +558,7 @@ long long __attribute__((noinline)) _eq_report_income_statement(long long acct_s
 long long __attribute__((noinline)) _eq_sleep(long long seconds);
 long long __attribute__((noinline)) _eq_stmt_block(long long stmts,long long line,long long col);
 long long __attribute__((noinline)) _eq_stmt_expression(long long expr,long long line,long long col);
-long long __attribute__((noinline)) _eq_stmt_extern(long long name,long long params,long long line,long long col);
+long long __attribute__((noinline)) _eq_stmt_extern(long long name,long long params,long long line,long long col, long long param_types, long long return_type);
 long long __attribute__((noinline)) _eq_stmt_if(long long cond,long long then,long long els,long long line,long long col);
 long long __attribute__((noinline)) _eq_stmt_interface(long long name,long long methods,long long line,long long col);
 long long __attribute__((noinline)) _eq_stmt_let(long long name,long long value,long long type,long long line,long long col,long long is_mut,long long is_res);
@@ -1049,7 +1077,7 @@ long long _eq_map_keys(long long m) {
         entry = ((long long*)(m))[m_off];
         while (entry != 0) {
             k = ((long long*)(entry))[0];
-            _eq_vec_push(keys, k);
+            keys = _eq_vec_push(keys, k);
             entry = ((long long*)(entry))[2];
         }
         i = i + 1;
@@ -1522,7 +1550,7 @@ long long _eq_ledger_process_flow(long long l, long long flow_type, long long am
     ((long long*)(entry_to))[1] = f_amount;
     ((long long*)(entry_to))[2] = from_agent;
     ((long long*)(entry_to))[3] = 1;
-    _eq_vec_push(v_to, entry_to);
+    v_to = _eq_vec_push(v_to, entry_to);
      v_from = 0;
     v_from = _eq_map_get(hist_map, from_agent);
     if (v_from == 0) {
@@ -1535,7 +1563,7 @@ long long _eq_ledger_process_flow(long long l, long long flow_type, long long am
     ((long long*)(entry_from))[1] = f_amount;
     ((long long*)(entry_from))[2] = to_agent;
     ((long long*)(entry_from))[3] = 0;
-    _eq_vec_push(v_from, entry_from);
+    v_from = _eq_vec_push(v_from, entry_from);
 }
 long long _eq_ledger_balance_at(long long l, long long agent, long long res, long long currency, long long target_date) {
     volatile long long d = 0;
@@ -2112,7 +2140,7 @@ long long _eq_parser_parse_generics(long long p) {
          more = 1;
         while (more && _eq_parser_check(p, _eq_g_TOKEN_IDENTIFIER)) {
              tok = _eq_parser_consume(p, _eq_g_TOKEN_IDENTIFIER, ((long long)"Expected generic type identifier"));
-            _eq_vec_push(list, ((long long*)(tok))[1]);
+            list = _eq_vec_push(list, ((long long*)(tok))[1]);
             if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) == 0) { more = 0; }
         }
         _eq_parser_consume(p, _eq_g_TOKEN_GREATER, ((long long)"Expected '>' after generic parameters"));
@@ -2366,16 +2394,16 @@ long long _eq_stmt_function(long long name, long long params, long long body, lo
     node[_eq_g_FUNC_PARAMS_MUT] = params_mut;
     return (long long)node;
 }
-long long _eq_stmt_extern(long long name, long long params, long long line, long long col) {
+long long _eq_stmt_extern(long long name, long long params, long long line, long long col, long long param_types, long long return_type) {
     volatile long long node = 0;
-
-     node = 0;
-    node = sys_malloc(5 * 8);
-    ((long long*)(node))[_eq_g_AST_TYPE] = _eq_g_STMT_EXTERN;
+    node = _eq_sys_malloc(8 * 8);
+    ((long long*)(node))[0] = _eq_g_STMT_EXTERN;
     ((long long*)(node))[1] = name;
     ((long long*)(node))[2] = params;
     ((long long*)(node))[3] = line;
     ((long long*)(node))[4] = col;
+    ((long long*)(node))[5] = param_types;
+    ((long long*)(node))[6] = return_type;
     return node;
 }
 long long _eq_stmt_struct(long long name, long long fields, long long line, long long col, long long generics) {
@@ -2496,7 +2524,8 @@ long long _eq_parse_call(long long p) {
             if (_eq_parser_check(p, _eq_g_TOKEN_RPARENT) == 0) {
                 more = 1;
                 while (more) {
-                    _eq_vec_push(args, _eq_parse_expression(p));
+                    long long arg = _eq_parse_expression(p);
+                    args = _eq_vec_push(args, arg);
                     if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) == 0) { more = 0; }
                 }
             }
@@ -2718,12 +2747,12 @@ long long _eq_parse_expression(long long p) {
     if (_eq_parser_match(p, _eq_g_TOKEN_TRY)) {
         volatile long long line = 0; line = ((long long*)(_eq_vec_get(((long long*)(p))[0], ((long long*)(p))[2] - 1)))[2];
         volatile long long col = 0; col = ((long long*)(_eq_vec_get(((long long*)(p))[0], ((long long*)(p))[2] - 1)))[3];
-        volatile long long expr = 0; expr = _eq_parse_expression(p);
-        volatile long long node = 0; node = _eq_sys_malloc(4 * 8);
+        volatile long long expr_val = 0; expr_val = _eq_parse_expression(p);
+        volatile long long node = 0; node = _eq_sys_malloc(6 * 8);
         ((long long*)(node))[0] = _eq_g_EXPR_TRY;
-        ((long long*)(node))[_eq_g_TRY_EXPR] = expr;
-        ((long long*)(node))[3] = line;
-        ((long long*)(node))[4] = col;
+        ((long long*)(node))[1] = expr_val;
+        ((long long*)(node))[2] = line;
+        ((long long*)(node))[3] = col;
         return node;
     }
     return _eq_parse_assignment(p);
@@ -2881,7 +2910,7 @@ long long _eq_parse_struct_decl(long long p) {
     fields = _eq_vec_new(64);
     while (_eq_parser_is_at_end(p) == 0 && _eq_parser_check(p, _eq_g_TOKEN_RBRACE) == 0) {
         field_name = _eq_parser_consume(p, _eq_g_TOKEN_IDENTIFIER, ((long long)"Expect field name."));
-        _eq_vec_push(fields, ((long long*)(field_name))[1]);
+        fields = _eq_vec_push(fields, ((long long*)(field_name))[1]);
         _eq_parser_consume(p, _eq_g_TOKEN_SEMICOLON, ((long long)"Expect ';' after field name."));
     }
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after struct body."));
@@ -2914,7 +2943,7 @@ long long _eq_parse_agent(long long p) {
         _eq_parser_consume(p, _eq_g_TOKEN_LBRACE, ((long long)"Expect '{' before Agent roles."));
         a_roles = _eq_vec_new(32);
         while (_eq_parser_is_at_end(p) == 0 && _eq_parser_check(p, _eq_g_TOKEN_RBRACE) == 0) {
-            _eq_vec_push(a_roles, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect role name."))))[1]);
+            a_roles = _eq_vec_push(a_roles, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect role name."))))[1]);
             if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) || _eq_parser_match(p, _eq_g_TOKEN_SEMICOLON)) {}
         }
         _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after Agent roles."));
@@ -2924,7 +2953,7 @@ long long _eq_parse_agent(long long p) {
     while (_eq_parser_is_at_end(p) == 0 && _eq_parser_check(p, _eq_g_TOKEN_RBRACE) == 0) {
         field_name_tok = _eq_parser_peek(p);
         _eq_parser_advance(p);
-        _eq_vec_push(fields, ((long long*)(field_name_tok))[1]);
+        fields = _eq_vec_push(fields, ((long long*)(field_name_tok))[1]);
         if (_eq_parser_match(p, _eq_g_TOKEN_COLON)) {
             if (_eq_parser_match(p, _eq_g_TOKEN_IDENTIFIER)) {}
             else { _eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect type or unit string.")); }
@@ -3004,8 +3033,8 @@ long long _eq_parse_execute(long long p) {
         val = 0;
         if (_eq_parser_match(p, _eq_g_TOKEN_IDENTIFIER)) { val = ((long long*)(_eq_parser_previous(p)))[1]; }
         else { val = ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect value."))))[1]; }
-        _eq_vec_push(args, key);
-        _eq_vec_push(args, val);
+        args = _eq_vec_push(args, key);
+        args = _eq_vec_push(args, val);
         if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) || _eq_parser_match(p, _eq_g_TOKEN_SEMICOLON)) {}
     }
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}'."));
@@ -3068,7 +3097,7 @@ long long _eq_parse_block(long long p) {
     tok = _eq_parser_previous(p); 
     stmts = _eq_vec_new(128);
     while (_eq_parser_is_at_end(p) == 0 && _eq_parser_check(p, _eq_g_TOKEN_RBRACE) == 0) {
-        _eq_vec_push(stmts, _eq_parse_statement(p));
+        stmts = _eq_vec_push(stmts, _eq_parse_statement(p));
     }
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after block."));
     return _eq_stmt_block(stmts, ((long long*)(tok))[2], ((long long*)(tok))[3]);
@@ -3110,9 +3139,9 @@ long long _eq_parse_function(long long p) {
             if (_eq_parser_match(p, _eq_g_TOKEN_COLON)) {
                 while (_eq_parser_check(p, _eq_g_TOKEN_COMMA) == 0 && _eq_parser_check(p, _eq_g_TOKEN_RPARENT) == 0 && _eq_parser_is_at_end(p) == 0) { _eq_parser_advance(p); }
             }
-            _eq_vec_push(params, ((long long*)(param))[1]);
-            _eq_vec_push(param_types, p_type);
-            _eq_vec_push(params_mut, is_mut);
+            params = _eq_vec_push(params, ((long long*)(param))[1]);
+            param_types = _eq_vec_push(param_types, p_type);
+            params_mut = _eq_vec_push(params_mut, is_mut);
             if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) == 0) { more = 0; }
         }
     }
@@ -3128,6 +3157,8 @@ long long _eq_parse_extern(long long p) {
     volatile long long name_tok = 0;
     volatile long long param = 0;
     volatile long long params = 0;
+    volatile long long param_types = 0;
+    volatile long long return_type = 0;
     volatile long long tok = 0;
 
      tok = 0;
@@ -3140,15 +3171,17 @@ long long _eq_parse_extern(long long p) {
     name_tok = _eq_parser_consume(p, _eq_g_TOKEN_IDENTIFIER, ((long long)"Expect function name."));
     _eq_parser_consume(p, _eq_g_TOKEN_LPARENT, ((long long)"Expect '(' after function name."));
     params = _eq_vec_new(32);
+    param_types = _eq_vec_new(32);
     if (_eq_parser_check(p, _eq_g_TOKEN_RPARENT) == 0) {
         more = 1;
         while (more) {
-            if (_eq_parser_match(p, 72)) { }
             param = _eq_parser_consume(p, _eq_g_TOKEN_IDENTIFIER, ((long long)"Expect parameter name."));
+            volatile long long p_type = 0;
             if (_eq_parser_match(p, _eq_g_TOKEN_COLON)) {
                 while (_eq_parser_check(p, _eq_g_TOKEN_COMMA) == 0 && _eq_parser_check(p, _eq_g_TOKEN_RPARENT) == 0 && _eq_parser_is_at_end(p) == 0) { _eq_parser_advance(p); }
             }
-            _eq_vec_push(params, ((long long*)(param))[1]);
+            params = _eq_vec_push(params, ((long long*)(param))[1]);
+            param_types = _eq_vec_push(param_types, p_type);
             if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) == 0) { more = 0; }
         }
     }
@@ -3157,7 +3190,7 @@ long long _eq_parse_extern(long long p) {
         while (_eq_parser_check(p, _eq_g_TOKEN_SEMICOLON) == 0 && _eq_parser_is_at_end(p) == 0) { _eq_parser_advance(p); }
     }
     _eq_parser_consume(p, _eq_g_TOKEN_SEMICOLON, ((long long)"Expect ';' after extern."));
-    return _eq_stmt_extern(((long long*)(name_tok))[1], params, ((long long*)(tok))[2], ((long long*)(tok))[3]);
+    return _eq_stmt_extern(((long long*)(name_tok))[1], params, ((long long*)(tok))[2], ((long long*)(tok))[3], param_types, return_type);
 }
 long long _eq_parse_interface(long long p) {
     volatile long long m_name = 0;
@@ -3183,9 +3216,9 @@ long long _eq_parse_interface(long long p) {
         _eq_parser_consume(p, _eq_g_TOKEN_LPARENT, ((long long)"Expect '(' after method name."));
         params = _eq_vec_new(200000);
         if (_eq_parser_check(p, _eq_g_TOKEN_RPARENT) == 0) {
-            _eq_vec_push(params, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_IDENTIFIER, ((long long)"Expect parameter name."))))[1]);
+            params = _eq_vec_push(params, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_IDENTIFIER, ((long long)"Expect parameter name."))))[1]);
             while (_eq_parser_match(p, _eq_g_TOKEN_COMMA)) {
-                _eq_vec_push(params, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_IDENTIFIER, ((long long)"Expect parameter name."))))[1]);
+                params = _eq_vec_push(params, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_IDENTIFIER, ((long long)"Expect parameter name."))))[1]);
             }
         }
         _eq_parser_consume(p, _eq_g_TOKEN_RPARENT, ((long long)"Expect ')' after parameters."));
@@ -3195,7 +3228,7 @@ long long _eq_parse_interface(long long p) {
         ((long long*)(method))[1] = params;
         ((long long*)(method))[2] = ((long long*)(tok))[2];
         ((long long*)(method))[3] = ((long long*)(tok))[3];
-        _eq_vec_push(methods, method);
+        methods = _eq_vec_push(methods, method);
     }
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after interface body."));
     return _eq_stmt_interface(name, methods, ((long long*)(tok))[2], ((long long*)(tok))[3]);
@@ -3206,7 +3239,7 @@ long long _eq_parse_program(long long p) {
      decls = 0;
     decls = _eq_vec_new(200000);
     while (_eq_parser_is_at_end(p) == 0) {
-        _eq_vec_push(decls, _eq_parse_statement(p));
+        decls = _eq_vec_push(decls, _eq_parse_statement(p));
     }
     return decls;
 }
@@ -3251,7 +3284,7 @@ long long _eq_parse_event(long long p) {
         _eq_parser_consume(p, _eq_g_TOKEN_LBRACE, ((long long)"Expect '{' before Event roles."));
         e_roles = _eq_vec_new(200000);
         while (_eq_parser_check(p, _eq_g_TOKEN_RBRACE) == 0) {
-            _eq_vec_push(e_roles, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect role name."))))[1]);
+            e_roles = _eq_vec_push(e_roles, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect role name."))))[1]);
             if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) || _eq_parser_match(p, _eq_g_TOKEN_SEMICOLON)) {}
         }
         _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after Event roles."));
@@ -3288,7 +3321,7 @@ long long _eq_parse_event(long long p) {
         ((long long*)(fnode))[_eq_g_FLOW_COL] = ((long long*)(tok))[3];
         ((long long*)(fnode))[8] = 0;
         ((long long*)(fnode))[9] = 0;
-        _eq_vec_push(c_flows, fnode);
+        c_flows = _eq_vec_push(c_flows, fnode);
     }
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after flow block."));
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after Event block."));
@@ -3340,7 +3373,7 @@ long long _eq_parse_commitment(long long p) {
         _eq_parser_consume(p, _eq_g_TOKEN_LBRACE, ((long long)"Expect '{' before Commitment roles."));
         c_roles = _eq_vec_new(200000);
         while (_eq_parser_check(p, _eq_g_TOKEN_RBRACE) == 0) {
-            _eq_vec_push(c_roles, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect role name."))))[1]);
+            c_roles = _eq_vec_push(c_roles, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect role name."))))[1]);
             if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) || _eq_parser_match(p, _eq_g_TOKEN_SEMICOLON)) {}
         }
         _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after Commitment roles."));
@@ -3376,7 +3409,7 @@ long long _eq_parse_commitment(long long p) {
         ((long long*)(fnode))[_eq_g_FLOW_LINE] = line;
         ((long long*)(fnode))[7] = 0;
         ((long long*)(fnode))[8] = 0;
-        _eq_vec_push(c_flows, fnode);
+        c_flows = _eq_vec_push(c_flows, fnode);
     }
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after flow block."));
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after Commitment block."));
@@ -3443,8 +3476,8 @@ long long _eq_parse_reverse(long long p) {
         val = 0;
         if (_eq_parser_match(p, _eq_g_TOKEN_IDENTIFIER)) { val = ((long long*)(_eq_parser_previous(p)))[1]; }
         else { val = ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect value."))))[1]; }
-        _eq_vec_push(args, key);
-        _eq_vec_push(args, val);
+        args = _eq_vec_push(args, key);
+        args = _eq_vec_push(args, val);
         if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) || _eq_parser_match(p, _eq_g_TOKEN_SEMICOLON)) {}
     }
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}'."));
@@ -3475,7 +3508,7 @@ long long _eq_parse_exchange(long long p) {
     events = _eq_vec_new(200000);
     while (_eq_parser_check(p, _eq_g_TOKEN_RBRACE) == 0) {
         ev = _eq_parser_consume(p, _eq_g_TOKEN_IDENTIFIER, ((long long)"Expect event name."));
-        _eq_vec_push(events, ((long long*)(ev))[1]);
+        events = _eq_vec_push(events, ((long long*)(ev))[1]);
         _eq_parser_consume(p, _eq_g_TOKEN_SEMICOLON, ((long long)"Expect ';'."));
     }
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}'."));
@@ -3541,19 +3574,21 @@ long long _eq_analyzer_new() {
      global_map = 0;
      diagnostics = 0;
      monomorphizer = 0;
-    a = sys_malloc(6 * 8);
+    a = sys_malloc(10 * 8);
     arena = _eq_arena_new(1024 * 1024);
     scopes = _eq_vec_new(200000);
     global_map = _eq_map_new(20000);
     diagnostics = _eq_vec_new(200000);
     monomorphizer = _eq_map_new(1000);
-    _eq_vec_push(scopes, global_map);
+    scopes = _eq_vec_push(scopes, global_map);
     ((long long*)(a))[0] = scopes;
     ((long long*)(a))[1] = 0;
     ((long long*)(a))[2] = 0;
     ((long long*)(a))[3] = arena;
     ((long long*)(a))[4] = diagnostics;
     ((long long*)(a))[5] = monomorphizer;
+    ((long long*)(a))[6] = 0;
+    ((long long*)(a))[7] = _eq_map_new(1000);
     _eq_analyzer_add_builtins(a);
     return a;
 }
@@ -3563,50 +3598,50 @@ long long _eq_analyzer_alloc(long long a, long long size) {
 }
 long long _eq_analyzer_add_builtins(long long a) {
 
-    _eq_analyzer_define(a, ((long long)"print"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"print_str"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"print_raw"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"print_raw_str"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"print_char"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"print_raw_char"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"get_char"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"set_char"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"malloc"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"free"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"exit"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"open"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"read"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"write"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"close"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"get_argc"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"get_argv"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"printf"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"map_keys"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"str_equal"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"str_len"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"str_concat"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"str_substring"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"str_from_int"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"str_to_int"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"sys_get_agent_location"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"sys_time"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"sys_audit_flow"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"sys_verify_sig"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"sys_evaluate_policies"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"sys_register_agent"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"sys_register_resource"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"print_fixed"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"str_utf8_len"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"analyzer_end_scope"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"analyze_error"), 0, 0);
-    _eq_analyzer_define(a, ((long long)"analyzer_is_global"), 0, 0);
+    _eq_analyzer_define(a, ((long long)"print"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"print_str"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"print_raw"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"print_raw_str"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"print_char"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"print_raw_char"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"get_char"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"set_char"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"malloc"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"free"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"exit"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"open"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"read"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"write"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"close"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"get_argc"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"get_argv"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"printf"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"map_keys"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"str_equal"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"str_len"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"str_concat"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"str_substring"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"str_from_int"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"str_to_int"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"sys_get_agent_location"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"sys_time"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"sys_audit_flow"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"sys_verify_sig"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"sys_evaluate_policies"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"sys_register_agent"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"sys_register_resource"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"print_fixed"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"str_utf8_len"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"analyzer_end_scope"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"analyze_error"), 0, 0, 0, 0);
+    _eq_analyzer_define(a, ((long long)"analyzer_is_global"), 0, 0, 0, 0);
 }
 long long _eq_analyzer_begin_scope(long long a) {
     volatile long long new_map = 0;
 
      new_map = 0;
     new_map = _eq_map_new(1000);
-    _eq_vec_push(((long long*)(a))[0], new_map);
+    ((long long*)(a))[0] = _eq_vec_push(((long long*)(a))[0], new_map);
     ((long long*)(a))[1] = _eq_vec_size(((long long*)(a))[0]) - 1;
 }
 long long _eq_analyzer_end_scope(long long a) {
@@ -3616,7 +3651,7 @@ long long _eq_analyzer_end_scope(long long a) {
         ((long long*)(a))[1] = ((long long*)(a))[1] - 1;
     }
 }
-long long _eq_analyzer_define(long long a, long long name, long long node, long long static_type) {
+long long _eq_analyzer_define(long long a, long long name, long long node, long long static_type, long long is_mut, long long is_res) {
     volatile long long current_map = 0;
     volatile long long entry = 0;
     volatile long long scopes = 0;
@@ -3630,8 +3665,8 @@ long long _eq_analyzer_define(long long a, long long name, long long node, long 
     ((long long*)(entry))[0] = _eq_intern_string(name);
     ((long long*)(entry))[1] = node;
     ((long long*)(entry))[2] = static_type;
-    ((long long*)(entry))[3] = 0;
-    ((long long*)(entry))[4] = 0;
+    ((long long*)(entry))[3] = is_mut;
+    ((long long*)(entry))[4] = is_res;
     ((long long*)(entry))[5] = 0;
     ((long long*)(entry))[6] = ((long long*)(a))[1];
     _eq_map_put(current_map, ((long long*)(entry))[0], entry);
@@ -3676,7 +3711,7 @@ long long _eq_analyze_error_internal(long long a, long long msg, long long line,
         ((long long*)(diag))[1] = line;
         ((long long*)(diag))[2] = col;
         ((long long*)(diag))[3] = 1; 
-        _eq_vec_push(((long long*)(a))[4], diag);
+        ((long long*)(a))[4] = _eq_vec_push(((long long*)(a))[4], diag);
         return 0;
     }
 }
@@ -4064,7 +4099,7 @@ long long _eq_analyze_stmt(long long a, long long stmt) {
         if (explicit_type) {
             _eq_verify_type_match(a, explicit_type, ((long long*)(stmt))[_eq_g_LET_VAL], ((long long*)(stmt))[_eq_g_LET_LINE], ((long long*)(stmt))[_eq_g_LET_COL]);
         }
-        _eq_analyzer_define(a, ((long long*)(stmt))[_eq_g_LET_NAME], 0, explicit_type);
+        _eq_analyzer_define(a, ((long long*)(stmt))[_eq_g_LET_NAME], 0, explicit_type, ((long long*)(stmt))[_eq_g_LET_IS_MUT], ((long long*)(stmt))[_eq_g_LET_IS_RESOURCE]);
     } else if (type == _eq_g_STMT_BLOCK) {
         _eq_analyzer_begin_scope(a);
         stmts = ((long long*)(stmt))[1];
@@ -4091,40 +4126,50 @@ long long _eq_analyze_stmt(long long a, long long stmt) {
     } else if (type == _eq_g_STMT_PRINT) {
         _eq_analyze_expr(a, ((long long*)(stmt))[1]);
     } else if (type == _eq_g_STMT_FUNCTION) {
-        _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0);
+        _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0, 0, 0);
         _eq_analyzer_begin_scope(a);
         params = ((long long*)(stmt))[2];
-        i = 0;
-        p_size = _eq_vec_size(params);
-        while (i < p_size) {
-            _eq_analyzer_define(a, _eq_vec_get(params, i), 0, 0);
-            i = i + 1;
+        {
+            volatile long long params_mut_vec = ((long long*)(stmt))[_eq_g_FUNC_PARAMS_MUT];
+            volatile long long p_mut_flag = 0;
+            i = 0;
+            p_size = _eq_vec_size(params);
+            while (i < p_size) {
+                p_mut_flag = 0;
+                if (params_mut_vec) {
+                    if (i < _eq_vec_size(params_mut_vec)) {
+                        p_mut_flag = _eq_vec_get(params_mut_vec, i);
+                    }
+                }
+                _eq_analyzer_define(a, _eq_vec_get(params, i), 0, 0, p_mut_flag, 0);
+                i = i + 1;
+            }
         }
         _eq_analyze_stmt(a, ((long long*)(stmt))[3]);
         _eq_analyzer_end_scope(a);
     } else if (type == _eq_g_STMT_EXTERN) {
-        _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0);
+        _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0, 0, 0);
     } else if (type == _eq_g_STMT_STRUCT) {
-        _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0);
+        _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0, 0, 0);
     } else if (type == _eq_g_STMT_AGENT) {
-        _eq_analyzer_define(a, ((long long*)(stmt))[_eq_g_AGENT_NAME], stmt, 0);
+        _eq_analyzer_define(a, ((long long*)(stmt))[_eq_g_AGENT_NAME], stmt, 0, 0, 0);
         if (((long long*)(stmt))[_eq_g_AGENT_IMPLEMENTS]) {
             _eq_verify_interface_implementation(a, ((long long*)(stmt))[_eq_g_AGENT_IMPLEMENTS], stmt, ((long long*)(stmt))[_eq_g_AGENT_LINE], ((long long*)(stmt))[_eq_g_AGENT_COL]);
         }
     } else if (type == _eq_g_STMT_RESOURCE) {
-        _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0);
+        _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0, 0, 0);
     } else if (type == _eq_g_STMT_INTERFACE) {
     } else if (type == _eq_g_STMT_EVENT) {
         _eq_analyze_event_duality(a, stmt);
     } else if (type == _eq_g_STMT_COMMITMENT) {
         _eq_analyze_event_duality(a, stmt);
     } else if (type == _eq_g_STMT_POLICY) {
-        _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0);
+        _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0, 0, 0);
         _eq_analyze_stmt(a, ((long long*)(stmt))[2]);
     } else if (type == _eq_g_STMT_REVERSE) {
         if (_eq_analyzer_resolve(a, ((long long*)(stmt))[1]) == 0) { _eq_analyze_error_internal(a, ((long long)"Unknown event to reverse"), ((long long*)(stmt))[3], ((long long*)(stmt))[4]); }
     } else if (type == _eq_g_STMT_EXCHANGE) {
-        _eq_analyzer_define(a, ((long long*)(stmt))[_eq_g_EXCHANGE_NAME], stmt, 0);
+        _eq_analyzer_define(a, ((long long*)(stmt))[_eq_g_EXCHANGE_NAME], stmt, 0, 0, 0);
         events = ((long long*)(stmt))[_eq_g_EXCHANGE_EVENTS];  i = 0;  size = _eq_vec_size(events);
         while (i < size) {
             if (_eq_analyzer_resolve(a, _eq_vec_get(events, i)) == 0) { _eq_analyze_error_internal(a, ((long long)"Unknown event in exchange"), ((long long*)(stmt))[_eq_g_EXCHANGE_LINE], ((long long*)(stmt))[_eq_g_EXCHANGE_COL]); }
@@ -4133,7 +4178,7 @@ long long _eq_analyze_stmt(long long a, long long stmt) {
     } else if (type == _eq_g_STMT_TRANSFORMATION) {
         _eq_analyze_event_duality(a, stmt);
     } else if (type == _eq_g_STMT_VALUATOR) {
-        _eq_analyzer_define(a, ((long long*)(stmt))[_eq_g_VALUATOR_NAME], stmt, 0);
+        _eq_analyzer_define(a, ((long long*)(stmt))[_eq_g_VALUATOR_NAME], stmt, 0, 0, 0);
         if (((long long*)(stmt))[_eq_g_VALUATOR_IMPLEMENTS]) {
             _eq_verify_interface_implementation(a, ((long long*)(stmt))[_eq_g_VALUATOR_IMPLEMENTS], stmt, ((long long*)(stmt))[_eq_g_VALUATOR_LINE], ((long long*)(stmt))[_eq_g_VALUATOR_COL]);
         }
@@ -4274,7 +4319,7 @@ long long _eq_analyze_event_duality(long long a, long long stmt) {
             _eq_analyze_error_internal(a, ((long long)"Event must fulfill a commitment or contract."), line, col);
         }
     }
-    _eq_analyzer_define(a, name, stmt, 0);
+    _eq_analyzer_define(a, name, stmt, 0, 0, 0);
     if (c_logic) {
         ((long long*)(a))[2] = 1;
         _eq_analyze_stmt(a, c_logic);
@@ -4454,7 +4499,20 @@ long long _eq_analyze_program(long long a, long long ast) {
         stmt = _eq_vec_get(ast, i);
         type = ((long long*)(stmt))[0];
         if (type == _eq_g_STMT_FUNCTION || type == _eq_g_STMT_EXTERN || type == _eq_g_STMT_LET || type == _eq_g_STMT_STRUCT || type == _eq_g_STMT_AGENT || type == _eq_g_STMT_RESOURCE || type == _eq_g_STMT_EVENT || type == _eq_g_STMT_COMMITMENT || type == _eq_g_STMT_POLICY || type == _eq_g_STMT_EXCHANGE || type == _eq_g_STMT_TRANSFORMATION || type == _eq_g_STMT_VALUATOR || type == _eq_g_STMT_INTERFACE) {
-            _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, 0);
+            volatile long long is_mut = 0;
+            volatile long long is_res = 0;
+            volatile long long ret_type = 0;
+            if (type == _eq_g_STMT_LET) {
+                is_mut = ((long long*)(stmt))[_eq_g_LET_IS_MUT];
+                is_res = ((long long*)(stmt))[_eq_g_LET_IS_RESOURCE];
+            }
+            if (type == _eq_g_STMT_FUNCTION) {
+                ret_type = ((long long*)(stmt))[_eq_g_FUNC_RETURN_TYPE];
+            }
+            if (type == _eq_g_STMT_EXTERN) {
+                ret_type = ((long long*)(stmt))[_eq_g_EXTERN_RETURN_TYPE];
+            }
+            _eq_analyzer_define(a, ((long long*)(stmt))[1], stmt, ret_type, is_mut, is_res);
         }
         i = i + 1;
     }
@@ -4464,11 +4522,17 @@ long long _eq_analyze_program(long long a, long long ast) {
         type = ((long long*)(stmt))[0];
         if (type == _eq_g_STMT_FUNCTION) {
             _eq_analyzer_begin_scope(a);
-            params = ((long long*)(stmt))[2];
+            params = ((long long*)(stmt))[_eq_g_FUNC_PARAMS];
+            volatile long long p_types = ((long long*)(stmt))[_eq_g_FUNC_PARAMS_TYPES];
+            volatile long long p_mut = ((long long*)(stmt))[_eq_g_FUNC_PARAMS_MUT];
             k = 0;
             p_size = _eq_vec_size(params);
             while (k < p_size) {
-                _eq_analyzer_define(a, _eq_vec_get(params, k), 0, 0);
+                volatile long long pm = 0;
+                if (p_mut && k < _eq_vec_size(p_mut)) { pm = _eq_vec_get(p_mut, k); }
+                volatile long long pt = 0;
+                if (p_types && k < _eq_vec_size(p_types)) { pt = _eq_vec_get(p_types, k); }
+                _eq_analyzer_define(a, _eq_vec_get(params, k), 0, pt, pm, 0);
                 k = k + 1;
             }
             _eq_analyze_stmt(a, ((long long*)(stmt))[3]);
@@ -4559,7 +4623,7 @@ long long _eq_analyzer_specialize(long long a, long long gen_func_name, long lon
     _eq_map_put(((long long*)(a))[5], mangled, new_func);
     
     
-    _eq_analyzer_define(a, mangled, new_func, 0);
+    _eq_analyzer_define(a, mangled, new_func, 0, 0, 0);
     _eq_analyze_stmt(a, new_func);
     
     return mangled;
@@ -5417,6 +5481,45 @@ long long _eq_codegen_new(long long trace_enabled, long long incremental) {
     
     return c;
 }
+void _eq_collect_allocas(long long c, long long node) {
+    if (node == 0) return;
+    volatile long long type = ((long long*)(node))[0];
+    if (type == _eq_g_STMT_LET) {
+        volatile long long name = ((long long*)(node))[1];
+        volatile long long existing = 0;
+        volatile long long vars = ((long long*)(c))[4];
+        if (vars) {
+            volatile long long j = 0; volatile long long v_sz = _eq_vec_size(vars);
+            while (j < v_sz) {
+                volatile long long v_entry = _eq_vec_get(vars, j);
+                if (_eq_str_equal(((long long*)(v_entry))[0], name)) { existing = v_entry; j = v_sz; }
+                j = j + 1;
+            }
+        }
+        if (existing == 0) {
+            volatile long long l_ptr = _eq_freshen_ptr(c);
+            _eq_print_raw_str(((long long)"    %p")); _eq_print_raw(l_ptr); _eq_emit_ln(((long long)" = alloca i64"));
+            _eq_print_raw_str(((long long)"    store i64 0, ptr %p")); _eq_print_raw(l_ptr); _eq_emit_ln(((long long)""));
+            volatile long long entry = _eq_sys_malloc(2 * 8); ((long long*)(entry))[0] = name; ((long long*)(entry))[1] = l_ptr;
+            ((long long*)(c))[4] = _eq_vec_push(((long long*)(c))[4], entry);
+        }
+    } else if (type == _eq_g_STMT_BLOCK) {
+        volatile long long body = ((long long*)(node))[1];
+        volatile long long i = 0; volatile long long size = _eq_vec_size(body);
+        while (i < size) { _eq_collect_allocas(c, _eq_vec_get(body, i)); i = i + 1; }
+    } else if (type == _eq_g_STMT_IF) {
+        _eq_collect_allocas(c, ((long long*)(node))[2]);
+        _eq_collect_allocas(c, ((long long*)(node))[3]);
+    } else if (type == _eq_g_STMT_WHILE) {
+        _eq_collect_allocas(c, ((long long*)(node))[2]);
+    } else if (type == _eq_g_STMT_AGENT || type == _eq_g_STMT_RESOURCE || type == _eq_g_STMT_EVENT) {
+        _eq_collect_allocas(c, ((long long*)(node))[3]);
+    } else if (type == _eq_g_STMT_EXCHANGE) {
+        _eq_collect_allocas(c, ((long long*)(node))[2]);
+    } else if (type == _eq_g_STMT_TRANSFORMATION) {
+        _eq_collect_allocas(c, ((long long*)(node))[4]);
+    }
+}
 long long _eq_gen_program(long long c, long long ast) {
     volatile long long body = 0;
     volatile long long g_stmt = 0;
@@ -5451,6 +5554,7 @@ long long _eq_gen_program(long long c, long long ast) {
     _eq_print_raw_str(((long long)"@__equis_argv = external global ptr\n"));
     _eq_emit_ln(((long long)"@__technical_clock = global i64 0"));
     _eq_emit_ln(((long long)"@str_assert_fail = private unnamed_addr constant [19 x i8] c\"ASSERTION FAILED!\\0A\\00\""));
+    _eq_emit_ln(((long long)"@g_needs_yield = external global i32"));
     
     if (_eq_pre_intern_emitted == 0) {
         _eq_pre_intern_emitted = 1;
@@ -5523,6 +5627,7 @@ long long _eq_gen_program(long long c, long long ast) {
             }
             _eq_print_raw_str(((long long)") {\nentry:\n"));
             ((long long*)(c))[0] = 1; ((long long*)(c))[4] = _eq_vec_new(200000);
+            _eq_collect_allocas(c, body);
             k = 0;
             p_name = 0; l_ptr = 0; k_entry = 0;
             while (k < p_size) {
@@ -5588,7 +5693,7 @@ long long _eq_optimize_program(long long ast) {
         stmt = _eq_vec_get(ast, i);
         opt_stmt = _eq_optimize_stmt(stmt);
         if (opt_stmt != 0) {
-            _eq_vec_push(new_ast, opt_stmt);
+            new_ast = _eq_vec_push(new_ast, opt_stmt);
         }
         i = i + 1;
     }
@@ -5622,7 +5727,7 @@ long long _eq_optimize_stmt(long long stmt) {
             if (dead == 0) {
                 s = _eq_optimize_stmt(_eq_vec_get(stmts, i));
                 if (s != 0) {
-                    _eq_vec_push(new_stmts, s);
+                    new_stmts = _eq_vec_push(new_stmts, s);
                     if (((long long*)(s))[0] == _eq_g_STMT_RETURN) { dead = 1; }
                 }
             }
@@ -6175,7 +6280,7 @@ long long _eq_compile_file(long long path) {
         if (((long long*)(node))[0] == 108) {
             _eq_compile_file(((long long*)(node))[1]);
         }
-        _eq_vec_push(_eq_g_global_ast_buffer, node);
+        _eq_g_global_ast_buffer = _eq_vec_push(_eq_g_global_ast_buffer, node);
         i = i + 1;
     }
     return 1;
@@ -6210,7 +6315,7 @@ long long _eq_main_routine() {
      start_file = 0;
 
     
-    sys_write_raw(1, ((long long)"; Equis Stage-1 IR Output Header\n"), 33);
+    
 
     start_file = 0;
      ai = 1;
@@ -6468,7 +6573,12 @@ void _eq___equis_init_globals() {
  _eq_g_TOKEN_IMPLEMENTS = 62;
  _eq_g_TOKEN_ENUM = 66;
  _eq_g_TOKEN_MATCH = 67;
- _eq_g_TOKEN_FAT_ARROW = 68;
+ _eq_g_TOKEN_FAT_ARROW = 78;
+ _eq_g_TOKEN_MUT = 72;
+ _eq_g_TOKEN_FOR = 79;
+ _eq_g_TOKEN_BREAK = 80;
+ _eq_g_TOKEN_CONTINUE = 81;
+ _eq_g_TOKEN_UNDERSCORE = 69;
  _eq_g_TOKEN_F64 = 63;
  _eq_g_TOKEN_BOOL = 64;
  _eq_g_TOKEN_I64 = 65;
@@ -6491,13 +6601,16 @@ void _eq___equis_init_globals() {
  _eq_g_ASSIGN_TARGET = 1;  _eq_g_ASSIGN_VALUE = 2;  _eq_g_ASSIGN_LINE = 3;  _eq_g_ASSIGN_COL = 4;
  _eq_g_GET_OBJ = 1;  _eq_g_GET_NAME = 2;  _eq_g_GET_LINE = 3;  _eq_g_GET_COL = 4;
  _eq_g_LET_NAME = 1;  _eq_g_LET_VAL = 2;  _eq_g_LET_TYPE = 3;  _eq_g_LET_LINE = 4;  _eq_g_LET_COL = 5;  _eq_g_LET_IS_MUT = 6;  _eq_g_LET_IS_RESOURCE = 7;
+ _eq_g_EXPR_TRY = 10;
  _eq_g_TRY_EXPR = 1;
+ _eq_g_TRY_IS_CHECKED = 2;
  _eq_g_IF_COND = 1;  _eq_g_IF_THEN = 2;  _eq_g_IF_ELSE = 3;  _eq_g_IF_LINE = 4;  _eq_g_IF_COL = 5;
  _eq_g_WHILE_COND = 1;  _eq_g_WHILE_BODY = 2;  _eq_g_WHILE_LINE = 3;  _eq_g_WHILE_COL = 4;
  _eq_g_FUNC_NAME = 1;  _eq_g_FUNC_PARAMS = 2;  _eq_g_FUNC_BODY = 3;  _eq_g_FUNC_LINE = 4;  _eq_g_FUNC_COL = 5;  _eq_g_FUNC_GENERICS = 6; _eq_g_FUNC_PARAMS_TYPES = 7; _eq_g_FUNC_RETURN_TYPE = 8; _eq_g_FUNC_PARAMS_MUT = 9;
- _eq_g_AGENT_NAME = 1;  _eq_g_AGENT_FIELDS = 2;  _eq_g_AGENT_LINE = 3;  _eq_g_AGENT_COL = 4;  _eq_g_AGENT_ROLES = 5;  _eq_g_AGENT_IMPLEMENTS = 6;
+ _eq_g_EXTERN_NAME = 1; _eq_g_EXTERN_PARAMS = 2; _eq_g_EXTERN_PARAMS_TYPES = 5; _eq_g_EXTERN_RETURN_TYPE = 6; _eq_g_EXTERN_LINE = 3; _eq_g_EXTERN_COL = 4;
+ _eq_g_AGENT_NAME = 1;  _eq_g_AGENT_FIELDS = 2;  _eq_g_AGENT_BODY = 3;  _eq_g_AGENT_ROLES = 4;  _eq_g_AGENT_IMPLEMENTS = 5;  _eq_g_AGENT_LINE = 6;  _eq_g_AGENT_COL = 7;
  _eq_g_EVENT_NAME = 1;  _eq_g_EVENT_LOGIC = 2;  _eq_g_EVENT_FLOWS = 3;  _eq_g_EVENT_LINE = 4;  _eq_g_EVENT_COL = 5;  _eq_g_EVENT_FULFILLS = 6;  _eq_g_EVENT_ROLES = 7;  _eq_g_EVENT_VALUATOR = 8;
- _eq_g_COMMITMENT_NAME = 1;  _eq_g_COMMITMENT_LOGIC = 2;  _eq_g_COMMITMENT_FLOWS = 3;  _eq_g_COMMITMENT_LINE = 4;  _eq_g_COMMITMENT_VALUATOR = 5;
+ _eq_g_COMMITMENT_NAME = 1;  _eq_g_COMMITMENT_LOGIC = 2;  _eq_g_COMMITMENT_FLOWS = 3;  _eq_g_COMMITMENT_LINE = 4;  _eq_g_COMMITMENT_VALUATOR = 5; _eq_g_COMMITMENT_ROLES = 6;
  _eq_g_EXCHANGE_NAME = 1;  _eq_g_EXCHANGE_EVENTS = 2;  _eq_g_EXCHANGE_LINE = 3;  _eq_g_EXCHANGE_COL = 4;
  _eq_g_TRANSFORMATION_NAME = 1;  _eq_g_TRANSFORMATION_LOGIC = 2;  _eq_g_TRANSFORMATION_FLOWS = 3;  _eq_g_TRANSFORMATION_LINE = 4;  _eq_g_TRANSFORMATION_COL = 5; _eq_g_TRANSFORMATION_ROLES = 7;
  _eq_g_VALUATOR_NAME = 1;  _eq_g_VALUATOR_BODY = 2;  _eq_g_VALUATOR_LINE = 3;  _eq_g_VALUATOR_COL = 4;  _eq_g_VALUATOR_IMPLEMENTS = 5;
@@ -6528,6 +6641,10 @@ void _eq___equis_init_globals() {
  _eq_g_STMT_VALUATOR = 112;
  _eq_g_STMT_ASSIGN = 132;
  _eq_g_STMT_INTERFACE = 133;
+ _eq_g_STMT_FOR = 134;
+ _eq_g_FOR_INIT = 1; _eq_g_FOR_COND = 2; _eq_g_FOR_STEP = 3; _eq_g_FOR_BODY = 4; _eq_g_FOR_LINE = 5; _eq_g_FOR_COL = 6;
+ _eq_g_REF_IS_MUT = 1; _eq_g_REF_EXPR = 2; _eq_g_REF_LINE = 3; _eq_g_REF_COL = 4;
+ _eq_g_PATTERN_VARIANT = 1; _eq_g_PATTERN_VARIABLE = 2; _eq_g_PATTERN_WILDCARD = 3; _eq_g_PATTERN_LITERAL = 4;
 
 
 
@@ -6764,3 +6881,57 @@ void _eq___equis_init_globals() {
 void _eq___equis_cleanup_globals() {
     return;
 }
+
+int __equis_argc;
+char **__equis_argv;
+
+long long sys_malloc(long long s) { return (long long)malloc(s); }
+long long sys_free(long long p) { free((void*)p); return 0; }
+long long sys_retain(long long p) { return p; }
+long long sys_release(long long p) { return p; }
+long long sys_ptr_add(long long p, long long o) { return p + o; }
+long long sys_strlen(long long s) { return (long long)strlen((char*)s); }
+long long sys_read_entire_file_raw(const char *p) {
+    if (!p) return 0;
+    FILE *f = fopen(p, "rb");
+    if (!f) return 0;
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    char *buf = (char *)malloc(size + 1);
+    if (fread(buf, 1, size, f) != (size_t)size) { free(buf); fclose(f); return 0; }
+    buf[size] = 0;
+    fclose(f);
+    return (long long)buf;
+}
+long long sys_read_entire_file(long long path) { return sys_read_entire_file_raw((char*)path); }
+long long sys_write_raw(long long fd, long long buf, long long count) { return (long long)write((int)fd, (void*)buf, (size_t)count); }
+long long sys_time() { return (long long)time(NULL); }
+long long sys_get_argc() { return (long long)__equis_argc; }
+long long sys_get_argv(long long i) { return (long long)__equis_argv[i]; }
+long long set_char(long long p, long long i, long long c) { ((char*)p)[i] = (char)c; return c; }
+long long get_char(long long p, long long i) { return (long long)((unsigned char*)p)[i]; }
+long long str_to_int(long long s) { return (long long)atoll((char*)s); }
+long long sys_panic_null() { fprintf(stderr, "Null Panic\n"); exit(1); }
+long long sys_panic_overflow() { fprintf(stderr, "Overflow Panic\n"); exit(1); }
+long long sys_assert(long long cond, long long msg) { if (!cond) { fprintf(stderr, "Assert: %s\n", (char*)msg); exit(1); } return 0; }
+long long sys_sleep(long long ms) { return 0; }
+long long sys_pin(long long p) { return p; }
+long long sys_set_agent(long long id) { return 0; }
+long long sys_get_agent() { return 0; }
+long long sys_set_word(long long p, long long i, long long v) { ((long long*)p)[i] = v; return v; }
+long long sys_get_word(long long p, long long i) { return ((long long*)p)[i]; }
+void print_raw_stderr(long long s) { fprintf(stderr, "%s", (char*)s); }
+void print_char_stderr(long long c) { fputc((int)c, stderr); }
+void print_int_stderr(long long n) { fprintf(stderr, "%lld", (long long)n); }
+void print_char(long long c) { putchar((int)c); }
+void print_int(long long n) { printf("%lld", (long long)n); }
+
+int main(int argc, char **argv) {
+    __equis_argc = argc;
+    __equis_argv = argv;
+    _eq___equis_init_globals();
+    _eq_main_routine();
+    return 0;
+}
+

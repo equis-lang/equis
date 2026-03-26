@@ -243,6 +243,8 @@ i64 sys_strlen(i64 s) {
 i64 sys_retain(i64 p) {
   if (p < 0x1000000 || (p % 8 != 0))
     return p;
+  if (min_heap_p == 0 || p < min_heap_p)
+    return p;
   uint64_t *head = ((uint64_t *)p) - 2;
   if (head[0] == 0x45515549535F5243ULL) {
     atomic_fetch_add((_Atomic i64 *)&head[1], 1);
@@ -254,6 +256,8 @@ void sys_free(i64 p);
 
 i64 sys_release(i64 p) {
   if (p < 0x1000000 || (p % 8 != 0))
+    return 0;
+  if (min_heap_p == 0 || p < min_heap_p)
     return 0;
   uint64_t *head = ((uint64_t *)p) - 2;
   if (head[0] == 0x45515549535F5243ULL) {

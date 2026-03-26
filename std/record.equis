@@ -23,7 +23,7 @@ fn record_get_field_meta(l, name) {
     let names = l[0];
     let metas = l[1];
     let size = vec_size(names);
-    let i = 0;
+    let mut i = 0;
     let target = intern_string(name);
     while (i < size) {
         if (vec_get(names, i) == target) { return vec_get(metas, i); }
@@ -37,7 +37,7 @@ fn record_get_str(l, buf, name) {
     let offset = meta[0];
     let len = meta[1];
     let res = sys_malloc(len + 1);
-    let i = 0;
+    let mut i = 0;
     while (i < len) {
         set_char(res, i, get_char(buf, offset + i));
         i = i + 1;
@@ -58,7 +58,7 @@ fn record_set_str(l, buf, name, val) {
     let offset = meta[0];
     let len = meta[1];
     let v_len = sys_strlen(val);
-    let i = 0;
+    let mut i = 0;
     while (i < len) {
         if (i < v_len) { set_char(buf, offset + i, get_char(val, i)); }
         else { set_char(buf, offset + i, 32); }

@@ -126,3 +126,99 @@ Fixed-point arithmetic (scale: 1,000,000).
 - `fixed_mul(a, b)`, `fixed_div(a, b)`: Multiplication and division.
 - `fixed_to_str(n)`: Converts a fixed-point value to a decimal string.
 - `print_fixed(n)`: Prints a fixed-point value to stdout.
+
+### `std/accounting.equis`
+Double-entry accounting primitives.
+- `accounting_init(res, cur)`: Bootstraps an accounting context.
+- `acct_register(sys, name, type, code)`: Defines account metadata.
+- `journal_entry(acct_sys, amount, res, cur, from_acc, to_acc, date)`: Records double-entry movements.
+- `report_income_statement(acct_sys, rev_acc, exp_acc, target_date)`: Generates an income statement.
+- `report_balance_sheet(acct_sys, asset_acc, liab_acc, equity_acc, target_date)`: Generates a balance sheet.
+
+### `std/ledger.equis`
+Temporal resource balance tracking.
+- `ledger_new()`: Initializes a resource tracking ledger.
+- `ledger_process_flow(l, type, amount, res, cur, from, to, date)`: Commits REA flows to history.
+- `ledger_balance_at(l, agent, res, cur, date)`: Calculates agent balance at a point in time.
+- `ledger_get_entries_for(l, agent)`: Returns all entries for a given agent.
+
+### `std/compliance.equis`
+Regulatory and policy enforcement logic.
+- `compliance_calculate_vat(amount, rate)`: Tax calculation primitive.
+- `policy_enforce_spending_limit(bal, tx, limit)`: Threshold validation.
+- `policy_ifrs_revenue_recognition(contract, event)`: IFRS revenue check.
+- `policy_gaap_matching_principle(ledger, expense_event)`: GAAP matching.
+- `policy_esg_carbon_footprint(flw)`: ESG carbon tracking.
+- `policy_gov_public_fund_audit(agent, event)`: Public fund audit enforcement.
+- `i18n_format_currency(amount, iso_code)`: Currency formatting.
+
+## Concurrency & Networking
+
+### `std/chan.equis`
+Bounded message-passing channels.
+- `chan_new(size)`: Initializes a bounded channel.
+- `chan_send(c, val)`: Pushes a value into the channel.
+- `chan_recv(c)`: Pulls a value from the channel.
+
+### `std/fiber.equis`
+Cooperative and preemptive multitasking.
+- `fiber_init()`: Initializes the fiber scheduler.
+- `fiber_spawn(f_ptr)`: Adds a function to the scheduler queue.
+- `fiber_yield()`: Voluntarily cedes control to the next fiber.
+- `fiber_exit()`: Terminates the current fiber.
+- `fiber_scheduler_run()`: Starts the round-robin execution loop.
+- `fiber_preempt_enable(ms)`: Enables signal-based preemption.
+
+### `std/net.equis`
+TCP networking primitives.
+- `net_connect(host, port)`: Connects to a remote TCP host.
+- `net_send(s, data)`: Sends data over a connection.
+- `net_recv(s, len)`: Receives data from a connection.
+
+### `std/http.equis`
+HTTP server implementation.
+- `http_server_new(port)`: Creates and binds an HTTP server socket.
+- `http_accept(server_fd)`: Accepts an incoming connection.
+- `http_parse_request(req_fd)`: Parses an HTTP request.
+- `http_get_method(req)`, `http_get_path(req)`, `http_get_body(req)`: Request accessors.
+- `http_send_response(req_fd, status, body)`: Sends an HTTP response.
+- `http_send_response_ext(req_fd, status, content_type, body)`: Sends a response with custom content type.
+
+### `std/dual_net.equis`
+Cross-node distributed duality consensus.
+- `verify_dual(peer_addr, event_id)`: Initiates cross-node duality verification.
+- `commit_event(id, hash)`: Generates a remote network commitment.
+
+### `std/rpc.equis`
+Remote procedure calls.
+- `rpc_serve(port, handler)`: Starts an RPC server.
+- `rpc_call(host, port, method, params)`: Invokes a remote procedure.
+
+## I/O & External Integration
+
+### `std/io.equis`
+File system utilities.
+- `io_read_lines(path)`: Reads an entire file into a string.
+- `io_write_atomic(path, content)`: Writes via temporary file + rename to prevent corruption.
+
+### `std/db.equis`
+PostgreSQL connectivity via libpq.
+- `db_connect(conninfo)`: Opens a database connection.
+- `db_query(conn, sql)`: Executes a SQL query.
+- `db_get(res, row, col)`: Retrieves a result cell.
+- `db_clear(res)`: Frees a result set.
+- `db_close(conn)`: Closes a connection.
+
+### `std/ffi.equis`
+Dynamic foreign function interface.
+- `ffi_load_library(path)`: Loads a shared library via `dlopen`.
+- `ffi_get_symbol(lib, name)`: Resolves a symbol via `dlsym`.
+- `ffi_close(lib)`: Unloads a shared library.
+
+### `std/record.equis`
+Fixed-width record buffers (COBOL-style).
+- `record_layout_new()`: Initializes a record definition.
+- `record_add_field(l, name, len, type)`: Defines a named field.
+- `record_get_str(l, buf, name)`, `record_get_int(l, buf, name)`: Extracts typed data.
+- `record_set_str(l, buf, name, val)`, `record_set_int(l, buf, name, val)`: Writes typed data.
+- `record_width(l)`: Returns the total record width.
