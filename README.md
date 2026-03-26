@@ -38,9 +38,10 @@ Equis is a self-hosted, domain-specific systems language for economic and accoun
 | **RBAC Enforcement** | Role-based access control enforced at agent execution entry points |
 | **Immutable Audit Trail** | Append-only JSON ledger (`ledger.ev`) for tamper-proof transaction history |
 | **Transactional Reversal** | Automated compensating flows for event-level rollback |
-| **Self-Hosted Compiler** | The Equis compiler is written in Equis |
-| **LLVM Backend** | Compiles to optimized native machine code |
-| **ARC Memory Model** | Hybrid automatic reference counting with deterministic arena allocation |
+| **ARC Memory Model** | Deterministic memory safety with no garbage collection pauses |
+| **Preemptive Fibers** | Timer-based multitasking for low-latency concurrent accounting |
+| **Self-Hosted Compiler** | Industry-grade compiler written entirely in Equis |
+| **LLVM Backend** | High-performance machine code generation |
 
 ## Project Structure
 
@@ -52,14 +53,13 @@ equis/
 ├── compiler/
 │   ├── analyzer.equis          # Symbol table & scope management
 │   ├── borrow_checker.equis    # Ownership & lifetime analysis
-│   ├── codegen.equis           # LLVM IR code generation
+│   ├── codegen.equis           # LLVM IR code generation (ARC & Preempt injection)
 │   ├── constants.equis         # AST node & token index definitions
 │   ├── lexer.equis             # Tokenizer
 │   ├── lsp.equis               # Language Server Protocol handler
 │   ├── main.equis              # Compiler entry point
-│   ├── main.ll                 # Pre-compiled LLVM IR (bootstrap artifact)
 │   ├── parser.equis            # Recursive descent parser
-│   ├── runtime.c               # C runtime support (ARC, I/O, syscalls)
+│   ├── runtime.c               # C runtime (ARC, Signals, Multitasking Support)
 │   └── semantics.equis         # Semantic analysis & REA enforcement
 ├── docs/
 │   ├── architecture.md         # Compiler pipeline design

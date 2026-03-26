@@ -53,7 +53,21 @@ A new event $E$ produces a new state $s_{n+1}$ by applying the transformation fu
 $$s_{n+1} = \tau(s_n, E)$$
 Crucially, $\tau$ is strictly additive; existing entries in $L$ are immutable.
 
-## 6. Compensation Semantics (Reverse)
+## 6. Concurrency: Preemptive Fiber Semantics
+
+Equis implements a non-blocking fiber model with preemptive yield points.
+Let $\Phi$ be the set of active fibers. The scheduler state is a pair $(\phi_{curr}, Q)$ where $\phi_{curr} \in \Phi$ is the running fiber and $Q$ is the run queue.
+
+### 6.1 Preemptive Yield Hook
+The compiler injects a yield check $Y$ at the entry of every function $f$ and back-edge of every loop $w$. 
+$$Y \coloneqq \text{if } g\_needs\_yield \text{ then } \text{yield}(\phi_{curr})$$
+Where $g\_needs\_yield$ is an atomic flag set by the kernel timer $T$ every $\Delta t$ milliseconds (default 50ms).
+
+### 6.2 Context Transformation
+A `yield` operation suspends $\phi_{curr}$, saves its continuation $k$, and invokes the scheduler to pick $\phi_{next} \in Q$:
+$$\forall \phi \in \Phi, \text{State}(\phi) \in \{\text{Running, Runnable, Yielded, Finished}\}$$
+
+## 7. Compensation Semantics (Reverse)
 
 The `reverse` operator does not delete $s_k$, but creates a state $s_{n+1}$ that is the functional inverse of $s_k$:
 $$s_{n+1} = s_n + (-E)$$
