@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.svg" width="150" alt="Equis Logo">
+  <img src="assets/logo.png" width="150" alt="Equis Logo">
 </p>
 
 <h1 align="center">Equis</h1>
