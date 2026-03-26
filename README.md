@@ -11,8 +11,16 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Release-v0.1.0-blue.svg" alt="Release">
   <img src="https://img.shields.io/badge/License-Apache%202.0-orange.svg" alt="License">
-  <img src="https://img.shields.io/badge/Build-passing-brightgreen.svg" alt="Build Status">
   <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg" alt="Platform">
+</p>
+
+<p align="center">
+  <a href="https://github.com/equis-lang/equis/actions/workflows/build.yml">
+    <img src="https://github.com/equis-lang/equis/actions/workflows/build.yml/badge.svg" alt="Equis Build Pipeline">
+  </a>
+  <a href="https://github.com/equis-lang/equis/actions/workflows/ci.yml">
+    <img src="https://github.com/equis-lang/equis/actions/workflows/ci.yml/badge.svg" alt="Equis CI">
+  </a>
 </p>
 
 ---
