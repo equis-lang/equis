@@ -44,30 +44,77 @@ Equis is a self-hosted, domain-specific systems language for economic and accoun
 
 ## Project Structure
 
-### Equis (Core Compiler)
 ```text
 equis/
-├── compiler/         # Core compiler (lexer, parser, analyzer, codegen)
-├── std/              # Standard library (sys, collections, accounting, etc.)
-├── docs/             # Formal specifications and technical guides
-├── examples/         # Sample programs and REA models
-├── tests/            # Regression, E2E, and integration tests
-├── bootstrap.c       # ANSI C bootstrap compiler
-├── Makefile          # Linux/macOS build system
-├── README.md         # Main repository documentation
-└── EQUIS.md          # Programmer's language reference
-```
-
-### VS Code Extension
-```text
-vscode-equis/
-├── src/
-│   └── extension.ts  # Language Client / LSP entry point
-├── equis.tmLanguage.json      # Syntax highlighting grammar
-├── language-configuration.json # Bracket matching & comments
-├── equis-icons.json           # File icon theme association
-├── package.json               # Extension manifest & contributions
-└── README.md                  # Extension usage guide
+├── assets/
+│   ├── logo.png
+│   └── logo.svg
+├── compiler/
+│   ├── analyzer.equis          # Symbol table & scope management
+│   ├── borrow_checker.equis    # Ownership & lifetime analysis
+│   ├── codegen.equis           # LLVM IR code generation
+│   ├── constants.equis         # AST node & token index definitions
+│   ├── lexer.equis             # Tokenizer
+│   ├── lsp.equis               # Language Server Protocol handler
+│   ├── main.equis              # Compiler entry point
+│   ├── main.ll                 # Pre-compiled LLVM IR (bootstrap artifact)
+│   ├── parser.equis            # Recursive descent parser
+│   ├── runtime.c               # C runtime support (ARC, I/O, syscalls)
+│   └── semantics.equis         # Semantic analysis & REA enforcement
+├── docs/
+│   ├── architecture.md         # Compiler pipeline design
+│   ├── benchmarks.md           # Performance measurements
+│   ├── grammar.ebnf            # Formal EBNF grammar
+│   ├── grammar.md              # Human-readable grammar guide
+│   ├── integration_guide.md    # CLI setup & global installation
+│   ├── operational_semantics.md# Formal duality & ARC proofs
+│   ├── specification.md        # Language specification
+│   └── stdlib_reference.md     # Standard library API reference
+├── examples/
+│   ├── benchmarks/
+│   │   └── speed_test.equis
+│   └── main.equis              # Full REA demonstration program
+├── scripts/
+│   └── verify_ddc.sh           # Diverse Double-Compilation verifier
+├── std/
+│   ├── accounting.equis        # ERP accounting logic
+│   ├── arena.equis             # Arena allocator
+│   ├── chan.equis               # Thread-safe channels
+│   ├── collections.equis       # Vectors & hash maps
+│   ├── compliance.equis        # ESG & regulatory checks
+│   ├── db.equis                # PostgreSQL connector (libpq)
+│   ├── dual_net.equis          # Distributed duality verification
+│   ├── ffi.equis               # Foreign function interface
+│   ├── fiber.equis             # Preemptive fiber scheduler
+│   ├── fixed.equis             # Fixed-point arithmetic
+│   ├── http.equis              # HTTP server
+│   ├── intern.equis            # String interning
+│   ├── io.equis                # File I/O utilities
+│   ├── json.equis              # JSON parser & serializer
+│   ├── ledger.equis            # Double-entry ledger
+│   ├── net.equis               # Socket networking
+│   ├── record.equis            # Record utilities
+│   ├── rpc.equis               # Remote procedure calls
+│   ├── string.equis            # String manipulation
+│   └── sys.equis               # System primitives & runtime bindings
+├── tests/                      # Regression, E2E, and integration tests
+├── .github/
+│   └── workflows/
+│       ├── build.yml           # Release build pipeline
+│       ├── ci.yml              # Continuous integration
+│       └── docs.yml            # Documentation deployment
+├── bootstrap.c                 # ANSI C bootstrap compiler
+├── Makefile                    # Linux/macOS build system
+├── bootstrap.ps1               # Windows bootstrap script
+├── eq                          # Linux/macOS runner script
+├── eq.bat                      # Windows runner script
+├── epm                         # Package manager (Linux/macOS)
+├── install.sh                  # Linux/macOS installer
+├── install.ps1                 # Windows installer
+├── EQUIS.md                    # Programmer's language reference
+├── CHANGELOG.md
+├── LICENSE                     # Apache 2.0
+└── NOTICE
 ```
 
 ## Language Primitives
