@@ -21,6 +21,9 @@
   <a href="https://github.com/equis-lang/equis/actions/workflows/ci.yml">
     <img src="https://github.com/equis-lang/equis/actions/workflows/ci.yml/badge.svg" alt="Equis CI">
   </a>
+  <a href="https://github.com/equis-lang/equis/actions/workflows/docs.yml">
+    <img src="https://github.com/equis-lang/equis/actions/workflows/docs.yml/badge.svg" alt="Deploy Docs">
+  </a>
 </p>
 
 ---
