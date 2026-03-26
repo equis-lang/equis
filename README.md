@@ -97,7 +97,6 @@ equis/
 │   ├── rpc.equis               # Remote procedure calls
 │   ├── string.equis            # String manipulation
 │   └── sys.equis               # System primitives & runtime bindings
-├── tests/                      # Regression, E2E, and integration tests
 ├── .github/
 │   └── workflows/
 │       ├── build.yml           # Release build pipeline
