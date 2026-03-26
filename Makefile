@@ -4,7 +4,6 @@ PREFIX ?= $(HOME)/.equis
 build: bootstrap
 	@echo "Equis Build Complete"
 
-
 PG_INC_DIR := $(shell pg_config --includedir 2>/dev/null)
 PG_LIB_DIR := $(shell pg_config --libdir 2>/dev/null)
 HAS_LIBPQ := $(shell test -f $(PG_INC_DIR)/libpq-fe.h && echo 1 || echo 0)
@@ -24,7 +23,6 @@ eq-core:
 bootstrap: eq-core
 	@echo "Bootstrap successful"
 
-
 check: eq-core
 	./eq-core -I std examples/main.equis > check_test.ll
 	clang -O3 -Wno-override-module check_test.ll compiler/runtime.c -lpthread -o check_bin
@@ -43,7 +41,6 @@ install: bootstrap
 	install -m 755 eq-core $(PREFIX)/lib/eq-core
 	install -m 644 compiler/runtime.c $(PREFIX)/lib/runtime.c
 	cp -r std $(PREFIX)/lib/
-	@echo ""
 	@echo "Equis installed to $(PREFIX)"
 	@echo "To use 'eq' globally, ensure $(PREFIX)/bin is in your PATH."
 

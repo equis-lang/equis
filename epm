@@ -1,21 +1,12 @@
 #!/bin/bash
 
-# =============================================================================
-# Equis Package Manager (epm) v0.1.0
-# Dependency management and project scaffolding for Equis.
-# =============================================================================
-
 set -euo pipefail
 
 function abspath() {
     local target=$1
-    if [ -d "$target" ]; then
-        (cd "$target" && pwd)
-    elif [ -f "$target" ]; then
-        (cd "$(dirname "$target")" && echo "$(pwd)/$(basename "$target")")
-    else
-        echo "$target"
-    fi
+    if [ -d "$target" ]; then (cd "$target" && pwd)
+    elif [ -f "$target" ]; then (cd "$(dirname "$target")" && echo "$(pwd)/$(basename "$target")")
+    else echo "$target"; fi
 }
 SCRIPT_PATH=$(abspath "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
@@ -41,22 +32,14 @@ EXAMPLES:
 EOF
 }
 
-# --- Action Handlers ---
-
-if [ $# -lt 1 ]; then
-    show_help
-    exit 0
-fi
+if [ $# -lt 1 ]; then show_help; exit 0; fi
 
 CMD=$1
 shift
 
 case $CMD in
     init)
-        if [ -f "equis.json" ]; then
-            echo "Error: equis.json already exists in this directory."
-            exit 1
-        fi
+        if [ -f "equis.json" ]; then echo "Error: equis.json already exists in this directory."; exit 1; fi
         NAME=$(basename "$(pwd)")
         cat << EOF > equis.json
 {
@@ -86,68 +69,34 @@ EOF
         fi
         echo "[epm] Initialized Equis project: $NAME"
         ;;
-
     get)
-        if [ -z "${1:-}" ]; then
-            echo "Usage: epm get <repo_url>"
-            exit 1
-        fi
-        if [ ! -f "equis.json" ]; then
-            echo "Error: No equis.json found. Run 'epm init' first."
-            exit 1
-        fi
-        
+        if [ -z "${1:-}" ]; then echo "Usage: epm get <repo_url>"; exit 1; fi
+        if [ ! -f "equis.json" ]; then echo "Error: No equis.json found. Run 'epm init' first."; exit 1; fi
         REPO=$1
         PKG_NAME=$(basename "$REPO" .git)
-        
         echo "[epm] Fetching $PKG_NAME..."
         mkdir -p .equis/packages
-        if [ -d ".equis/packages/$PKG_NAME" ]; then
-            (cd ".equis/packages/$PKG_NAME" && git pull)
-        else
-            git clone "$REPO" ".equis/packages/$PKG_NAME"
-        fi
-
+        if [ -d ".equis/packages/$PKG_NAME" ]; then (cd ".equis/packages/$PKG_NAME" && git pull)
+        else git clone "$REPO" ".equis/packages/$PKG_NAME"; fi
         if ! grep -q "\"$PKG_NAME\"" equis.json; then
-            # Handle empty dependencies: {} -> { "pkg": "url" }
             if grep -q "  \"dependencies\": {}" equis.json; then
                 sed -i 's|  "dependencies": {}|  "dependencies": {\n    "'"$PKG_NAME"'": "'"$REPO"'"\n  }|' equis.json
             else
-                # Handle non-empty: { "a": "b" } -> { "a": "b", "pkg": "url" }
                 sed -i '/"dependencies": {/,/}/ s|}|    "'"$PKG_NAME"'": "'"$REPO"'"\n  }|' equis.json
-                # Now add the missing comma to the previous line
                 sed -i '/"'"$PKG_NAME"'":/! s|\(    ".*": ".*"\)$|\1,|' equis.json
             fi
             echo "[epm] Added $PKG_NAME to equis.json"
         fi
         ;;
-
     install)
-        if [ ! -f "equis.json" ]; then
-            echo "Error: equis.json not found."
-            exit 1
-        fi
+        if [ ! -f "equis.json" ]; then echo "Error: equis.json not found."; exit 1; fi
         echo "[epm] Installing dependencies..."
-        grep "\": \"http" equis.json | sed -E 's/.*": "(.*)".*/\1/' | while read -r url; do
-            epm get "$url"
-        done
+        grep "\": \"http" equis.json | sed -E 's/.*": "(.*)".*/\1/' | while read -r url; do epm get "$url"; done
         ;;
-
-        fi
-        if [ -f "$SCRIPT_DIR/eq" ]; then
-            "$SCRIPT_DIR/eq" run "$@"
-        else
-            eq run "$@"
-        fi
+    run)
+        if [ -f "$SCRIPT_DIR/eq" ]; then "$SCRIPT_DIR/eq" run "$@"
+        else eq run "$@"; fi
         ;;
-
-    help|--help|-h)
-        show_help
-        ;;
-
-    *)
-        echo "[epm] Error: Unknown command '$CMD'. See 'epm help'."
-        exit 1
-        ;;
+    help|--help|-h) show_help ;;
+    *) echo "[epm] Error: Unknown command '$CMD'. See 'epm help'."; exit 1 ;;
 esac
-

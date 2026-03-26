@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# =============================================================================
-# Equis CLI (eq) v0.1.0
-# The systems programming runner for verifiable accounting.
-# =============================================================================
-
 set -euo pipefail
 
 function get_real_path() {
@@ -15,7 +10,6 @@ function get_real_path() {
             echo "$res"
             return
         fi
-
         while [ -L "$target" ]; do
             local link=$(readlink "$target")
             if expr "$link" : '/.*' > /dev/null; then
@@ -79,8 +73,6 @@ EXAMPLES:
 EOF
 }
 
-# --- Action Handlers ---
-
 if [ $# -lt 1 ]; then
     show_help
     exit 0
@@ -95,65 +87,36 @@ case $CMD in
         OUTPUT=""
         OTHER_ARGS=""
         VERBOSE=0
-
         while [[ $# -gt 0 ]]; do
             case $1 in
-                -I)
-                    OTHER_ARGS="$OTHER_ARGS -I $2"
-                    shift 2
-                    ;;
-                -o)
-                    OUTPUT="$2"
-                    shift 2
-                    ;;
-                -v|--verbose)
-                    VERBOSE=1
-                    shift
-                    ;;
-                *.equis)
-                    FILE="$1"
-                    shift
-                    ;;
-                help|--help|-h)
-                    show_help
-                    exit 0
-                    ;;
-                *)
-                    OTHER_ARGS="$OTHER_ARGS $1"
-                    shift
-                    ;;
+                -I) OTHER_ARGS="$OTHER_ARGS -I $2"; shift 2 ;;
+                -o) OUTPUT="$2"; shift 2 ;;
+                -v|--verbose) VERBOSE=1; shift ;;
+                *.equis) FILE="$1"; shift ;;
+                help|--help|-h) show_help; exit 0 ;;
+                *) OTHER_ARGS="$OTHER_ARGS $1"; shift ;;
             esac
         done
-
         if [ -z "$FILE" ]; then 
             echo "[eq] Error: No .equis source file specified."
             exit 1
         fi
-
         if [ -z "$OUTPUT" ]; then
             OUTPUT=$(basename "$FILE" .equis)
         fi
-
         TLL=$(mktemp /tmp/eq_XXXXXX.ll)
-        
         INCLUDE_ARGS="-I $EQUIS_STD"
-        
         if [ "$VERBOSE" -eq 1 ]; then
             echo "[eq] Compiling: $FILE"
             echo "[eq] Core: $EQUIS_CORE $INCLUDE_ARGS $OTHER_ARGS"
         fi
-
         $EQUIS_CORE $INCLUDE_ARGS $OTHER_ARGS "$FILE" > "$TLL"
-        
         clang -O3 "$TLL" "$RUNTIME_C" -o "$OUTPUT" -Wno-override-init -lm -lpthread
-        
         rm "$TLL"
-        
         if [ "$VERBOSE" -eq 1 ]; then
             echo "[eq] Output: ./$OUTPUT"
         fi
         ;;
-
     run)
         FILE=""
         for arg in "$@"; do
@@ -162,21 +125,16 @@ case $CMD in
                 break
             fi
         done
-
         if [ -z "$FILE" ]; then
             echo "Error: No .equis source file specified."
             exit 1
         fi
-
         TEMP_EXE=$(mktemp /tmp/eq_bin_XXXXXX)
         echo "[eq] Compiling temporary binary..."
-        
         $0 compile "$@" -o "$TEMP_EXE"
-        
         "$TEMP_EXE"
         rm "$TEMP_EXE"
         ;;
-
     build)
         if [ ! -f "$EQUIS_HOME/Makefile" ]; then
             echo "Error: Makefile not found in $EQUIS_HOME. Cannot rebuild toolchain."
@@ -185,11 +143,9 @@ case $CMD in
         echo "[eq] Rebuilding toolchain..."
         (cd "$EQUIS_HOME" && make clean install)
         ;;
-
     lsp)
         $EQUIS_CORE -I "$EQUIS_STD" --lsp
         ;;
-    
     check)
         if [ $# -lt 1 ]; then
             echo "Usage: eq check <file.equis>"
@@ -197,24 +153,19 @@ case $CMD in
         fi
         $EQUIS_CORE -I "$EQUIS_STD" --check "$1"
         ;;
-
     clean)
         rm -f *.ll *.o core 2>/dev/null || true
         find . -maxdepth 1 -type f -executable -not -name "eq" -not -name "epm" -exec rm -f {} +
         echo "[eq] Workspace cleaned."
         ;;
-
     version)
         echo "Equis Professional Toolchain v0.1.0 (Linux-Native)"
         echo "Semantic Engine: REA-Duality-v1 (Stable)"
         ;;
-
     help|--help|-h)
         show_help
         ;;
-
     *)
-        # Fallback to direct core execution if file exists
         if [ -f "$CMD" ]; then
              $EQUIS_CORE -I "$EQUIS_STD" "$CMD" "$@"
         else
@@ -223,4 +174,3 @@ case $CMD in
         fi
         ;;
 esac
-
