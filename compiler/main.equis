@@ -114,6 +114,19 @@ fn main() {
     let analyzer = analyzer_new();
     analyze_program(analyzer, global_ast_buffer);
     
+    let diags = analyzer[4];
+    if (diags) {
+        if (vec_size(diags) > 0) {
+            let d_idx = 0; let d_sz = vec_size(diags);
+            while (d_idx < d_sz) {
+                let d = vec_get(diags, d_idx);
+                analyze_error(d[0], d[1], d[2]);
+                d_idx = d_idx + 1;
+            }
+            exit(1);
+        }
+    }
+    
     write(2, "  Borrow Checking...\n", 21);
     let bc = borrow_checker_new();
     borrow_check_program(bc, global_ast_buffer);

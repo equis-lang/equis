@@ -92,7 +92,7 @@ fn run_demos() {
 
     // REA Operations
     print_raw_str("--- REA Execution Flow ---\n");
-    execute Purchase { sig: "Sig_H1"; timestamp: "1700000000" };
+    execute Purchase { sig: Buyer; timestamp: "1700000000" };
     
     print_raw_str("--- REA Reverse Flow ---\n");
     reverse Purchase { reason: "Customer Refund" };

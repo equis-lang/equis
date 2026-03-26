@@ -300,11 +300,9 @@ fn analyze_stmt(a, stmt) {
                     a_node = a_entry[1];
                     agent_roles = 0;
                     if (a_node != 0) {
-                        let w = 0;
-                        while (w < 7) {
-                            w = w + 1;
+                        if (a_node[0] == STMT_AGENT) { 
+                            agent_roles = a_node[AGENT_ROLES]; 
                         }
-                        if (a_node[0] == STMT_AGENT) { agent_roles = a_node[AGENT_ROLES]; }
                     }
                 r = 0; let r_size = vec_size(required_roles);
                 authorized = 0;
@@ -314,7 +312,9 @@ fn analyze_stmt(a, stmt) {
                         ar = 0; let ar_size = vec_size(agent_roles);
                         while (ar < ar_size) {
                              a_role = vec_get(agent_roles, ar);
-                             if (str_equal(a_role, req_role)) { authorized = 1; }
+                             if (str_equal(a_role, req_role)) { 
+                                 authorized = 1; 
+                             }
                              ar = ar + 1;
                         }
                     }
@@ -430,8 +430,8 @@ fn analyze_event_duality(a, stmt) {
         i = i + 1;
     }
     v_name = 0;
-    if (stmt[0] == STMT_EVENT) { v_name = stmt[7]; }
-    if (stmt[0] == STMT_COMMITMENT) { v_name = stmt[5]; }
+    if (stmt[0] == STMT_EVENT) { v_name = stmt[EVENT_VALUATOR]; }
+    if (stmt[0] == STMT_COMMITMENT) { v_name = stmt[COMMITMENT_VALUATOR]; }
     res_keys = map_keys(balance_map);
     k = 0;
     k_size = vec_size(res_keys);

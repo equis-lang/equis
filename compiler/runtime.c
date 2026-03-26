@@ -859,6 +859,35 @@ i64 sys_rename(char *old, char *new) {
 
 #endif
 
+typedef struct {
+  char *id;
+  char *roles[MAX_ROLES];
+  int role_count;
+} EquisAgent;
+
+i64 sys_create_agent(char *id) {
+  EquisAgent *a = (EquisAgent *)calloc(1, sizeof(EquisAgent));
+  if (id) a->id = strdup(id);
+  return (i64)a;
+}
+
+void sys_add_agent_role(i64 agent_ptr, char *role) {
+  if (!agent_ptr || !role) return;
+  EquisAgent *a = (EquisAgent *)agent_ptr;
+  if (a->role_count < MAX_ROLES) {
+    a->roles[a->role_count++] = strdup(role);
+  }
+}
+
+void sys_activate_signatory(i64 agent_ptr) {
+  _eq_role_count = 0;
+  if (!agent_ptr) return;
+  EquisAgent *a = (EquisAgent *)agent_ptr;
+  for (int i = 0; i < a->role_count; i++) {
+    sys_add_role(a->roles[i]);
+  }
+}
+
 extern i64 _eq_main_routine();
 extern void _eq___equis_init_globals();
 extern void _eq___equis_cleanup_globals();

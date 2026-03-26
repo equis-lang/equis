@@ -769,6 +769,28 @@ fn gen_stmt(c, stmt) {
             map_put(Global_Field_Map, f_name, entry);
             j = j + 1;
         }
+        
+        if (type == STMT_AGENT) {
+            let name = stmt[AGENT_NAME];
+            let a_roles = stmt[AGENT_ROLES];
+            if (c[7] == 1) {
+                print_raw_str("    %agent_ptr_"); print_raw_str(name); 
+                print_raw_str(" = call i64 @sys_create_agent(ptr null)\n");
+                print_raw_str("    store i64 %agent_ptr_"); print_raw_str(name);
+                print_raw_str(", ptr @Global_"); print_raw_str(name); print_raw_str("\n");
+                if (a_roles) {
+                   let r_sz = vec_size(a_roles);
+                   let r_idx = 0;
+                   while (r_idx < r_sz) {
+                       let r_str = vec_get(a_roles, r_idx);
+                       let r_lbl = gen_string_label(c, r_str);
+                       print_raw_str("    call void @sys_add_agent_role(i64 %agent_ptr_"); print_raw_str(name);
+                       print_raw_str(", ptr @str."); print_raw(r_lbl); emit_ln(")");
+                       r_idx = r_idx + 1;
+                   }
+                }
+            }
+        }
     } else if (type == STMT_EVENT || type == STMT_COMMITMENT || type == STMT_POLICY || type == STMT_TRANSFORMATION || type == STMT_VALUATOR) {
         name = stmt[EVENT_NAME];
         p_name = "event_";
@@ -829,7 +851,21 @@ fn gen_stmt(c, stmt) {
         print_raw_str("    ret void\n}\n\n");
     } else if (type == STMT_EXECUTE) {
         name = stmt[1];
-        // Arguments passed as vectors/pointers
+        let args = stmt[2];
+        let i = 0; let sz = vec_size(args);
+        let found_sig = 0;
+        while (i < sz) {
+            if (str_equal(vec_get(args, i), "sig")) {
+                let sig_val = vec_get(args, i + 1);
+                print_raw_str("    %sig_agent = load i64, ptr @Global_"); print_raw_str(sig_val); emit_ln("");
+                print_raw_str("    call void @sys_activate_signatory(i64 %sig_agent)\n");
+                found_sig = 1; i = sz;
+            }
+            i = i + 2;
+        }
+        if (found_sig == 0) {
+            print_raw_str("    call void @sys_activate_signatory(i64 0)\n");
+        }
         print_raw_str("    call void @sys_verify_duality()\n");
         print_raw_str("    call void @event_"); print_raw_str(name); print_raw_str("(i64 0)\n");
     } else if (type == STMT_REVERSE) {
@@ -872,6 +908,7 @@ fn codegen_new(trace_enabled, incremental) {
     }
     c[6] = 1 - incremental;
     if (incremental == 1) { c[6] = 0; } else { c[6] = 1; }
+    c[7] = 0; // in_function_body flag
     if (Global_Field_Map == 0) { Global_Field_Map = map_new(2000); }
     
     gen_string_label(c, "0");
@@ -928,6 +965,9 @@ fn gen_program(c, ast) {
                 print_raw_str("@Global_"); print_raw_str(stmt[1]); emit_ln(" = global i64 0");
             }
             if (stmt[0] == STMT_STRUCT || stmt[0] == STMT_AGENT || stmt[0] == STMT_RESOURCE) {
+                if (stmt[0] == STMT_AGENT) {
+                    print_raw_str("@Global_"); print_raw_str(stmt[AGENT_NAME]); print_raw_str(" = global i64 0\n");
+                }
                 gen_stmt(c, stmt);
             }
         }
@@ -964,6 +1004,9 @@ fn gen_program(c, ast) {
     if (is_extern(c, "sys_mkdir") == 0) { print_raw_str("declare i64 @sys_mkdir(i64)\n"); c[3] = vec_push(c[3], "sys_mkdir"); }
     if (is_extern(c, "sys_realloc") == 0) { print_raw_str("declare i64 @sys_realloc(i64, i64)\n"); c[3] = vec_push(c[3], "sys_realloc"); }
     if (is_extern(c, "_eq_fiber_yield") == 0) { print_raw_str("declare i64 @_eq_fiber_yield()\n"); c[3] = vec_push(c[3], "_eq_fiber_yield"); }
+    if (is_extern(c, "sys_create_agent") == 0) { print_raw_str("declare i64 @sys_create_agent(ptr)\n"); c[3] = vec_push(c[3], "sys_create_agent"); }
+    if (is_extern(c, "sys_add_agent_role") == 0) { print_raw_str("declare void @sys_add_agent_role(i64, ptr)\n"); c[3] = vec_push(c[3], "sys_add_agent_role"); }
+    if (is_extern(c, "sys_activate_signatory") == 0) { print_raw_str("declare void @sys_activate_signatory(i64)\n"); c[3] = vec_push(c[3], "sys_activate_signatory"); }
 
 
     
@@ -984,7 +1027,7 @@ fn gen_program(c, ast) {
                         if (j < p_size - 1) { print_raw_str(", "); } j = j + 1;
                     }
                     print_raw_str(") {\nentry:\n");
-                    c[0] = 1; c[4] = vec_new(1024);
+                    c[0] = 1; c[4] = vec_new(1024); c[7] = 1;
 
                     // Preemption Check Hook
                     let r_pre = freshen_reg(c);
@@ -1012,6 +1055,7 @@ fn gen_program(c, ast) {
 
                     gen_stmt(c, body);
                     gen_release_locals(c, c[4]);
+                    c[7] = 0;
                     print_raw_str("    ret i64 0\nLabel_PanicNull:\n    call i64 @sys_panic_null()\n    unreachable\n}\n\n");
                 }
                 if (stmt[0] == STMT_EVENT) {
@@ -1028,7 +1072,7 @@ fn gen_program(c, ast) {
         }
         print_raw_str("define void @_eq___equis_init_globals() {\nentry:\n");
         print_raw_str("    %_pre_intern_res = call i64 @_eq___equis_pre_intern()\n");
-        c[0] = 1; c[4] = 0;
+        c[0] = 1; c[4] = 0; c[7] = 1;
         i = 0;
         g_stmt = 0; s_type = 0;
         while (i < size) {
@@ -1039,6 +1083,7 @@ fn gen_program(c, ast) {
             }
             i = i + 1;
         }
+        c[7] = 0;
         print_raw_str("    ret void\nLabel_PanicNull:\n    call i64 @sys_panic_null()\n    unreachable\n}\n\n");
         
         if (is_defined(c, "main_routine") == 0) {

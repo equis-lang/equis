@@ -47,6 +47,7 @@ fn lexer_identifier(lex) {
     else if (str_equal(text, "flow")) { type = TOKEN_FLOW; }
     else if (str_equal(text, "logic")) { type = TOKEN_LOGIC; }
     else if (str_equal(text, "from")) { type = TOKEN_FROM; }
+    else if (str_equal(text, "roles")) { type = TOKEN_ROLES; }
     else if (str_equal(text, "to")) { type = TOKEN_TO; }
     else if (str_equal(text, "interface")) { type = TOKEN_INTERFACE; }
     else if (str_equal(text, "implements")) { type = TOKEN_IMPLEMENTS; }

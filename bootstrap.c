@@ -2915,7 +2915,7 @@ long long _eq_parse_agent(long long p) {
         a_roles = _eq_vec_new(32);
         while (_eq_parser_is_at_end(p) == 0 && _eq_parser_check(p, _eq_g_TOKEN_RBRACE) == 0) {
             _eq_vec_push(a_roles, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect role name."))))[1]);
-            if (_eq_parser_match(p, _eq_g_TOKEN_COMMA)) {}
+            if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) || _eq_parser_match(p, _eq_g_TOKEN_SEMICOLON)) {}
         }
         _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after Agent roles."));
     }
@@ -3006,7 +3006,7 @@ long long _eq_parse_execute(long long p) {
         else { val = ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect value."))))[1]; }
         _eq_vec_push(args, key);
         _eq_vec_push(args, val);
-        if (_eq_parser_match(p, _eq_g_TOKEN_COMMA)) {}
+        if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) || _eq_parser_match(p, _eq_g_TOKEN_SEMICOLON)) {}
     }
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}'."));
     _eq_parser_consume(p, _eq_g_TOKEN_SEMICOLON, ((long long)"Expect ';' after execute."));
@@ -3252,7 +3252,7 @@ long long _eq_parse_event(long long p) {
         e_roles = _eq_vec_new(200000);
         while (_eq_parser_check(p, _eq_g_TOKEN_RBRACE) == 0) {
             _eq_vec_push(e_roles, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect role name."))))[1]);
-            if (_eq_parser_match(p, _eq_g_TOKEN_COMMA)) {}
+            if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) || _eq_parser_match(p, _eq_g_TOKEN_SEMICOLON)) {}
         }
         _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after Event roles."));
     }
@@ -3341,7 +3341,7 @@ long long _eq_parse_commitment(long long p) {
         c_roles = _eq_vec_new(200000);
         while (_eq_parser_check(p, _eq_g_TOKEN_RBRACE) == 0) {
             _eq_vec_push(c_roles, ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect role name."))))[1]);
-            if (_eq_parser_match(p, _eq_g_TOKEN_COMMA)) {}
+            if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) || _eq_parser_match(p, _eq_g_TOKEN_SEMICOLON)) {}
         }
         _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}' after Commitment roles."));
     }
@@ -3445,7 +3445,7 @@ long long _eq_parse_reverse(long long p) {
         else { val = ((long long*)(_eq_parser_consume(p, _eq_g_TOKEN_STRING, ((long long)"Expect value."))))[1]; }
         _eq_vec_push(args, key);
         _eq_vec_push(args, val);
-        if (_eq_parser_match(p, _eq_g_TOKEN_COMMA)) {}
+        if (_eq_parser_match(p, _eq_g_TOKEN_COMMA) || _eq_parser_match(p, _eq_g_TOKEN_SEMICOLON)) {}
     }
     _eq_parser_consume(p, _eq_g_TOKEN_RBRACE, ((long long)"Expect '}'."));
     _eq_parser_consume(p, _eq_g_TOKEN_SEMICOLON, ((long long)"Expect ';' after reverse."));
@@ -4620,6 +4620,7 @@ long long _eq_freshen_label(long long c) {
     return l;
 }
 long long _eq_gen_string_label(long long c, long long val) {
+    if (c < 4096) return 0;
     volatile long long entry = 0;
     volatile long long found = 0;
     volatile long long found_ptr = 0;
@@ -4692,6 +4693,7 @@ long long _eq_print_escaped_str(long long s) {
     }
 }
 long long _eq_gen_expr(long long c, long long expr) {
+    if (c < 4096 || expr < 4096) return 0;
     volatile long long a_res = 0;
     volatile long long arg_count = 0;
     volatile long long arg_results = 0;
@@ -5100,6 +5102,7 @@ long long _eq_gen_expr(long long c, long long expr) {
     return 0;
 }
 long long _eq_gen_stmt(long long c, long long stmt) {
+    if (c < 4096 || stmt < 4096) return 0;
     volatile long long a_res = 0;
     volatile long long a_size = 0;
     volatile long long arg_val = 0;
@@ -5541,6 +5544,7 @@ long long _eq_gen_program(long long c, long long ast) {
     }
     
     if (((long long*)(c))[6] == 1) {
+    if (_eq_is_defined(c, ((long long)"__equis_pre_intern")) == 0) { _eq_print_raw_str(((long long)"define i64 @_eq___equis_pre_intern() {\nentry:\n    ret i64 0\n}\n\n")); }
         _eq_print_raw_str(((long long)"define void @_eq___equis_init_globals() {\nentry:\n"));
         _eq_print_raw_str(((long long)"    call i64 @_eq___equis_pre_intern()\n"));
         ((long long*)(c))[0] = 1; ((long long*)(c))[4] = 0;
