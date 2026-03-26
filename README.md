@@ -106,8 +106,10 @@ equis/
 ├── Makefile                    # Linux/macOS build system
 ├── bootstrap.ps1               # Windows bootstrap script
 ├── eq                          # Linux/macOS runner script
-├── eq.bat                      # Windows runner script
+├── eq.ps1                      # PowerShell runner script
+├── eq.bat                      # Windows batch runner script
 ├── epm                         # Package manager (Linux/macOS)
+├── epm.ps1                     # PowerShell package manager
 ├── install.sh                  # Linux/macOS installer
 ├── install.ps1                 # Windows installer
 ├── EQUIS.md                    # Programmer's language reference
