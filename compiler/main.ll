@@ -30306,89 +30306,141 @@ start_fn:
     %r6 = call i64 @sys_malloc(i64 80    )
     store i64 %r6, ptr %p5    
     %r7 = load i64, ptr %p5    
-    %r8 = inttoptr i64 %r7     to ptr
-    %r9 = getelementptr i64, ptr %r8, i64 0    
-    %r10 = load i64, ptr %r9    
-    store i64 1, ptr %r9    
-    %r11 = load i64, ptr %p5    
-    %r12 = inttoptr i64 %r11     to ptr
-    %r13 = getelementptr i64, ptr %r12, i64 1    
-    %r14 = load i64, ptr %r13    
-    store i64 1, ptr %r13    
-    %r15 = call i64 @_eq_vec_new(i64 4096    )
-    %r16 = load i64, ptr %p5    
-    %r17 = inttoptr i64 %r16     to ptr
-    %r18 = getelementptr i64, ptr %r17, i64 2    
-    %r19 = load i64, ptr %r18    
-    store i64 %r15, ptr %r18    
-    %r20 = call i64 @_eq_vec_new(i64 1024    )
-    %r21 = load i64, ptr %p5    
-    %r22 = inttoptr i64 %r21     to ptr
-    %r23 = getelementptr i64, ptr %r22, i64 3    
-    %r24 = load i64, ptr %r23    
-    store i64 %r20, ptr %r23    
-    %r25 = load i64, ptr %p5    
-    %r26 = inttoptr i64 %r25     to ptr
-    %r27 = getelementptr i64, ptr %r26, i64 4    
-    %r28 = load i64, ptr %r27    
-    store i64 0, ptr %r27    
-    %r29 = call i64 @_eq_vec_new(i64 1024    )
-    %r30 = load i64, ptr %p5    
-    %r31 = inttoptr i64 %r30     to ptr
-    %r32 = getelementptr i64, ptr %r31, i64 5    
-    %r33 = load i64, ptr %r32    
-    store i64 %r29, ptr %r32    
-    %r34 = load i64, ptr %p4    
-    %r35 = sub i64 1, %r34    
-    %r36 = load i64, ptr %p5    
-    %r37 = inttoptr i64 %r36     to ptr
-    %r38 = getelementptr i64, ptr %r37, i64 6    
-    %r39 = load i64, ptr %r38    
-    store i64 %r35, ptr %r38    
-    %r40 = load i64, ptr %p4    
-    %r41 = icmp eq i64 %r40, 1    
-    %r42 = zext i1 %r41     to i64
-    %r43 = icmp ne i64 %r42    , 0
-    br i1 %r43, label %Label_3225, label %Label_3226    
+    %r8 = icmp eq i64 %r7, 0    
+    %r9 = zext i1 %r8     to i64
+    %r10 = icmp ne i64 %r9    , 0
+    br i1 %r10, label %Label_3225, label %Label_3226    
 Label_3225:
-    %r44 = load i64, ptr %p5    
-    %r45 = inttoptr i64 %r44     to ptr
-    %r46 = getelementptr i64, ptr %r45, i64 6    
-    %r47 = load i64, ptr %r46    
-    store i64 0, ptr %r46    
+    %r11 = ptrtoint ptr @str.400     to i64
+    %r12 = call i64 @write(i64 2, i64 %r11, i64 42    )
+    %r13 = call i64 @exit(i64 1    )
     br label %Label_3227    
 Label_3226:
-    %r48 = load i64, ptr %p5    
-    %r49 = inttoptr i64 %r48     to ptr
-    %r50 = getelementptr i64, ptr %r49, i64 6    
-    %r51 = load i64, ptr %r50    
-    store i64 1, ptr %r50    
     br label %Label_3227    
 Label_3227:
-    %r52 = load i64, ptr @Global_Global_Field_Map    
+    %r14 = load i64, ptr %p5    
+    %r15 = inttoptr i64 %r14     to ptr
+    %r16 = getelementptr i64, ptr %r15, i64 0    
+    %r17 = load i64, ptr %r16    
+    store i64 1, ptr %r16    
+    %r18 = load i64, ptr %p5    
+    %r19 = inttoptr i64 %r18     to ptr
+    %r20 = getelementptr i64, ptr %r19, i64 1    
+    %r21 = load i64, ptr %r20    
+    store i64 1, ptr %r20    
+    %r22 = call i64 @_eq_vec_new(i64 4096    )
+    %r23 = load i64, ptr %p5    
+    %r24 = inttoptr i64 %r23     to ptr
+    %r25 = getelementptr i64, ptr %r24, i64 2    
+    %r26 = load i64, ptr %r25    
+    store i64 %r22, ptr %r25    
+    %r27 = call i64 @_eq_vec_new(i64 1024    )
+    %r28 = load i64, ptr %p5    
+    %r29 = inttoptr i64 %r28     to ptr
+    %r30 = getelementptr i64, ptr %r29, i64 3    
+    %r31 = load i64, ptr %r30    
+    store i64 %r27, ptr %r30    
+    %r32 = load i64, ptr %p5    
+    %r33 = inttoptr i64 %r32     to ptr
+    %r34 = getelementptr i64, ptr %r33, i64 4    
+    %r35 = load i64, ptr %r34    
+    store i64 0, ptr %r34    
+    %r36 = call i64 @_eq_vec_new(i64 1024    )
+    %r37 = load i64, ptr %p5    
+    %r38 = inttoptr i64 %r37     to ptr
+    %r39 = getelementptr i64, ptr %r38, i64 5    
+    %r40 = load i64, ptr %r39    
+    store i64 %r36, ptr %r39    
+    %r41 = load i64, ptr %p5    
+    %r42 = icmp eq i64 %r41    , 0
+    br i1 %r42, label %Label_PanicNull, label %Label_3228    
+Label_3228:
+    %r43 = inttoptr i64 %r41     to ptr
+    %r44 = getelementptr i64, ptr %r43, i64 2    
+    %r45 = load i64, ptr %r44    
+    %r46 = icmp eq i64 %r45, 0    
+    %r47 = zext i1 %r46     to i64
+    %r48 = load i64, ptr %p5    
+    %r49 = icmp eq i64 %r48    , 0
+    br i1 %r49, label %Label_PanicNull, label %Label_3229    
+Label_3229:
+    %r50 = inttoptr i64 %r48     to ptr
+    %r51 = getelementptr i64, ptr %r50, i64 3    
+    %r52 = load i64, ptr %r51    
     %r53 = icmp eq i64 %r52, 0    
     %r54 = zext i1 %r53     to i64
-    %r55 = icmp ne i64 %r54    , 0
-    br i1 %r55, label %Label_3228, label %Label_3229    
-Label_3228:
-    %r56 = call i64 @_eq_map_new(i64 2000    )
-    %r57 = load i64, ptr @Global_Global_Field_Map    
-    store i64 %r56, ptr @Global_Global_Field_Map    
-    br label %Label_3230    
-Label_3229:
-    br label %Label_3230    
+    %r55 = or i64 %r47, %r54    
+    %r56 = load i64, ptr %p5    
+    %r57 = icmp eq i64 %r56    , 0
+    br i1 %r57, label %Label_PanicNull, label %Label_3230    
 Label_3230:
-    %r58 = load i64, ptr %p5    
-    %r59 = ptrtoint ptr @str.0     to i64
-    %r60 = call i64 @_eq_gen_string_label(i64 %r58, i64 %r59    )
-    %r61 = load i64, ptr %p5    
-    %r62 = ptrtoint ptr @str.1     to i64
-    %r63 = call i64 @_eq_gen_string_label(i64 %r61, i64 %r62    )
-    %r64 = load i64, ptr %p5    
-    %r65 = ptrtoint ptr @str.2     to i64
-    %r66 = call i64 @_eq_gen_string_label(i64 %r64, i64 %r65    )
-    %r67 = load i64, ptr %p5    
-    ret i64 %r67    
+    %r58 = inttoptr i64 %r56     to ptr
+    %r59 = getelementptr i64, ptr %r58, i64 5    
+    %r60 = load i64, ptr %r59    
+    %r61 = icmp eq i64 %r60, 0    
+    %r62 = zext i1 %r61     to i64
+    %r63 = or i64 %r55, %r62    
+    %r64 = icmp ne i64 %r63    , 0
+    br i1 %r64, label %Label_3231, label %Label_3232    
+Label_3231:
+    %r65 = ptrtoint ptr @str.401     to i64
+    %r66 = call i64 @write(i64 2, i64 %r65, i64 42    )
+    %r67 = call i64 @exit(i64 1    )
+    br label %Label_3233    
+Label_3232:
+    br label %Label_3233    
+Label_3233:
+    %r68 = load i64, ptr %p4    
+    %r69 = sub i64 1, %r68    
+    %r70 = load i64, ptr %p5    
+    %r71 = inttoptr i64 %r70     to ptr
+    %r72 = getelementptr i64, ptr %r71, i64 6    
+    %r73 = load i64, ptr %r72    
+    store i64 %r69, ptr %r72    
+    %r74 = load i64, ptr %p4    
+    %r75 = icmp eq i64 %r74, 1    
+    %r76 = zext i1 %r75     to i64
+    %r77 = icmp ne i64 %r76    , 0
+    br i1 %r77, label %Label_3234, label %Label_3235    
+Label_3234:
+    %r78 = load i64, ptr %p5    
+    %r79 = inttoptr i64 %r78     to ptr
+    %r80 = getelementptr i64, ptr %r79, i64 6    
+    %r81 = load i64, ptr %r80    
+    store i64 0, ptr %r80    
+    br label %Label_3236    
+Label_3235:
+    %r82 = load i64, ptr %p5    
+    %r83 = inttoptr i64 %r82     to ptr
+    %r84 = getelementptr i64, ptr %r83, i64 6    
+    %r85 = load i64, ptr %r84    
+    store i64 1, ptr %r84    
+    br label %Label_3236    
+Label_3236:
+    %r86 = load i64, ptr @Global_Global_Field_Map    
+    %r87 = icmp eq i64 %r86, 0    
+    %r88 = zext i1 %r87     to i64
+    %r89 = icmp ne i64 %r88    , 0
+    br i1 %r89, label %Label_3237, label %Label_3238    
+Label_3237:
+    %r90 = call i64 @_eq_map_new(i64 2000    )
+    %r91 = load i64, ptr @Global_Global_Field_Map    
+    store i64 %r90, ptr @Global_Global_Field_Map    
+    br label %Label_3239    
+Label_3238:
+    br label %Label_3239    
+Label_3239:
+    %r92 = load i64, ptr %p5    
+    %r93 = ptrtoint ptr @str.0     to i64
+    %r94 = call i64 @_eq_gen_string_label(i64 %r92, i64 %r93    )
+    %r95 = load i64, ptr %p5    
+    %r96 = ptrtoint ptr @str.1     to i64
+    %r97 = call i64 @_eq_gen_string_label(i64 %r95, i64 %r96    )
+    %r98 = load i64, ptr %p5    
+    %r99 = ptrtoint ptr @str.2     to i64
+    %r100 = call i64 @_eq_gen_string_label(i64 %r98, i64 %r99    )
+    %r101 = load i64, ptr %p5    
+    ret i64 %r101    
     ret i64 0
 Label_PanicNull:
     call i64 @sys_panic_null()
@@ -30468,1558 +30520,1622 @@ start_fn:
     %p23     = alloca i64
     store i64 0, ptr %p23    
     store i64 0, ptr %p23    
-    %p24     = alloca i64
-    store i64 0, ptr %p24    
-    %r25 = call i64 @sys_os(    )
-    store i64 %r25, ptr %p24    
-    %r26 = load i64, ptr %p24    
-    %r27 = icmp eq i64 %r26, 2    
-    %r28 = zext i1 %r27     to i64
-    %r29 = icmp ne i64 %r28    , 0
-    br i1 %r29, label %Label_3231, label %Label_3232    
-Label_3231:
-    %r30 = ptrtoint ptr @str.400     to i64
-    %r31 = call i64 @_eq_print_raw_str(i64 %r30    )
-    br label %Label_3233    
-Label_3232:
-    %r32 = ptrtoint ptr @str.401     to i64
-    %r33 = call i64 @_eq_print_raw_str(i64 %r32    )
-    br label %Label_3233    
-Label_3233:
-    %r34 = ptrtoint ptr @str.402     to i64
-    %r35 = call i64 @_eq_emit_ln(i64 %r34    )
-    %r36 = ptrtoint ptr @str.403     to i64
-    %r37 = call i64 @_eq_emit_ln(i64 %r36    )
-    %r38 = ptrtoint ptr @str.404     to i64
-    %r39 = call i64 @_eq_emit_ln(i64 %r38    )
-    %r40 = ptrtoint ptr @str.405     to i64
-    %r41 = call i64 @_eq_print_raw_str(i64 %r40    )
-    %r42 = ptrtoint ptr @str.406     to i64
-    %r43 = call i64 @_eq_print_raw_str(i64 %r42    )
-    %r44 = ptrtoint ptr @str.407     to i64
-    %r45 = call i64 @_eq_emit_ln(i64 %r44    )
-    %r46 = ptrtoint ptr @str.408     to i64
-    %r47 = call i64 @_eq_emit_ln(i64 %r46    )
-    %r48 = ptrtoint ptr @str.409     to i64
-    %r49 = call i64 @_eq_emit_ln(i64 %r48    )
-    %r50 = load i64, ptr %p4    
-    %r51 = call i64 @_eq_vec_size(i64 %r50    )
-    %r52 = load i64, ptr %p5    
-    store i64 %r51, ptr %p5    
-    %r53 = load i64, ptr %p6    
-    store i64 0, ptr %p6    
-    br label %Label_3234    
-Label_3234:
-    %r54 = load volatile i32, ptr @g_needs_yield
-    %r55 = icmp ne i32 %r54, 0
-    br i1 %r55, label %Preywh_3237, label %Checkwh_3237    
-Preywh_3237:
-        store i32 0, ptr @g_needs_yield
-        call i64 @_eq_fiber_yield()
-    br label %Checkwh_3237    
-Checkwh_3237:
-    %r56 = load i64, ptr %p6    
-    %r57 = load i64, ptr %p5    
-    %r58 = icmp slt i64 %r56, %r57    
-    %r59 = zext i1 %r58     to i64
-    %r60 = icmp ne i64 %r59    , 0
-    br i1 %r60, label %Label_3235, label %Label_3236    
-Label_3235:
-    %r61 = load i64, ptr %p4    
-    %r62 = load i64, ptr %p6    
-    %r63 = call i64 @_eq_vec_get(i64 %r61, i64 %r62    )
-    %r64 = load i64, ptr %p7    
-    store i64 %r63, ptr %p7    
-    %r65 = load i64, ptr %p7    
-    %r66 = icmp ne i64 %r65, 0    
-    %r67 = zext i1 %r66     to i64
-    %r68 = icmp ne i64 %r67    , 0
-    br i1 %r68, label %Label_3238, label %Label_3239    
-Label_3238:
-    %r69 = load i64, ptr %p7    
-    %r70 = icmp eq i64 %r69    , 0
-    br i1 %r70, label %Label_PanicNull, label %Label_3241    
+    %r24 = load i64, ptr %p3    
+    %r25 = icmp eq i64 %r24, 0    
+    %r26 = zext i1 %r25     to i64
+    %r27 = icmp ne i64 %r26    , 0
+    br i1 %r27, label %Label_3240, label %Label_3241    
+Label_3240:
+    %r28 = ptrtoint ptr @str.402     to i64
+    %r29 = call i64 @write(i64 2, i64 %r28, i64 46    )
+    %r30 = call i64 @exit(i64 1    )
+    br label %Label_3242    
 Label_3241:
-    %r71 = inttoptr i64 %r69     to ptr
-    %r72 = getelementptr i64, ptr %r71, i64 0    
-    %r73 = load i64, ptr %r72    
-    %r74 = load i64, ptr @Global_STMT_EXTERN    
-    %r75 = icmp eq i64 %r73, %r74    
-    %r76 = zext i1 %r75     to i64
-    %r77 = icmp ne i64 %r76    , 0
-    br i1 %r77, label %Label_3242, label %Label_3243    
+    br label %Label_3242    
 Label_3242:
-    %r78 = load i64, ptr %p7    
-    %r79 = icmp eq i64 %r78    , 0
-    br i1 %r79, label %Label_PanicNull, label %Label_3245    
+    %r31 = load i64, ptr %p4    
+    %r32 = icmp eq i64 %r31, 0    
+    %r33 = zext i1 %r32     to i64
+    %r34 = icmp ne i64 %r33    , 0
+    br i1 %r34, label %Label_3243, label %Label_3244    
+Label_3243:
+    %r35 = ptrtoint ptr @str.403     to i64
+    %r36 = call i64 @write(i64 2, i64 %r35, i64 39    )
+    %r37 = call i64 @exit(i64 1    )
+    br label %Label_3245    
+Label_3244:
+    br label %Label_3245    
 Label_3245:
-    %r80 = inttoptr i64 %r78     to ptr
-    %r81 = getelementptr i64, ptr %r80, i64 1    
-    %r82 = load i64, ptr %r81    
-    %r83 = load i64, ptr %p8    
-    store i64 %r82, ptr %p8    
-    %r84 = load i64, ptr %p7    
-    %r85 = icmp eq i64 %r84    , 0
-    br i1 %r85, label %Label_PanicNull, label %Label_3246    
+    %p38     = alloca i64
+    store i64 0, ptr %p38    
+    %r39 = call i64 @sys_os(    )
+    store i64 %r39, ptr %p38    
+    %r40 = load i64, ptr %p38    
+    %r41 = icmp eq i64 %r40, 2    
+    %r42 = zext i1 %r41     to i64
+    %r43 = icmp ne i64 %r42    , 0
+    br i1 %r43, label %Label_3246, label %Label_3247    
 Label_3246:
-    %r86 = inttoptr i64 %r84     to ptr
-    %r87 = getelementptr i64, ptr %r86, i64 2    
-    %r88 = load i64, ptr %r87    
-    %r89 = load i64, ptr %p9    
-    store i64 %r88, ptr %p9    
-    %r90 = load i64, ptr %p9    
-    %r91 = call i64 @_eq_vec_size(i64 %r90    )
-    %r92 = load i64, ptr %p10    
-    store i64 %r91, ptr %p10    
-    %r93 = load i64, ptr %p3    
-    %r94 = icmp eq i64 %r93    , 0
-    br i1 %r94, label %Label_PanicNull, label %Label_3247    
+    %r44 = ptrtoint ptr @str.404     to i64
+    %r45 = call i64 @_eq_print_raw_str(i64 %r44    )
+    br label %Label_3248    
 Label_3247:
-    %r95 = inttoptr i64 %r93     to ptr
-    %r96 = getelementptr i64, ptr %r95, i64 3    
-    %r97 = load i64, ptr %r96    
-    %r98 = load i64, ptr %p8    
-    %r99 = call i64 @_eq_vec_push(i64 %r97, i64 %r98    )
-    %r100 = load i64, ptr %p3    
-    %r101 = inttoptr i64 %r100     to ptr
-    %r102 = getelementptr i64, ptr %r101, i64 3    
-    %r103 = load i64, ptr %r102    
-    store i64 %r99, ptr %r102    
-    %r104 = ptrtoint ptr @str.410     to i64
-    %r105 = call i64 @_eq_print_raw_str(i64 %r104    )
-    %r106 = load i64, ptr %p8    
-    %r107 = call i64 @_eq_print_raw_str(i64 %r106    )
-    %r108 = ptrtoint ptr @str.63     to i64
-    %r109 = call i64 @_eq_print_raw_str(i64 %r108    )
-    %r110 = load i64, ptr %p11    
-    store i64 0, ptr %p11    
+    %r46 = ptrtoint ptr @str.405     to i64
+    %r47 = call i64 @_eq_print_raw_str(i64 %r46    )
     br label %Label_3248    
 Label_3248:
-    %r111 = load volatile i32, ptr @g_needs_yield
-    %r112 = icmp ne i32 %r111, 0
-    br i1 %r112, label %Preywh_3251, label %Checkwh_3251    
-Preywh_3251:
+    %r48 = ptrtoint ptr @str.406     to i64
+    %r49 = call i64 @_eq_emit_ln(i64 %r48    )
+    %r50 = ptrtoint ptr @str.407     to i64
+    %r51 = call i64 @_eq_emit_ln(i64 %r50    )
+    %r52 = ptrtoint ptr @str.408     to i64
+    %r53 = call i64 @_eq_emit_ln(i64 %r52    )
+    %r54 = ptrtoint ptr @str.409     to i64
+    %r55 = call i64 @_eq_print_raw_str(i64 %r54    )
+    %r56 = ptrtoint ptr @str.410     to i64
+    %r57 = call i64 @_eq_print_raw_str(i64 %r56    )
+    %r58 = ptrtoint ptr @str.411     to i64
+    %r59 = call i64 @_eq_emit_ln(i64 %r58    )
+    %r60 = ptrtoint ptr @str.412     to i64
+    %r61 = call i64 @_eq_emit_ln(i64 %r60    )
+    %r62 = ptrtoint ptr @str.413     to i64
+    %r63 = call i64 @_eq_emit_ln(i64 %r62    )
+    %r64 = load i64, ptr %p4    
+    %r65 = call i64 @_eq_vec_size(i64 %r64    )
+    %r66 = load i64, ptr %p5    
+    store i64 %r65, ptr %p5    
+    %r67 = load i64, ptr %p6    
+    store i64 0, ptr %p6    
+    br label %Label_3249    
+Label_3249:
+    %r68 = load volatile i32, ptr @g_needs_yield
+    %r69 = icmp ne i32 %r68, 0
+    br i1 %r69, label %Preywh_3252, label %Checkwh_3252    
+Preywh_3252:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3251    
-Checkwh_3251:
-    %r113 = load i64, ptr %p11    
-    %r114 = load i64, ptr %p10    
-    %r115 = icmp slt i64 %r113, %r114    
-    %r116 = zext i1 %r115     to i64
-    %r117 = icmp ne i64 %r116    , 0
-    br i1 %r117, label %Label_3249, label %Label_3250    
-Label_3249:
-    %r118 = ptrtoint ptr @str.52     to i64
-    %r119 = call i64 @_eq_print_raw_str(i64 %r118    )
-    %r120 = load i64, ptr %p11    
-    %r121 = load i64, ptr %p10    
-    %r122 = sub i64 %r121, 1    
-    %r123 = icmp slt i64 %r120, %r122    
-    %r124 = zext i1 %r123     to i64
-    %r125 = icmp ne i64 %r124    , 0
-    br i1 %r125, label %Label_3252, label %Label_3253    
-Label_3252:
-    %r126 = ptrtoint ptr @str.308     to i64
-    %r127 = call i64 @_eq_print_raw_str(i64 %r126    )
-    br label %Label_3254    
-Label_3253:
-    br label %Label_3254    
-Label_3254:
-    %r128 = load i64, ptr %p11    
-    %r129 = add i64 %r128, 1    
-    %r130 = load i64, ptr %p11    
-    store i64 %r129, ptr %p11    
-    br label %Label_3248    
+    br label %Checkwh_3252    
+Checkwh_3252:
+    %r70 = load i64, ptr %p6    
+    %r71 = load i64, ptr %p5    
+    %r72 = icmp slt i64 %r70, %r71    
+    %r73 = zext i1 %r72     to i64
+    %r74 = icmp ne i64 %r73    , 0
+    br i1 %r74, label %Label_3250, label %Label_3251    
 Label_3250:
-    %r131 = ptrtoint ptr @str.104     to i64
-    %r132 = call i64 @_eq_print_raw_str(i64 %r131    )
-    br label %Label_3244    
-Label_3243:
-    br label %Label_3244    
-Label_3244:
-    %r133 = load i64, ptr %p7    
-    %r134 = icmp eq i64 %r133    , 0
-    br i1 %r134, label %Label_PanicNull, label %Label_3255    
-Label_3255:
-    %r135 = inttoptr i64 %r133     to ptr
-    %r136 = getelementptr i64, ptr %r135, i64 0    
-    %r137 = load i64, ptr %r136    
-    %r138 = load i64, ptr @Global_STMT_FUNCTION    
-    %r139 = icmp eq i64 %r137, %r138    
-    %r140 = zext i1 %r139     to i64
-    %r141 = icmp ne i64 %r140    , 0
-    br i1 %r141, label %Label_3256, label %Label_3257    
+    %r75 = load i64, ptr %p4    
+    %r76 = load i64, ptr %p6    
+    %r77 = call i64 @_eq_vec_get(i64 %r75, i64 %r76    )
+    %r78 = load i64, ptr %p7    
+    store i64 %r77, ptr %p7    
+    %r79 = load i64, ptr %p7    
+    %r80 = icmp ne i64 %r79, 0    
+    %r81 = zext i1 %r80     to i64
+    %r82 = icmp ne i64 %r81    , 0
+    br i1 %r82, label %Label_3253, label %Label_3254    
+Label_3253:
+    %r83 = load i64, ptr %p7    
+    %r84 = icmp eq i64 %r83    , 0
+    br i1 %r84, label %Label_PanicNull, label %Label_3256    
 Label_3256:
-    %r142 = load i64, ptr %p3    
-    %r143 = icmp eq i64 %r142    , 0
-    br i1 %r143, label %Label_PanicNull, label %Label_3259    
+    %r85 = inttoptr i64 %r83     to ptr
+    %r86 = getelementptr i64, ptr %r85, i64 0    
+    %r87 = load i64, ptr %r86    
+    %r88 = load i64, ptr @Global_STMT_EXTERN    
+    %r89 = icmp eq i64 %r87, %r88    
+    %r90 = zext i1 %r89     to i64
+    %r91 = icmp ne i64 %r90    , 0
+    br i1 %r91, label %Label_3257, label %Label_3258    
+Label_3257:
+    %r92 = load i64, ptr %p7    
+    %r93 = icmp eq i64 %r92    , 0
+    br i1 %r93, label %Label_PanicNull, label %Label_3260    
+Label_3260:
+    %r94 = inttoptr i64 %r92     to ptr
+    %r95 = getelementptr i64, ptr %r94, i64 1    
+    %r96 = load i64, ptr %r95    
+    %r97 = load i64, ptr %p8    
+    store i64 %r96, ptr %p8    
+    %r98 = load i64, ptr %p7    
+    %r99 = icmp eq i64 %r98    , 0
+    br i1 %r99, label %Label_PanicNull, label %Label_3261    
+Label_3261:
+    %r100 = inttoptr i64 %r98     to ptr
+    %r101 = getelementptr i64, ptr %r100, i64 2    
+    %r102 = load i64, ptr %r101    
+    %r103 = load i64, ptr %p9    
+    store i64 %r102, ptr %p9    
+    %r104 = load i64, ptr %p9    
+    %r105 = call i64 @_eq_vec_size(i64 %r104    )
+    %r106 = load i64, ptr %p10    
+    store i64 %r105, ptr %p10    
+    %r107 = load i64, ptr %p3    
+    %r108 = icmp eq i64 %r107    , 0
+    br i1 %r108, label %Label_PanicNull, label %Label_3262    
+Label_3262:
+    %r109 = inttoptr i64 %r107     to ptr
+    %r110 = getelementptr i64, ptr %r109, i64 3    
+    %r111 = load i64, ptr %r110    
+    %r112 = load i64, ptr %p8    
+    %r113 = call i64 @_eq_vec_push(i64 %r111, i64 %r112    )
+    %r114 = load i64, ptr %p3    
+    %r115 = inttoptr i64 %r114     to ptr
+    %r116 = getelementptr i64, ptr %r115, i64 3    
+    %r117 = load i64, ptr %r116    
+    store i64 %r113, ptr %r116    
+    %r118 = ptrtoint ptr @str.414     to i64
+    %r119 = call i64 @_eq_print_raw_str(i64 %r118    )
+    %r120 = load i64, ptr %p8    
+    %r121 = call i64 @_eq_print_raw_str(i64 %r120    )
+    %r122 = ptrtoint ptr @str.63     to i64
+    %r123 = call i64 @_eq_print_raw_str(i64 %r122    )
+    %r124 = load i64, ptr %p11    
+    store i64 0, ptr %p11    
+    br label %Label_3263    
+Label_3263:
+    %r125 = load volatile i32, ptr @g_needs_yield
+    %r126 = icmp ne i32 %r125, 0
+    br i1 %r126, label %Preywh_3266, label %Checkwh_3266    
+Preywh_3266:
+        store i32 0, ptr @g_needs_yield
+        call i64 @_eq_fiber_yield()
+    br label %Checkwh_3266    
+Checkwh_3266:
+    %r127 = load i64, ptr %p11    
+    %r128 = load i64, ptr %p10    
+    %r129 = icmp slt i64 %r127, %r128    
+    %r130 = zext i1 %r129     to i64
+    %r131 = icmp ne i64 %r130    , 0
+    br i1 %r131, label %Label_3264, label %Label_3265    
+Label_3264:
+    %r132 = ptrtoint ptr @str.52     to i64
+    %r133 = call i64 @_eq_print_raw_str(i64 %r132    )
+    %r134 = load i64, ptr %p11    
+    %r135 = load i64, ptr %p10    
+    %r136 = sub i64 %r135, 1    
+    %r137 = icmp slt i64 %r134, %r136    
+    %r138 = zext i1 %r137     to i64
+    %r139 = icmp ne i64 %r138    , 0
+    br i1 %r139, label %Label_3267, label %Label_3268    
+Label_3267:
+    %r140 = ptrtoint ptr @str.308     to i64
+    %r141 = call i64 @_eq_print_raw_str(i64 %r140    )
+    br label %Label_3269    
+Label_3268:
+    br label %Label_3269    
+Label_3269:
+    %r142 = load i64, ptr %p11    
+    %r143 = add i64 %r142, 1    
+    %r144 = load i64, ptr %p11    
+    store i64 %r143, ptr %p11    
+    br label %Label_3263    
+Label_3265:
+    %r145 = ptrtoint ptr @str.104     to i64
+    %r146 = call i64 @_eq_print_raw_str(i64 %r145    )
+    br label %Label_3259    
+Label_3258:
+    br label %Label_3259    
 Label_3259:
-    %r144 = inttoptr i64 %r142     to ptr
-    %r145 = getelementptr i64, ptr %r144, i64 5    
-    %r146 = load i64, ptr %r145    
     %r147 = load i64, ptr %p7    
     %r148 = icmp eq i64 %r147    , 0
-    br i1 %r148, label %Label_PanicNull, label %Label_3260    
-Label_3260:
-    %r149 = inttoptr i64 %r147     to ptr
-    %r150 = getelementptr i64, ptr %r149, i64 1    
-    %r151 = load i64, ptr %r150    
-    %r152 = call i64 @_eq_vec_push(i64 %r146, i64 %r151    )
-    %r153 = load i64, ptr %p3    
-    %r154 = inttoptr i64 %r153     to ptr
-    %r155 = getelementptr i64, ptr %r154, i64 5    
-    %r156 = load i64, ptr %r155    
-    store i64 %r152, ptr %r155    
-    br label %Label_3258    
-Label_3257:
-    br label %Label_3258    
-Label_3258:
-    %r157 = load i64, ptr %p7    
-    %r158 = icmp eq i64 %r157    , 0
-    br i1 %r158, label %Label_PanicNull, label %Label_3261    
-Label_3261:
-    %r159 = inttoptr i64 %r157     to ptr
-    %r160 = getelementptr i64, ptr %r159, i64 0    
-    %r161 = load i64, ptr %r160    
-    %r162 = load i64, ptr @Global_STMT_LET    
-    %r163 = icmp eq i64 %r161, %r162    
-    %r164 = zext i1 %r163     to i64
-    %r165 = icmp ne i64 %r164    , 0
-    br i1 %r165, label %Label_3262, label %Label_3263    
-Label_3262:
-    %r166 = ptrtoint ptr @str.411     to i64
-    %r167 = call i64 @_eq_print_raw_str(i64 %r166    )
-    %r168 = load i64, ptr %p7    
-    %r169 = icmp eq i64 %r168    , 0
-    br i1 %r169, label %Label_PanicNull, label %Label_3265    
-Label_3265:
-    %r170 = inttoptr i64 %r168     to ptr
-    %r171 = getelementptr i64, ptr %r170, i64 1    
-    %r172 = load i64, ptr %r171    
-    %r173 = call i64 @_eq_print_raw_str(i64 %r172    )
-    %r174 = ptrtoint ptr @str.412     to i64
-    %r175 = call i64 @_eq_emit_ln(i64 %r174    )
-    br label %Label_3264    
-Label_3263:
-    br label %Label_3264    
-Label_3264:
-    %r176 = load i64, ptr %p7    
-    %r177 = icmp eq i64 %r176    , 0
-    br i1 %r177, label %Label_PanicNull, label %Label_3266    
-Label_3266:
-    %r178 = inttoptr i64 %r176     to ptr
-    %r179 = getelementptr i64, ptr %r178, i64 0    
-    %r180 = load i64, ptr %r179    
-    %r181 = load i64, ptr @Global_STMT_STRUCT    
-    %r182 = icmp eq i64 %r180, %r181    
-    %r183 = zext i1 %r182     to i64
-    %r184 = load i64, ptr %p7    
-    %r185 = icmp eq i64 %r184    , 0
-    br i1 %r185, label %Label_PanicNull, label %Label_3267    
-Label_3267:
-    %r186 = inttoptr i64 %r184     to ptr
-    %r187 = getelementptr i64, ptr %r186, i64 0    
-    %r188 = load i64, ptr %r187    
-    %r189 = load i64, ptr @Global_STMT_AGENT    
-    %r190 = icmp eq i64 %r188, %r189    
-    %r191 = zext i1 %r190     to i64
-    %r192 = or i64 %r183, %r191    
-    %r193 = load i64, ptr %p7    
-    %r194 = icmp eq i64 %r193    , 0
-    br i1 %r194, label %Label_PanicNull, label %Label_3268    
-Label_3268:
-    %r195 = inttoptr i64 %r193     to ptr
-    %r196 = getelementptr i64, ptr %r195, i64 0    
-    %r197 = load i64, ptr %r196    
-    %r198 = load i64, ptr @Global_STMT_RESOURCE    
-    %r199 = icmp eq i64 %r197, %r198    
-    %r200 = zext i1 %r199     to i64
-    %r201 = or i64 %r192, %r200    
-    %r202 = icmp ne i64 %r201    , 0
-    br i1 %r202, label %Label_3269, label %Label_3270    
-Label_3269:
-    %r203 = load i64, ptr %p3    
-    %r204 = load i64, ptr %p7    
-    %r205 = call i64 @_eq_gen_stmt(i64 %r203, i64 %r204    )
-    br label %Label_3271    
+    br i1 %r148, label %Label_PanicNull, label %Label_3270    
 Label_3270:
-    br label %Label_3271    
+    %r149 = inttoptr i64 %r147     to ptr
+    %r150 = getelementptr i64, ptr %r149, i64 0    
+    %r151 = load i64, ptr %r150    
+    %r152 = load i64, ptr @Global_STMT_FUNCTION    
+    %r153 = icmp eq i64 %r151, %r152    
+    %r154 = zext i1 %r153     to i64
+    %r155 = icmp ne i64 %r154    , 0
+    br i1 %r155, label %Label_3271, label %Label_3272    
 Label_3271:
-    br label %Label_3240    
-Label_3239:
-    br label %Label_3240    
-Label_3240:
-    %r206 = load i64, ptr %p6    
-    %r207 = add i64 %r206, 1    
-    %r208 = load i64, ptr %p6    
-    store i64 %r207, ptr %p6    
-    br label %Label_3234    
-Label_3236:
-    %r209 = load i64, ptr %p3    
-    %r210 = ptrtoint ptr @str.210     to i64
-    %r211 = call i64 @_eq_is_extern(i64 %r209, i64 %r210    )
-    %r212 = icmp eq i64 %r211, 0    
-    %r213 = zext i1 %r212     to i64
-    %r214 = icmp ne i64 %r213    , 0
-    br i1 %r214, label %Label_3272, label %Label_3273    
-Label_3272:
-    %r215 = ptrtoint ptr @str.413     to i64
-    %r216 = call i64 @_eq_print_raw_str(i64 %r215    )
-    %r217 = load i64, ptr %p3    
-    %r218 = icmp eq i64 %r217    , 0
-    br i1 %r218, label %Label_PanicNull, label %Label_3275    
-Label_3275:
-    %r219 = inttoptr i64 %r217     to ptr
-    %r220 = getelementptr i64, ptr %r219, i64 3    
-    %r221 = load i64, ptr %r220    
-    %r222 = ptrtoint ptr @str.210     to i64
-    %r223 = call i64 @_eq_vec_push(i64 %r221, i64 %r222    )
-    %r224 = load i64, ptr %p3    
-    %r225 = inttoptr i64 %r224     to ptr
-    %r226 = getelementptr i64, ptr %r225, i64 3    
-    %r227 = load i64, ptr %r226    
-    store i64 %r223, ptr %r226    
-    br label %Label_3274    
-Label_3273:
-    br label %Label_3274    
+    %r156 = load i64, ptr %p3    
+    %r157 = icmp eq i64 %r156    , 0
+    br i1 %r157, label %Label_PanicNull, label %Label_3274    
 Label_3274:
-    %r228 = load i64, ptr %p3    
-    %r229 = ptrtoint ptr @str.207     to i64
-    %r230 = call i64 @_eq_is_extern(i64 %r228, i64 %r229    )
-    %r231 = icmp eq i64 %r230, 0    
-    %r232 = zext i1 %r231     to i64
-    %r233 = icmp ne i64 %r232    , 0
-    br i1 %r233, label %Label_3276, label %Label_3277    
+    %r158 = inttoptr i64 %r156     to ptr
+    %r159 = getelementptr i64, ptr %r158, i64 5    
+    %r160 = load i64, ptr %r159    
+    %r161 = load i64, ptr %p7    
+    %r162 = icmp eq i64 %r161    , 0
+    br i1 %r162, label %Label_PanicNull, label %Label_3275    
+Label_3275:
+    %r163 = inttoptr i64 %r161     to ptr
+    %r164 = getelementptr i64, ptr %r163, i64 1    
+    %r165 = load i64, ptr %r164    
+    %r166 = call i64 @_eq_vec_push(i64 %r160, i64 %r165    )
+    %r167 = load i64, ptr %p3    
+    %r168 = inttoptr i64 %r167     to ptr
+    %r169 = getelementptr i64, ptr %r168, i64 5    
+    %r170 = load i64, ptr %r169    
+    store i64 %r166, ptr %r169    
+    br label %Label_3273    
+Label_3272:
+    br label %Label_3273    
+Label_3273:
+    %r171 = load i64, ptr %p7    
+    %r172 = icmp eq i64 %r171    , 0
+    br i1 %r172, label %Label_PanicNull, label %Label_3276    
 Label_3276:
-    %r234 = ptrtoint ptr @str.414     to i64
-    %r235 = call i64 @_eq_print_raw_str(i64 %r234    )
-    %r236 = load i64, ptr %p3    
-    %r237 = icmp eq i64 %r236    , 0
-    br i1 %r237, label %Label_PanicNull, label %Label_3279    
-Label_3279:
-    %r238 = inttoptr i64 %r236     to ptr
-    %r239 = getelementptr i64, ptr %r238, i64 3    
-    %r240 = load i64, ptr %r239    
-    %r241 = ptrtoint ptr @str.207     to i64
-    %r242 = call i64 @_eq_vec_push(i64 %r240, i64 %r241    )
-    %r243 = load i64, ptr %p3    
-    %r244 = inttoptr i64 %r243     to ptr
-    %r245 = getelementptr i64, ptr %r244, i64 3    
-    %r246 = load i64, ptr %r245    
-    store i64 %r242, ptr %r245    
-    br label %Label_3278    
+    %r173 = inttoptr i64 %r171     to ptr
+    %r174 = getelementptr i64, ptr %r173, i64 0    
+    %r175 = load i64, ptr %r174    
+    %r176 = load i64, ptr @Global_STMT_LET    
+    %r177 = icmp eq i64 %r175, %r176    
+    %r178 = zext i1 %r177     to i64
+    %r179 = icmp ne i64 %r178    , 0
+    br i1 %r179, label %Label_3277, label %Label_3278    
 Label_3277:
-    br label %Label_3278    
-Label_3278:
-    %r247 = load i64, ptr %p3    
-    %r248 = ptrtoint ptr @str.205     to i64
-    %r249 = call i64 @_eq_is_extern(i64 %r247, i64 %r248    )
-    %r250 = icmp eq i64 %r249, 0    
-    %r251 = zext i1 %r250     to i64
-    %r252 = icmp ne i64 %r251    , 0
-    br i1 %r252, label %Label_3280, label %Label_3281    
+    %r180 = ptrtoint ptr @str.415     to i64
+    %r181 = call i64 @_eq_print_raw_str(i64 %r180    )
+    %r182 = load i64, ptr %p7    
+    %r183 = icmp eq i64 %r182    , 0
+    br i1 %r183, label %Label_PanicNull, label %Label_3280    
 Label_3280:
-    %r253 = ptrtoint ptr @str.415     to i64
-    %r254 = call i64 @_eq_print_raw_str(i64 %r253    )
-    %r255 = load i64, ptr %p3    
-    %r256 = icmp eq i64 %r255    , 0
-    br i1 %r256, label %Label_PanicNull, label %Label_3283    
-Label_3283:
-    %r257 = inttoptr i64 %r255     to ptr
-    %r258 = getelementptr i64, ptr %r257, i64 3    
-    %r259 = load i64, ptr %r258    
-    %r260 = ptrtoint ptr @str.205     to i64
-    %r261 = call i64 @_eq_vec_push(i64 %r259, i64 %r260    )
-    %r262 = load i64, ptr %p3    
-    %r263 = inttoptr i64 %r262     to ptr
-    %r264 = getelementptr i64, ptr %r263, i64 3    
-    %r265 = load i64, ptr %r264    
-    store i64 %r261, ptr %r264    
-    br label %Label_3282    
+    %r184 = inttoptr i64 %r182     to ptr
+    %r185 = getelementptr i64, ptr %r184, i64 1    
+    %r186 = load i64, ptr %r185    
+    %r187 = call i64 @_eq_print_raw_str(i64 %r186    )
+    %r188 = ptrtoint ptr @str.416     to i64
+    %r189 = call i64 @_eq_emit_ln(i64 %r188    )
+    br label %Label_3279    
+Label_3278:
+    br label %Label_3279    
+Label_3279:
+    %r190 = load i64, ptr %p7    
+    %r191 = icmp eq i64 %r190    , 0
+    br i1 %r191, label %Label_PanicNull, label %Label_3281    
 Label_3281:
-    br label %Label_3282    
+    %r192 = inttoptr i64 %r190     to ptr
+    %r193 = getelementptr i64, ptr %r192, i64 0    
+    %r194 = load i64, ptr %r193    
+    %r195 = load i64, ptr @Global_STMT_STRUCT    
+    %r196 = icmp eq i64 %r194, %r195    
+    %r197 = zext i1 %r196     to i64
+    %r198 = load i64, ptr %p7    
+    %r199 = icmp eq i64 %r198    , 0
+    br i1 %r199, label %Label_PanicNull, label %Label_3282    
 Label_3282:
-    %r266 = load i64, ptr %p3    
-    %r267 = ptrtoint ptr @str.206     to i64
-    %r268 = call i64 @_eq_is_extern(i64 %r266, i64 %r267    )
-    %r269 = icmp eq i64 %r268, 0    
-    %r270 = zext i1 %r269     to i64
-    %r271 = icmp ne i64 %r270    , 0
-    br i1 %r271, label %Label_3284, label %Label_3285    
+    %r200 = inttoptr i64 %r198     to ptr
+    %r201 = getelementptr i64, ptr %r200, i64 0    
+    %r202 = load i64, ptr %r201    
+    %r203 = load i64, ptr @Global_STMT_AGENT    
+    %r204 = icmp eq i64 %r202, %r203    
+    %r205 = zext i1 %r204     to i64
+    %r206 = or i64 %r197, %r205    
+    %r207 = load i64, ptr %p7    
+    %r208 = icmp eq i64 %r207    , 0
+    br i1 %r208, label %Label_PanicNull, label %Label_3283    
+Label_3283:
+    %r209 = inttoptr i64 %r207     to ptr
+    %r210 = getelementptr i64, ptr %r209, i64 0    
+    %r211 = load i64, ptr %r210    
+    %r212 = load i64, ptr @Global_STMT_RESOURCE    
+    %r213 = icmp eq i64 %r211, %r212    
+    %r214 = zext i1 %r213     to i64
+    %r215 = or i64 %r206, %r214    
+    %r216 = icmp ne i64 %r215    , 0
+    br i1 %r216, label %Label_3284, label %Label_3285    
 Label_3284:
-    %r272 = ptrtoint ptr @str.416     to i64
-    %r273 = call i64 @_eq_print_raw_str(i64 %r272    )
-    %r274 = load i64, ptr %p3    
-    %r275 = icmp eq i64 %r274    , 0
-    br i1 %r275, label %Label_PanicNull, label %Label_3287    
-Label_3287:
-    %r276 = inttoptr i64 %r274     to ptr
-    %r277 = getelementptr i64, ptr %r276, i64 3    
-    %r278 = load i64, ptr %r277    
-    %r279 = ptrtoint ptr @str.206     to i64
-    %r280 = call i64 @_eq_vec_push(i64 %r278, i64 %r279    )
-    %r281 = load i64, ptr %p3    
-    %r282 = inttoptr i64 %r281     to ptr
-    %r283 = getelementptr i64, ptr %r282, i64 3    
-    %r284 = load i64, ptr %r283    
-    store i64 %r280, ptr %r283    
+    %r217 = load i64, ptr %p3    
+    %r218 = load i64, ptr %p7    
+    %r219 = call i64 @_eq_gen_stmt(i64 %r217, i64 %r218    )
     br label %Label_3286    
 Label_3285:
     br label %Label_3286    
 Label_3286:
-    %r285 = ptrtoint ptr @str.417     to i64
-    %r286 = call i64 @_eq_print_raw_str(i64 %r285    )
-    %r287 = load i64, ptr %p3    
-    %r288 = ptrtoint ptr @str.214     to i64
-    %r289 = call i64 @_eq_is_extern(i64 %r287, i64 %r288    )
-    %r290 = icmp eq i64 %r289, 0    
-    %r291 = zext i1 %r290     to i64
-    %r292 = icmp ne i64 %r291    , 0
-    br i1 %r292, label %Label_3288, label %Label_3289    
-Label_3288:
-    %r293 = ptrtoint ptr @str.418     to i64
-    %r294 = call i64 @_eq_print_raw_str(i64 %r293    )
-    %r295 = load i64, ptr %p3    
-    %r296 = icmp eq i64 %r295    , 0
-    br i1 %r296, label %Label_PanicNull, label %Label_3291    
-Label_3291:
-    %r297 = inttoptr i64 %r295     to ptr
-    %r298 = getelementptr i64, ptr %r297, i64 3    
-    %r299 = load i64, ptr %r298    
-    %r300 = ptrtoint ptr @str.214     to i64
-    %r301 = call i64 @_eq_vec_push(i64 %r299, i64 %r300    )
-    %r302 = load i64, ptr %p3    
-    %r303 = inttoptr i64 %r302     to ptr
-    %r304 = getelementptr i64, ptr %r303, i64 3    
-    %r305 = load i64, ptr %r304    
-    store i64 %r301, ptr %r304    
-    br label %Label_3290    
-Label_3289:
-    br label %Label_3290    
+    br label %Label_3255    
+Label_3254:
+    br label %Label_3255    
+Label_3255:
+    %r220 = load i64, ptr %p6    
+    %r221 = add i64 %r220, 1    
+    %r222 = load i64, ptr %p6    
+    store i64 %r221, ptr %p6    
+    br label %Label_3249    
+Label_3251:
+    %r223 = load i64, ptr %p3    
+    %r224 = ptrtoint ptr @str.210     to i64
+    %r225 = call i64 @_eq_is_extern(i64 %r223, i64 %r224    )
+    %r226 = icmp eq i64 %r225, 0    
+    %r227 = zext i1 %r226     to i64
+    %r228 = icmp ne i64 %r227    , 0
+    br i1 %r228, label %Label_3287, label %Label_3288    
+Label_3287:
+    %r229 = ptrtoint ptr @str.417     to i64
+    %r230 = call i64 @_eq_print_raw_str(i64 %r229    )
+    %r231 = load i64, ptr %p3    
+    %r232 = icmp eq i64 %r231    , 0
+    br i1 %r232, label %Label_PanicNull, label %Label_3290    
 Label_3290:
-    %r306 = load i64, ptr %p3    
-    %r307 = ptrtoint ptr @str.225     to i64
-    %r308 = call i64 @_eq_is_extern(i64 %r306, i64 %r307    )
-    %r309 = icmp eq i64 %r308, 0    
-    %r310 = zext i1 %r309     to i64
-    %r311 = icmp ne i64 %r310    , 0
-    br i1 %r311, label %Label_3292, label %Label_3293    
-Label_3292:
-    %r312 = ptrtoint ptr @str.419     to i64
-    %r313 = call i64 @_eq_print_raw_str(i64 %r312    )
-    %r314 = load i64, ptr %p3    
-    %r315 = icmp eq i64 %r314    , 0
-    br i1 %r315, label %Label_PanicNull, label %Label_3295    
-Label_3295:
-    %r316 = inttoptr i64 %r314     to ptr
-    %r317 = getelementptr i64, ptr %r316, i64 3    
-    %r318 = load i64, ptr %r317    
-    %r319 = ptrtoint ptr @str.225     to i64
-    %r320 = call i64 @_eq_vec_push(i64 %r318, i64 %r319    )
-    %r321 = load i64, ptr %p3    
-    %r322 = inttoptr i64 %r321     to ptr
-    %r323 = getelementptr i64, ptr %r322, i64 3    
-    %r324 = load i64, ptr %r323    
-    store i64 %r320, ptr %r323    
-    br label %Label_3294    
-Label_3293:
-    br label %Label_3294    
+    %r233 = inttoptr i64 %r231     to ptr
+    %r234 = getelementptr i64, ptr %r233, i64 3    
+    %r235 = load i64, ptr %r234    
+    %r236 = ptrtoint ptr @str.210     to i64
+    %r237 = call i64 @_eq_vec_push(i64 %r235, i64 %r236    )
+    %r238 = load i64, ptr %p3    
+    %r239 = inttoptr i64 %r238     to ptr
+    %r240 = getelementptr i64, ptr %r239, i64 3    
+    %r241 = load i64, ptr %r240    
+    store i64 %r237, ptr %r240    
+    br label %Label_3289    
+Label_3288:
+    br label %Label_3289    
+Label_3289:
+    %r242 = load i64, ptr %p3    
+    %r243 = ptrtoint ptr @str.207     to i64
+    %r244 = call i64 @_eq_is_extern(i64 %r242, i64 %r243    )
+    %r245 = icmp eq i64 %r244, 0    
+    %r246 = zext i1 %r245     to i64
+    %r247 = icmp ne i64 %r246    , 0
+    br i1 %r247, label %Label_3291, label %Label_3292    
+Label_3291:
+    %r248 = ptrtoint ptr @str.418     to i64
+    %r249 = call i64 @_eq_print_raw_str(i64 %r248    )
+    %r250 = load i64, ptr %p3    
+    %r251 = icmp eq i64 %r250    , 0
+    br i1 %r251, label %Label_PanicNull, label %Label_3294    
 Label_3294:
-    %r325 = load i64, ptr %p3    
-    %r326 = ptrtoint ptr @str.226     to i64
-    %r327 = call i64 @_eq_is_extern(i64 %r325, i64 %r326    )
-    %r328 = icmp eq i64 %r327, 0    
-    %r329 = zext i1 %r328     to i64
-    %r330 = icmp ne i64 %r329    , 0
-    br i1 %r330, label %Label_3296, label %Label_3297    
-Label_3296:
-    %r331 = ptrtoint ptr @str.420     to i64
-    %r332 = call i64 @_eq_print_raw_str(i64 %r331    )
-    %r333 = load i64, ptr %p3    
-    %r334 = icmp eq i64 %r333    , 0
-    br i1 %r334, label %Label_PanicNull, label %Label_3299    
-Label_3299:
-    %r335 = inttoptr i64 %r333     to ptr
-    %r336 = getelementptr i64, ptr %r335, i64 3    
-    %r337 = load i64, ptr %r336    
-    %r338 = ptrtoint ptr @str.226     to i64
-    %r339 = call i64 @_eq_vec_push(i64 %r337, i64 %r338    )
-    %r340 = load i64, ptr %p3    
-    %r341 = inttoptr i64 %r340     to ptr
-    %r342 = getelementptr i64, ptr %r341, i64 3    
-    %r343 = load i64, ptr %r342    
-    store i64 %r339, ptr %r342    
-    br label %Label_3298    
-Label_3297:
-    br label %Label_3298    
+    %r252 = inttoptr i64 %r250     to ptr
+    %r253 = getelementptr i64, ptr %r252, i64 3    
+    %r254 = load i64, ptr %r253    
+    %r255 = ptrtoint ptr @str.207     to i64
+    %r256 = call i64 @_eq_vec_push(i64 %r254, i64 %r255    )
+    %r257 = load i64, ptr %p3    
+    %r258 = inttoptr i64 %r257     to ptr
+    %r259 = getelementptr i64, ptr %r258, i64 3    
+    %r260 = load i64, ptr %r259    
+    store i64 %r256, ptr %r259    
+    br label %Label_3293    
+Label_3292:
+    br label %Label_3293    
+Label_3293:
+    %r261 = load i64, ptr %p3    
+    %r262 = ptrtoint ptr @str.205     to i64
+    %r263 = call i64 @_eq_is_extern(i64 %r261, i64 %r262    )
+    %r264 = icmp eq i64 %r263, 0    
+    %r265 = zext i1 %r264     to i64
+    %r266 = icmp ne i64 %r265    , 0
+    br i1 %r266, label %Label_3295, label %Label_3296    
+Label_3295:
+    %r267 = ptrtoint ptr @str.419     to i64
+    %r268 = call i64 @_eq_print_raw_str(i64 %r267    )
+    %r269 = load i64, ptr %p3    
+    %r270 = icmp eq i64 %r269    , 0
+    br i1 %r270, label %Label_PanicNull, label %Label_3298    
 Label_3298:
-    %r344 = load i64, ptr %p3    
-    %r345 = ptrtoint ptr @str.421     to i64
-    %r346 = call i64 @_eq_is_extern(i64 %r344, i64 %r345    )
-    %r347 = icmp eq i64 %r346, 0    
-    %r348 = zext i1 %r347     to i64
-    %r349 = icmp ne i64 %r348    , 0
-    br i1 %r349, label %Label_3300, label %Label_3301    
-Label_3300:
-    %r350 = ptrtoint ptr @str.422     to i64
-    %r351 = call i64 @_eq_print_raw_str(i64 %r350    )
-    %r352 = load i64, ptr %p3    
-    %r353 = icmp eq i64 %r352    , 0
-    br i1 %r353, label %Label_PanicNull, label %Label_3303    
-Label_3303:
-    %r354 = inttoptr i64 %r352     to ptr
-    %r355 = getelementptr i64, ptr %r354, i64 3    
-    %r356 = load i64, ptr %r355    
-    %r357 = ptrtoint ptr @str.421     to i64
-    %r358 = call i64 @_eq_vec_push(i64 %r356, i64 %r357    )
-    %r359 = load i64, ptr %p3    
-    %r360 = inttoptr i64 %r359     to ptr
-    %r361 = getelementptr i64, ptr %r360, i64 3    
-    %r362 = load i64, ptr %r361    
-    store i64 %r358, ptr %r361    
-    br label %Label_3302    
-Label_3301:
-    br label %Label_3302    
+    %r271 = inttoptr i64 %r269     to ptr
+    %r272 = getelementptr i64, ptr %r271, i64 3    
+    %r273 = load i64, ptr %r272    
+    %r274 = ptrtoint ptr @str.205     to i64
+    %r275 = call i64 @_eq_vec_push(i64 %r273, i64 %r274    )
+    %r276 = load i64, ptr %p3    
+    %r277 = inttoptr i64 %r276     to ptr
+    %r278 = getelementptr i64, ptr %r277, i64 3    
+    %r279 = load i64, ptr %r278    
+    store i64 %r275, ptr %r278    
+    br label %Label_3297    
+Label_3296:
+    br label %Label_3297    
+Label_3297:
+    %r280 = load i64, ptr %p3    
+    %r281 = ptrtoint ptr @str.206     to i64
+    %r282 = call i64 @_eq_is_extern(i64 %r280, i64 %r281    )
+    %r283 = icmp eq i64 %r282, 0    
+    %r284 = zext i1 %r283     to i64
+    %r285 = icmp ne i64 %r284    , 0
+    br i1 %r285, label %Label_3299, label %Label_3300    
+Label_3299:
+    %r286 = ptrtoint ptr @str.420     to i64
+    %r287 = call i64 @_eq_print_raw_str(i64 %r286    )
+    %r288 = load i64, ptr %p3    
+    %r289 = icmp eq i64 %r288    , 0
+    br i1 %r289, label %Label_PanicNull, label %Label_3302    
 Label_3302:
-    %r363 = load i64, ptr %p3    
-    %r364 = ptrtoint ptr @str.423     to i64
-    %r365 = call i64 @_eq_is_extern(i64 %r363, i64 %r364    )
-    %r366 = icmp eq i64 %r365, 0    
-    %r367 = zext i1 %r366     to i64
-    %r368 = icmp ne i64 %r367    , 0
-    br i1 %r368, label %Label_3304, label %Label_3305    
-Label_3304:
-    %r369 = ptrtoint ptr @str.424     to i64
-    %r370 = call i64 @_eq_print_raw_str(i64 %r369    )
-    %r371 = load i64, ptr %p3    
-    %r372 = icmp eq i64 %r371    , 0
-    br i1 %r372, label %Label_PanicNull, label %Label_3307    
-Label_3307:
-    %r373 = inttoptr i64 %r371     to ptr
-    %r374 = getelementptr i64, ptr %r373, i64 3    
-    %r375 = load i64, ptr %r374    
-    %r376 = ptrtoint ptr @str.423     to i64
-    %r377 = call i64 @_eq_vec_push(i64 %r375, i64 %r376    )
-    %r378 = load i64, ptr %p3    
-    %r379 = inttoptr i64 %r378     to ptr
-    %r380 = getelementptr i64, ptr %r379, i64 3    
-    %r381 = load i64, ptr %r380    
-    store i64 %r377, ptr %r380    
-    br label %Label_3306    
-Label_3305:
-    br label %Label_3306    
+    %r290 = inttoptr i64 %r288     to ptr
+    %r291 = getelementptr i64, ptr %r290, i64 3    
+    %r292 = load i64, ptr %r291    
+    %r293 = ptrtoint ptr @str.206     to i64
+    %r294 = call i64 @_eq_vec_push(i64 %r292, i64 %r293    )
+    %r295 = load i64, ptr %p3    
+    %r296 = inttoptr i64 %r295     to ptr
+    %r297 = getelementptr i64, ptr %r296, i64 3    
+    %r298 = load i64, ptr %r297    
+    store i64 %r294, ptr %r297    
+    br label %Label_3301    
+Label_3300:
+    br label %Label_3301    
+Label_3301:
+    %r299 = ptrtoint ptr @str.421     to i64
+    %r300 = call i64 @_eq_print_raw_str(i64 %r299    )
+    %r301 = load i64, ptr %p3    
+    %r302 = ptrtoint ptr @str.214     to i64
+    %r303 = call i64 @_eq_is_extern(i64 %r301, i64 %r302    )
+    %r304 = icmp eq i64 %r303, 0    
+    %r305 = zext i1 %r304     to i64
+    %r306 = icmp ne i64 %r305    , 0
+    br i1 %r306, label %Label_3303, label %Label_3304    
+Label_3303:
+    %r307 = ptrtoint ptr @str.422     to i64
+    %r308 = call i64 @_eq_print_raw_str(i64 %r307    )
+    %r309 = load i64, ptr %p3    
+    %r310 = icmp eq i64 %r309    , 0
+    br i1 %r310, label %Label_PanicNull, label %Label_3306    
 Label_3306:
-    %r382 = load i64, ptr %p3    
-    %r383 = ptrtoint ptr @str.425     to i64
-    %r384 = call i64 @_eq_is_extern(i64 %r382, i64 %r383    )
-    %r385 = icmp eq i64 %r384, 0    
-    %r386 = zext i1 %r385     to i64
-    %r387 = icmp ne i64 %r386    , 0
-    br i1 %r387, label %Label_3308, label %Label_3309    
-Label_3308:
-    %r388 = ptrtoint ptr @str.426     to i64
-    %r389 = call i64 @_eq_print_raw_str(i64 %r388    )
-    %r390 = load i64, ptr %p3    
-    %r391 = icmp eq i64 %r390    , 0
-    br i1 %r391, label %Label_PanicNull, label %Label_3311    
-Label_3311:
-    %r392 = inttoptr i64 %r390     to ptr
-    %r393 = getelementptr i64, ptr %r392, i64 3    
-    %r394 = load i64, ptr %r393    
-    %r395 = ptrtoint ptr @str.425     to i64
-    %r396 = call i64 @_eq_vec_push(i64 %r394, i64 %r395    )
-    %r397 = load i64, ptr %p3    
-    %r398 = inttoptr i64 %r397     to ptr
-    %r399 = getelementptr i64, ptr %r398, i64 3    
-    %r400 = load i64, ptr %r399    
-    store i64 %r396, ptr %r399    
-    br label %Label_3310    
-Label_3309:
-    br label %Label_3310    
+    %r311 = inttoptr i64 %r309     to ptr
+    %r312 = getelementptr i64, ptr %r311, i64 3    
+    %r313 = load i64, ptr %r312    
+    %r314 = ptrtoint ptr @str.214     to i64
+    %r315 = call i64 @_eq_vec_push(i64 %r313, i64 %r314    )
+    %r316 = load i64, ptr %p3    
+    %r317 = inttoptr i64 %r316     to ptr
+    %r318 = getelementptr i64, ptr %r317, i64 3    
+    %r319 = load i64, ptr %r318    
+    store i64 %r315, ptr %r318    
+    br label %Label_3305    
+Label_3304:
+    br label %Label_3305    
+Label_3305:
+    %r320 = load i64, ptr %p3    
+    %r321 = ptrtoint ptr @str.225     to i64
+    %r322 = call i64 @_eq_is_extern(i64 %r320, i64 %r321    )
+    %r323 = icmp eq i64 %r322, 0    
+    %r324 = zext i1 %r323     to i64
+    %r325 = icmp ne i64 %r324    , 0
+    br i1 %r325, label %Label_3307, label %Label_3308    
+Label_3307:
+    %r326 = ptrtoint ptr @str.423     to i64
+    %r327 = call i64 @_eq_print_raw_str(i64 %r326    )
+    %r328 = load i64, ptr %p3    
+    %r329 = icmp eq i64 %r328    , 0
+    br i1 %r329, label %Label_PanicNull, label %Label_3310    
 Label_3310:
-    %r401 = load i64, ptr %p3    
-    %r402 = ptrtoint ptr @str.427     to i64
-    %r403 = call i64 @_eq_is_extern(i64 %r401, i64 %r402    )
-    %r404 = icmp eq i64 %r403, 0    
-    %r405 = zext i1 %r404     to i64
-    %r406 = icmp ne i64 %r405    , 0
-    br i1 %r406, label %Label_3312, label %Label_3313    
-Label_3312:
-    %r407 = ptrtoint ptr @str.428     to i64
-    %r408 = call i64 @_eq_print_raw_str(i64 %r407    )
-    %r409 = load i64, ptr %p3    
-    %r410 = icmp eq i64 %r409    , 0
-    br i1 %r410, label %Label_PanicNull, label %Label_3315    
-Label_3315:
-    %r411 = inttoptr i64 %r409     to ptr
-    %r412 = getelementptr i64, ptr %r411, i64 3    
-    %r413 = load i64, ptr %r412    
-    %r414 = ptrtoint ptr @str.427     to i64
-    %r415 = call i64 @_eq_vec_push(i64 %r413, i64 %r414    )
-    %r416 = load i64, ptr %p3    
-    %r417 = inttoptr i64 %r416     to ptr
-    %r418 = getelementptr i64, ptr %r417, i64 3    
-    %r419 = load i64, ptr %r418    
-    store i64 %r415, ptr %r418    
-    br label %Label_3314    
-Label_3313:
-    br label %Label_3314    
+    %r330 = inttoptr i64 %r328     to ptr
+    %r331 = getelementptr i64, ptr %r330, i64 3    
+    %r332 = load i64, ptr %r331    
+    %r333 = ptrtoint ptr @str.225     to i64
+    %r334 = call i64 @_eq_vec_push(i64 %r332, i64 %r333    )
+    %r335 = load i64, ptr %p3    
+    %r336 = inttoptr i64 %r335     to ptr
+    %r337 = getelementptr i64, ptr %r336, i64 3    
+    %r338 = load i64, ptr %r337    
+    store i64 %r334, ptr %r337    
+    br label %Label_3309    
+Label_3308:
+    br label %Label_3309    
+Label_3309:
+    %r339 = load i64, ptr %p3    
+    %r340 = ptrtoint ptr @str.226     to i64
+    %r341 = call i64 @_eq_is_extern(i64 %r339, i64 %r340    )
+    %r342 = icmp eq i64 %r341, 0    
+    %r343 = zext i1 %r342     to i64
+    %r344 = icmp ne i64 %r343    , 0
+    br i1 %r344, label %Label_3311, label %Label_3312    
+Label_3311:
+    %r345 = ptrtoint ptr @str.424     to i64
+    %r346 = call i64 @_eq_print_raw_str(i64 %r345    )
+    %r347 = load i64, ptr %p3    
+    %r348 = icmp eq i64 %r347    , 0
+    br i1 %r348, label %Label_PanicNull, label %Label_3314    
 Label_3314:
-    %r420 = load i64, ptr %p3    
-    %r421 = ptrtoint ptr @str.216     to i64
-    %r422 = call i64 @_eq_is_extern(i64 %r420, i64 %r421    )
-    %r423 = icmp eq i64 %r422, 0    
-    %r424 = zext i1 %r423     to i64
-    %r425 = icmp ne i64 %r424    , 0
-    br i1 %r425, label %Label_3316, label %Label_3317    
-Label_3316:
-    %r426 = ptrtoint ptr @str.429     to i64
-    %r427 = call i64 @_eq_print_raw_str(i64 %r426    )
-    %r428 = load i64, ptr %p3    
-    %r429 = icmp eq i64 %r428    , 0
-    br i1 %r429, label %Label_PanicNull, label %Label_3319    
-Label_3319:
-    %r430 = inttoptr i64 %r428     to ptr
-    %r431 = getelementptr i64, ptr %r430, i64 3    
-    %r432 = load i64, ptr %r431    
-    %r433 = ptrtoint ptr @str.216     to i64
-    %r434 = call i64 @_eq_vec_push(i64 %r432, i64 %r433    )
-    %r435 = load i64, ptr %p3    
-    %r436 = inttoptr i64 %r435     to ptr
-    %r437 = getelementptr i64, ptr %r436, i64 3    
-    %r438 = load i64, ptr %r437    
-    store i64 %r434, ptr %r437    
-    br label %Label_3318    
-Label_3317:
-    br label %Label_3318    
+    %r349 = inttoptr i64 %r347     to ptr
+    %r350 = getelementptr i64, ptr %r349, i64 3    
+    %r351 = load i64, ptr %r350    
+    %r352 = ptrtoint ptr @str.226     to i64
+    %r353 = call i64 @_eq_vec_push(i64 %r351, i64 %r352    )
+    %r354 = load i64, ptr %p3    
+    %r355 = inttoptr i64 %r354     to ptr
+    %r356 = getelementptr i64, ptr %r355, i64 3    
+    %r357 = load i64, ptr %r356    
+    store i64 %r353, ptr %r356    
+    br label %Label_3313    
+Label_3312:
+    br label %Label_3313    
+Label_3313:
+    %r358 = load i64, ptr %p3    
+    %r359 = ptrtoint ptr @str.425     to i64
+    %r360 = call i64 @_eq_is_extern(i64 %r358, i64 %r359    )
+    %r361 = icmp eq i64 %r360, 0    
+    %r362 = zext i1 %r361     to i64
+    %r363 = icmp ne i64 %r362    , 0
+    br i1 %r363, label %Label_3315, label %Label_3316    
+Label_3315:
+    %r364 = ptrtoint ptr @str.426     to i64
+    %r365 = call i64 @_eq_print_raw_str(i64 %r364    )
+    %r366 = load i64, ptr %p3    
+    %r367 = icmp eq i64 %r366    , 0
+    br i1 %r367, label %Label_PanicNull, label %Label_3318    
 Label_3318:
-    %r439 = load i64, ptr %p3    
-    %r440 = ptrtoint ptr @str.209     to i64
-    %r441 = call i64 @_eq_is_extern(i64 %r439, i64 %r440    )
-    %r442 = icmp eq i64 %r441, 0    
-    %r443 = zext i1 %r442     to i64
-    %r444 = icmp ne i64 %r443    , 0
-    br i1 %r444, label %Label_3320, label %Label_3321    
-Label_3320:
-    %r445 = ptrtoint ptr @str.430     to i64
-    %r446 = call i64 @_eq_print_raw_str(i64 %r445    )
-    %r447 = load i64, ptr %p3    
-    %r448 = icmp eq i64 %r447    , 0
-    br i1 %r448, label %Label_PanicNull, label %Label_3323    
-Label_3323:
-    %r449 = inttoptr i64 %r447     to ptr
-    %r450 = getelementptr i64, ptr %r449, i64 3    
-    %r451 = load i64, ptr %r450    
-    %r452 = ptrtoint ptr @str.209     to i64
-    %r453 = call i64 @_eq_vec_push(i64 %r451, i64 %r452    )
-    %r454 = load i64, ptr %p3    
-    %r455 = inttoptr i64 %r454     to ptr
-    %r456 = getelementptr i64, ptr %r455, i64 3    
-    %r457 = load i64, ptr %r456    
-    store i64 %r453, ptr %r456    
-    br label %Label_3322    
-Label_3321:
-    br label %Label_3322    
+    %r368 = inttoptr i64 %r366     to ptr
+    %r369 = getelementptr i64, ptr %r368, i64 3    
+    %r370 = load i64, ptr %r369    
+    %r371 = ptrtoint ptr @str.425     to i64
+    %r372 = call i64 @_eq_vec_push(i64 %r370, i64 %r371    )
+    %r373 = load i64, ptr %p3    
+    %r374 = inttoptr i64 %r373     to ptr
+    %r375 = getelementptr i64, ptr %r374, i64 3    
+    %r376 = load i64, ptr %r375    
+    store i64 %r372, ptr %r375    
+    br label %Label_3317    
+Label_3316:
+    br label %Label_3317    
+Label_3317:
+    %r377 = load i64, ptr %p3    
+    %r378 = ptrtoint ptr @str.427     to i64
+    %r379 = call i64 @_eq_is_extern(i64 %r377, i64 %r378    )
+    %r380 = icmp eq i64 %r379, 0    
+    %r381 = zext i1 %r380     to i64
+    %r382 = icmp ne i64 %r381    , 0
+    br i1 %r382, label %Label_3319, label %Label_3320    
+Label_3319:
+    %r383 = ptrtoint ptr @str.428     to i64
+    %r384 = call i64 @_eq_print_raw_str(i64 %r383    )
+    %r385 = load i64, ptr %p3    
+    %r386 = icmp eq i64 %r385    , 0
+    br i1 %r386, label %Label_PanicNull, label %Label_3322    
 Label_3322:
-    %r458 = load i64, ptr %p3    
-    %r459 = ptrtoint ptr @str.208     to i64
-    %r460 = call i64 @_eq_is_extern(i64 %r458, i64 %r459    )
-    %r461 = icmp eq i64 %r460, 0    
-    %r462 = zext i1 %r461     to i64
-    %r463 = icmp ne i64 %r462    , 0
-    br i1 %r463, label %Label_3324, label %Label_3325    
-Label_3324:
-    %r464 = ptrtoint ptr @str.431     to i64
-    %r465 = call i64 @_eq_print_raw_str(i64 %r464    )
-    %r466 = load i64, ptr %p3    
-    %r467 = icmp eq i64 %r466    , 0
-    br i1 %r467, label %Label_PanicNull, label %Label_3327    
-Label_3327:
-    %r468 = inttoptr i64 %r466     to ptr
-    %r469 = getelementptr i64, ptr %r468, i64 3    
-    %r470 = load i64, ptr %r469    
-    %r471 = ptrtoint ptr @str.208     to i64
-    %r472 = call i64 @_eq_vec_push(i64 %r470, i64 %r471    )
-    %r473 = load i64, ptr %p3    
-    %r474 = inttoptr i64 %r473     to ptr
-    %r475 = getelementptr i64, ptr %r474, i64 3    
-    %r476 = load i64, ptr %r475    
-    store i64 %r472, ptr %r475    
-    br label %Label_3326    
-Label_3325:
-    br label %Label_3326    
+    %r387 = inttoptr i64 %r385     to ptr
+    %r388 = getelementptr i64, ptr %r387, i64 3    
+    %r389 = load i64, ptr %r388    
+    %r390 = ptrtoint ptr @str.427     to i64
+    %r391 = call i64 @_eq_vec_push(i64 %r389, i64 %r390    )
+    %r392 = load i64, ptr %p3    
+    %r393 = inttoptr i64 %r392     to ptr
+    %r394 = getelementptr i64, ptr %r393, i64 3    
+    %r395 = load i64, ptr %r394    
+    store i64 %r391, ptr %r394    
+    br label %Label_3321    
+Label_3320:
+    br label %Label_3321    
+Label_3321:
+    %r396 = load i64, ptr %p3    
+    %r397 = ptrtoint ptr @str.429     to i64
+    %r398 = call i64 @_eq_is_extern(i64 %r396, i64 %r397    )
+    %r399 = icmp eq i64 %r398, 0    
+    %r400 = zext i1 %r399     to i64
+    %r401 = icmp ne i64 %r400    , 0
+    br i1 %r401, label %Label_3323, label %Label_3324    
+Label_3323:
+    %r402 = ptrtoint ptr @str.430     to i64
+    %r403 = call i64 @_eq_print_raw_str(i64 %r402    )
+    %r404 = load i64, ptr %p3    
+    %r405 = icmp eq i64 %r404    , 0
+    br i1 %r405, label %Label_PanicNull, label %Label_3326    
 Label_3326:
-    %r477 = load i64, ptr %p3    
-    %r478 = ptrtoint ptr @str.211     to i64
-    %r479 = call i64 @_eq_is_extern(i64 %r477, i64 %r478    )
-    %r480 = icmp eq i64 %r479, 0    
-    %r481 = zext i1 %r480     to i64
-    %r482 = icmp ne i64 %r481    , 0
-    br i1 %r482, label %Label_3328, label %Label_3329    
-Label_3328:
-    %r483 = ptrtoint ptr @str.432     to i64
-    %r484 = call i64 @_eq_print_raw_str(i64 %r483    )
-    %r485 = load i64, ptr %p3    
-    %r486 = icmp eq i64 %r485    , 0
-    br i1 %r486, label %Label_PanicNull, label %Label_3331    
-Label_3331:
-    %r487 = inttoptr i64 %r485     to ptr
-    %r488 = getelementptr i64, ptr %r487, i64 3    
-    %r489 = load i64, ptr %r488    
-    %r490 = ptrtoint ptr @str.211     to i64
-    %r491 = call i64 @_eq_vec_push(i64 %r489, i64 %r490    )
-    %r492 = load i64, ptr %p3    
-    %r493 = inttoptr i64 %r492     to ptr
-    %r494 = getelementptr i64, ptr %r493, i64 3    
-    %r495 = load i64, ptr %r494    
-    store i64 %r491, ptr %r494    
-    br label %Label_3330    
-Label_3329:
-    br label %Label_3330    
+    %r406 = inttoptr i64 %r404     to ptr
+    %r407 = getelementptr i64, ptr %r406, i64 3    
+    %r408 = load i64, ptr %r407    
+    %r409 = ptrtoint ptr @str.429     to i64
+    %r410 = call i64 @_eq_vec_push(i64 %r408, i64 %r409    )
+    %r411 = load i64, ptr %p3    
+    %r412 = inttoptr i64 %r411     to ptr
+    %r413 = getelementptr i64, ptr %r412, i64 3    
+    %r414 = load i64, ptr %r413    
+    store i64 %r410, ptr %r413    
+    br label %Label_3325    
+Label_3324:
+    br label %Label_3325    
+Label_3325:
+    %r415 = load i64, ptr %p3    
+    %r416 = ptrtoint ptr @str.431     to i64
+    %r417 = call i64 @_eq_is_extern(i64 %r415, i64 %r416    )
+    %r418 = icmp eq i64 %r417, 0    
+    %r419 = zext i1 %r418     to i64
+    %r420 = icmp ne i64 %r419    , 0
+    br i1 %r420, label %Label_3327, label %Label_3328    
+Label_3327:
+    %r421 = ptrtoint ptr @str.432     to i64
+    %r422 = call i64 @_eq_print_raw_str(i64 %r421    )
+    %r423 = load i64, ptr %p3    
+    %r424 = icmp eq i64 %r423    , 0
+    br i1 %r424, label %Label_PanicNull, label %Label_3330    
 Label_3330:
-    %r496 = load i64, ptr %p3    
-    %r497 = ptrtoint ptr @str.433     to i64
-    %r498 = call i64 @_eq_is_extern(i64 %r496, i64 %r497    )
-    %r499 = icmp eq i64 %r498, 0    
-    %r500 = zext i1 %r499     to i64
-    %r501 = icmp ne i64 %r500    , 0
-    br i1 %r501, label %Label_3332, label %Label_3333    
-Label_3332:
-    %r502 = ptrtoint ptr @str.434     to i64
-    %r503 = call i64 @_eq_print_raw_str(i64 %r502    )
-    %r504 = load i64, ptr %p3    
-    %r505 = icmp eq i64 %r504    , 0
-    br i1 %r505, label %Label_PanicNull, label %Label_3335    
-Label_3335:
-    %r506 = inttoptr i64 %r504     to ptr
-    %r507 = getelementptr i64, ptr %r506, i64 3    
-    %r508 = load i64, ptr %r507    
-    %r509 = ptrtoint ptr @str.433     to i64
-    %r510 = call i64 @_eq_vec_push(i64 %r508, i64 %r509    )
-    %r511 = load i64, ptr %p3    
-    %r512 = inttoptr i64 %r511     to ptr
-    %r513 = getelementptr i64, ptr %r512, i64 3    
-    %r514 = load i64, ptr %r513    
-    store i64 %r510, ptr %r513    
-    br label %Label_3334    
-Label_3333:
-    br label %Label_3334    
+    %r425 = inttoptr i64 %r423     to ptr
+    %r426 = getelementptr i64, ptr %r425, i64 3    
+    %r427 = load i64, ptr %r426    
+    %r428 = ptrtoint ptr @str.431     to i64
+    %r429 = call i64 @_eq_vec_push(i64 %r427, i64 %r428    )
+    %r430 = load i64, ptr %p3    
+    %r431 = inttoptr i64 %r430     to ptr
+    %r432 = getelementptr i64, ptr %r431, i64 3    
+    %r433 = load i64, ptr %r432    
+    store i64 %r429, ptr %r432    
+    br label %Label_3329    
+Label_3328:
+    br label %Label_3329    
+Label_3329:
+    %r434 = load i64, ptr %p3    
+    %r435 = ptrtoint ptr @str.216     to i64
+    %r436 = call i64 @_eq_is_extern(i64 %r434, i64 %r435    )
+    %r437 = icmp eq i64 %r436, 0    
+    %r438 = zext i1 %r437     to i64
+    %r439 = icmp ne i64 %r438    , 0
+    br i1 %r439, label %Label_3331, label %Label_3332    
+Label_3331:
+    %r440 = ptrtoint ptr @str.433     to i64
+    %r441 = call i64 @_eq_print_raw_str(i64 %r440    )
+    %r442 = load i64, ptr %p3    
+    %r443 = icmp eq i64 %r442    , 0
+    br i1 %r443, label %Label_PanicNull, label %Label_3334    
 Label_3334:
-    %r515 = load i64, ptr %p3    
-    %r516 = ptrtoint ptr @str.435     to i64
-    %r517 = call i64 @_eq_is_extern(i64 %r515, i64 %r516    )
-    %r518 = icmp eq i64 %r517, 0    
-    %r519 = zext i1 %r518     to i64
-    %r520 = icmp ne i64 %r519    , 0
-    br i1 %r520, label %Label_3336, label %Label_3337    
-Label_3336:
-    %r521 = ptrtoint ptr @str.436     to i64
-    %r522 = call i64 @_eq_print_raw_str(i64 %r521    )
-    %r523 = load i64, ptr %p3    
-    %r524 = icmp eq i64 %r523    , 0
-    br i1 %r524, label %Label_PanicNull, label %Label_3339    
-Label_3339:
-    %r525 = inttoptr i64 %r523     to ptr
-    %r526 = getelementptr i64, ptr %r525, i64 3    
-    %r527 = load i64, ptr %r526    
-    %r528 = ptrtoint ptr @str.435     to i64
-    %r529 = call i64 @_eq_vec_push(i64 %r527, i64 %r528    )
-    %r530 = load i64, ptr %p3    
-    %r531 = inttoptr i64 %r530     to ptr
-    %r532 = getelementptr i64, ptr %r531, i64 3    
-    %r533 = load i64, ptr %r532    
-    store i64 %r529, ptr %r532    
-    br label %Label_3338    
-Label_3337:
-    br label %Label_3338    
+    %r444 = inttoptr i64 %r442     to ptr
+    %r445 = getelementptr i64, ptr %r444, i64 3    
+    %r446 = load i64, ptr %r445    
+    %r447 = ptrtoint ptr @str.216     to i64
+    %r448 = call i64 @_eq_vec_push(i64 %r446, i64 %r447    )
+    %r449 = load i64, ptr %p3    
+    %r450 = inttoptr i64 %r449     to ptr
+    %r451 = getelementptr i64, ptr %r450, i64 3    
+    %r452 = load i64, ptr %r451    
+    store i64 %r448, ptr %r451    
+    br label %Label_3333    
+Label_3332:
+    br label %Label_3333    
+Label_3333:
+    %r453 = load i64, ptr %p3    
+    %r454 = ptrtoint ptr @str.209     to i64
+    %r455 = call i64 @_eq_is_extern(i64 %r453, i64 %r454    )
+    %r456 = icmp eq i64 %r455, 0    
+    %r457 = zext i1 %r456     to i64
+    %r458 = icmp ne i64 %r457    , 0
+    br i1 %r458, label %Label_3335, label %Label_3336    
+Label_3335:
+    %r459 = ptrtoint ptr @str.434     to i64
+    %r460 = call i64 @_eq_print_raw_str(i64 %r459    )
+    %r461 = load i64, ptr %p3    
+    %r462 = icmp eq i64 %r461    , 0
+    br i1 %r462, label %Label_PanicNull, label %Label_3338    
 Label_3338:
-    %r534 = load i64, ptr %p3    
-    %r535 = ptrtoint ptr @str.437     to i64
-    %r536 = call i64 @_eq_is_extern(i64 %r534, i64 %r535    )
-    %r537 = icmp eq i64 %r536, 0    
-    %r538 = zext i1 %r537     to i64
-    %r539 = icmp ne i64 %r538    , 0
-    br i1 %r539, label %Label_3340, label %Label_3341    
-Label_3340:
-    %r540 = ptrtoint ptr @str.438     to i64
-    %r541 = call i64 @_eq_print_raw_str(i64 %r540    )
-    %r542 = load i64, ptr %p3    
-    %r543 = icmp eq i64 %r542    , 0
-    br i1 %r543, label %Label_PanicNull, label %Label_3343    
-Label_3343:
-    %r544 = inttoptr i64 %r542     to ptr
-    %r545 = getelementptr i64, ptr %r544, i64 3    
-    %r546 = load i64, ptr %r545    
-    %r547 = ptrtoint ptr @str.437     to i64
-    %r548 = call i64 @_eq_vec_push(i64 %r546, i64 %r547    )
-    %r549 = load i64, ptr %p3    
-    %r550 = inttoptr i64 %r549     to ptr
-    %r551 = getelementptr i64, ptr %r550, i64 3    
-    %r552 = load i64, ptr %r551    
-    store i64 %r548, ptr %r551    
-    br label %Label_3342    
-Label_3341:
-    br label %Label_3342    
+    %r463 = inttoptr i64 %r461     to ptr
+    %r464 = getelementptr i64, ptr %r463, i64 3    
+    %r465 = load i64, ptr %r464    
+    %r466 = ptrtoint ptr @str.209     to i64
+    %r467 = call i64 @_eq_vec_push(i64 %r465, i64 %r466    )
+    %r468 = load i64, ptr %p3    
+    %r469 = inttoptr i64 %r468     to ptr
+    %r470 = getelementptr i64, ptr %r469, i64 3    
+    %r471 = load i64, ptr %r470    
+    store i64 %r467, ptr %r470    
+    br label %Label_3337    
+Label_3336:
+    br label %Label_3337    
+Label_3337:
+    %r472 = load i64, ptr %p3    
+    %r473 = ptrtoint ptr @str.208     to i64
+    %r474 = call i64 @_eq_is_extern(i64 %r472, i64 %r473    )
+    %r475 = icmp eq i64 %r474, 0    
+    %r476 = zext i1 %r475     to i64
+    %r477 = icmp ne i64 %r476    , 0
+    br i1 %r477, label %Label_3339, label %Label_3340    
+Label_3339:
+    %r478 = ptrtoint ptr @str.435     to i64
+    %r479 = call i64 @_eq_print_raw_str(i64 %r478    )
+    %r480 = load i64, ptr %p3    
+    %r481 = icmp eq i64 %r480    , 0
+    br i1 %r481, label %Label_PanicNull, label %Label_3342    
 Label_3342:
-    %r553 = load i64, ptr %p3    
-    %r554 = ptrtoint ptr @str.439     to i64
-    %r555 = call i64 @_eq_is_extern(i64 %r553, i64 %r554    )
-    %r556 = icmp eq i64 %r555, 0    
-    %r557 = zext i1 %r556     to i64
-    %r558 = icmp ne i64 %r557    , 0
-    br i1 %r558, label %Label_3344, label %Label_3345    
-Label_3344:
-    %r559 = ptrtoint ptr @str.440     to i64
-    %r560 = call i64 @_eq_print_raw_str(i64 %r559    )
-    %r561 = load i64, ptr %p3    
-    %r562 = icmp eq i64 %r561    , 0
-    br i1 %r562, label %Label_PanicNull, label %Label_3347    
-Label_3347:
-    %r563 = inttoptr i64 %r561     to ptr
-    %r564 = getelementptr i64, ptr %r563, i64 3    
-    %r565 = load i64, ptr %r564    
-    %r566 = ptrtoint ptr @str.439     to i64
-    %r567 = call i64 @_eq_vec_push(i64 %r565, i64 %r566    )
-    %r568 = load i64, ptr %p3    
-    %r569 = inttoptr i64 %r568     to ptr
-    %r570 = getelementptr i64, ptr %r569, i64 3    
-    %r571 = load i64, ptr %r570    
-    store i64 %r567, ptr %r570    
-    br label %Label_3346    
-Label_3345:
-    br label %Label_3346    
+    %r482 = inttoptr i64 %r480     to ptr
+    %r483 = getelementptr i64, ptr %r482, i64 3    
+    %r484 = load i64, ptr %r483    
+    %r485 = ptrtoint ptr @str.208     to i64
+    %r486 = call i64 @_eq_vec_push(i64 %r484, i64 %r485    )
+    %r487 = load i64, ptr %p3    
+    %r488 = inttoptr i64 %r487     to ptr
+    %r489 = getelementptr i64, ptr %r488, i64 3    
+    %r490 = load i64, ptr %r489    
+    store i64 %r486, ptr %r489    
+    br label %Label_3341    
+Label_3340:
+    br label %Label_3341    
+Label_3341:
+    %r491 = load i64, ptr %p3    
+    %r492 = ptrtoint ptr @str.211     to i64
+    %r493 = call i64 @_eq_is_extern(i64 %r491, i64 %r492    )
+    %r494 = icmp eq i64 %r493, 0    
+    %r495 = zext i1 %r494     to i64
+    %r496 = icmp ne i64 %r495    , 0
+    br i1 %r496, label %Label_3343, label %Label_3344    
+Label_3343:
+    %r497 = ptrtoint ptr @str.436     to i64
+    %r498 = call i64 @_eq_print_raw_str(i64 %r497    )
+    %r499 = load i64, ptr %p3    
+    %r500 = icmp eq i64 %r499    , 0
+    br i1 %r500, label %Label_PanicNull, label %Label_3346    
 Label_3346:
-    %r572 = load i64, ptr %p3    
-    %r573 = ptrtoint ptr @str.441     to i64
-    %r574 = call i64 @_eq_is_extern(i64 %r572, i64 %r573    )
-    %r575 = icmp eq i64 %r574, 0    
-    %r576 = zext i1 %r575     to i64
-    %r577 = icmp ne i64 %r576    , 0
-    br i1 %r577, label %Label_3348, label %Label_3349    
-Label_3348:
-    %r578 = ptrtoint ptr @str.442     to i64
-    %r579 = call i64 @_eq_print_raw_str(i64 %r578    )
-    %r580 = load i64, ptr %p3    
-    %r581 = icmp eq i64 %r580    , 0
-    br i1 %r581, label %Label_PanicNull, label %Label_3351    
-Label_3351:
-    %r582 = inttoptr i64 %r580     to ptr
-    %r583 = getelementptr i64, ptr %r582, i64 3    
-    %r584 = load i64, ptr %r583    
-    %r585 = ptrtoint ptr @str.441     to i64
-    %r586 = call i64 @_eq_vec_push(i64 %r584, i64 %r585    )
-    %r587 = load i64, ptr %p3    
-    %r588 = inttoptr i64 %r587     to ptr
-    %r589 = getelementptr i64, ptr %r588, i64 3    
-    %r590 = load i64, ptr %r589    
-    store i64 %r586, ptr %r589    
-    br label %Label_3350    
-Label_3349:
-    br label %Label_3350    
+    %r501 = inttoptr i64 %r499     to ptr
+    %r502 = getelementptr i64, ptr %r501, i64 3    
+    %r503 = load i64, ptr %r502    
+    %r504 = ptrtoint ptr @str.211     to i64
+    %r505 = call i64 @_eq_vec_push(i64 %r503, i64 %r504    )
+    %r506 = load i64, ptr %p3    
+    %r507 = inttoptr i64 %r506     to ptr
+    %r508 = getelementptr i64, ptr %r507, i64 3    
+    %r509 = load i64, ptr %r508    
+    store i64 %r505, ptr %r508    
+    br label %Label_3345    
+Label_3344:
+    br label %Label_3345    
+Label_3345:
+    %r510 = load i64, ptr %p3    
+    %r511 = ptrtoint ptr @str.437     to i64
+    %r512 = call i64 @_eq_is_extern(i64 %r510, i64 %r511    )
+    %r513 = icmp eq i64 %r512, 0    
+    %r514 = zext i1 %r513     to i64
+    %r515 = icmp ne i64 %r514    , 0
+    br i1 %r515, label %Label_3347, label %Label_3348    
+Label_3347:
+    %r516 = ptrtoint ptr @str.438     to i64
+    %r517 = call i64 @_eq_print_raw_str(i64 %r516    )
+    %r518 = load i64, ptr %p3    
+    %r519 = icmp eq i64 %r518    , 0
+    br i1 %r519, label %Label_PanicNull, label %Label_3350    
 Label_3350:
-    %r591 = load i64, ptr %p3    
-    %r592 = ptrtoint ptr @str.224     to i64
-    %r593 = call i64 @_eq_is_extern(i64 %r591, i64 %r592    )
-    %r594 = icmp eq i64 %r593, 0    
-    %r595 = zext i1 %r594     to i64
-    %r596 = icmp ne i64 %r595    , 0
-    br i1 %r596, label %Label_3352, label %Label_3353    
-Label_3352:
-    %r597 = ptrtoint ptr @str.443     to i64
-    %r598 = call i64 @_eq_print_raw_str(i64 %r597    )
-    %r599 = load i64, ptr %p3    
-    %r600 = icmp eq i64 %r599    , 0
-    br i1 %r600, label %Label_PanicNull, label %Label_3355    
-Label_3355:
-    %r601 = inttoptr i64 %r599     to ptr
-    %r602 = getelementptr i64, ptr %r601, i64 3    
-    %r603 = load i64, ptr %r602    
-    %r604 = ptrtoint ptr @str.224     to i64
-    %r605 = call i64 @_eq_vec_push(i64 %r603, i64 %r604    )
-    %r606 = load i64, ptr %p3    
-    %r607 = inttoptr i64 %r606     to ptr
-    %r608 = getelementptr i64, ptr %r607, i64 3    
-    %r609 = load i64, ptr %r608    
-    store i64 %r605, ptr %r608    
-    br label %Label_3354    
-Label_3353:
-    br label %Label_3354    
+    %r520 = inttoptr i64 %r518     to ptr
+    %r521 = getelementptr i64, ptr %r520, i64 3    
+    %r522 = load i64, ptr %r521    
+    %r523 = ptrtoint ptr @str.437     to i64
+    %r524 = call i64 @_eq_vec_push(i64 %r522, i64 %r523    )
+    %r525 = load i64, ptr %p3    
+    %r526 = inttoptr i64 %r525     to ptr
+    %r527 = getelementptr i64, ptr %r526, i64 3    
+    %r528 = load i64, ptr %r527    
+    store i64 %r524, ptr %r527    
+    br label %Label_3349    
+Label_3348:
+    br label %Label_3349    
+Label_3349:
+    %r529 = load i64, ptr %p3    
+    %r530 = ptrtoint ptr @str.439     to i64
+    %r531 = call i64 @_eq_is_extern(i64 %r529, i64 %r530    )
+    %r532 = icmp eq i64 %r531, 0    
+    %r533 = zext i1 %r532     to i64
+    %r534 = icmp ne i64 %r533    , 0
+    br i1 %r534, label %Label_3351, label %Label_3352    
+Label_3351:
+    %r535 = ptrtoint ptr @str.440     to i64
+    %r536 = call i64 @_eq_print_raw_str(i64 %r535    )
+    %r537 = load i64, ptr %p3    
+    %r538 = icmp eq i64 %r537    , 0
+    br i1 %r538, label %Label_PanicNull, label %Label_3354    
 Label_3354:
-    %r610 = load i64, ptr %p3    
-    %r611 = ptrtoint ptr @str.444     to i64
-    %r612 = call i64 @_eq_is_extern(i64 %r610, i64 %r611    )
-    %r613 = icmp eq i64 %r612, 0    
-    %r614 = zext i1 %r613     to i64
-    %r615 = icmp ne i64 %r614    , 0
-    br i1 %r615, label %Label_3356, label %Label_3357    
-Label_3356:
-    %r616 = ptrtoint ptr @str.445     to i64
-    %r617 = call i64 @_eq_print_raw_str(i64 %r616    )
-    %r618 = load i64, ptr %p3    
-    %r619 = icmp eq i64 %r618    , 0
-    br i1 %r619, label %Label_PanicNull, label %Label_3359    
-Label_3359:
-    %r620 = inttoptr i64 %r618     to ptr
-    %r621 = getelementptr i64, ptr %r620, i64 3    
-    %r622 = load i64, ptr %r621    
-    %r623 = ptrtoint ptr @str.444     to i64
-    %r624 = call i64 @_eq_vec_push(i64 %r622, i64 %r623    )
-    %r625 = load i64, ptr %p3    
-    %r626 = inttoptr i64 %r625     to ptr
-    %r627 = getelementptr i64, ptr %r626, i64 3    
-    %r628 = load i64, ptr %r627    
-    store i64 %r624, ptr %r627    
-    br label %Label_3358    
-Label_3357:
-    br label %Label_3358    
+    %r539 = inttoptr i64 %r537     to ptr
+    %r540 = getelementptr i64, ptr %r539, i64 3    
+    %r541 = load i64, ptr %r540    
+    %r542 = ptrtoint ptr @str.439     to i64
+    %r543 = call i64 @_eq_vec_push(i64 %r541, i64 %r542    )
+    %r544 = load i64, ptr %p3    
+    %r545 = inttoptr i64 %r544     to ptr
+    %r546 = getelementptr i64, ptr %r545, i64 3    
+    %r547 = load i64, ptr %r546    
+    store i64 %r543, ptr %r546    
+    br label %Label_3353    
+Label_3352:
+    br label %Label_3353    
+Label_3353:
+    %r548 = load i64, ptr %p3    
+    %r549 = ptrtoint ptr @str.441     to i64
+    %r550 = call i64 @_eq_is_extern(i64 %r548, i64 %r549    )
+    %r551 = icmp eq i64 %r550, 0    
+    %r552 = zext i1 %r551     to i64
+    %r553 = icmp ne i64 %r552    , 0
+    br i1 %r553, label %Label_3355, label %Label_3356    
+Label_3355:
+    %r554 = ptrtoint ptr @str.442     to i64
+    %r555 = call i64 @_eq_print_raw_str(i64 %r554    )
+    %r556 = load i64, ptr %p3    
+    %r557 = icmp eq i64 %r556    , 0
+    br i1 %r557, label %Label_PanicNull, label %Label_3358    
 Label_3358:
-    %r629 = load i64, ptr %p3    
-    %r630 = ptrtoint ptr @str.446     to i64
-    %r631 = call i64 @_eq_is_extern(i64 %r629, i64 %r630    )
-    %r632 = icmp eq i64 %r631, 0    
-    %r633 = zext i1 %r632     to i64
-    %r634 = icmp ne i64 %r633    , 0
-    br i1 %r634, label %Label_3360, label %Label_3361    
-Label_3360:
-    %r635 = ptrtoint ptr @str.447     to i64
-    %r636 = call i64 @_eq_print_raw_str(i64 %r635    )
-    %r637 = load i64, ptr %p3    
-    %r638 = icmp eq i64 %r637    , 0
-    br i1 %r638, label %Label_PanicNull, label %Label_3363    
-Label_3363:
-    %r639 = inttoptr i64 %r637     to ptr
-    %r640 = getelementptr i64, ptr %r639, i64 3    
-    %r641 = load i64, ptr %r640    
-    %r642 = ptrtoint ptr @str.446     to i64
-    %r643 = call i64 @_eq_vec_push(i64 %r641, i64 %r642    )
-    %r644 = load i64, ptr %p3    
-    %r645 = inttoptr i64 %r644     to ptr
-    %r646 = getelementptr i64, ptr %r645, i64 3    
-    %r647 = load i64, ptr %r646    
-    store i64 %r643, ptr %r646    
-    br label %Label_3362    
-Label_3361:
-    br label %Label_3362    
+    %r558 = inttoptr i64 %r556     to ptr
+    %r559 = getelementptr i64, ptr %r558, i64 3    
+    %r560 = load i64, ptr %r559    
+    %r561 = ptrtoint ptr @str.441     to i64
+    %r562 = call i64 @_eq_vec_push(i64 %r560, i64 %r561    )
+    %r563 = load i64, ptr %p3    
+    %r564 = inttoptr i64 %r563     to ptr
+    %r565 = getelementptr i64, ptr %r564, i64 3    
+    %r566 = load i64, ptr %r565    
+    store i64 %r562, ptr %r565    
+    br label %Label_3357    
+Label_3356:
+    br label %Label_3357    
+Label_3357:
+    %r567 = load i64, ptr %p3    
+    %r568 = ptrtoint ptr @str.443     to i64
+    %r569 = call i64 @_eq_is_extern(i64 %r567, i64 %r568    )
+    %r570 = icmp eq i64 %r569, 0    
+    %r571 = zext i1 %r570     to i64
+    %r572 = icmp ne i64 %r571    , 0
+    br i1 %r572, label %Label_3359, label %Label_3360    
+Label_3359:
+    %r573 = ptrtoint ptr @str.444     to i64
+    %r574 = call i64 @_eq_print_raw_str(i64 %r573    )
+    %r575 = load i64, ptr %p3    
+    %r576 = icmp eq i64 %r575    , 0
+    br i1 %r576, label %Label_PanicNull, label %Label_3362    
 Label_3362:
-    %r648 = load i64, ptr %p3    
-    %r649 = ptrtoint ptr @str.448     to i64
-    %r650 = call i64 @_eq_is_extern(i64 %r648, i64 %r649    )
-    %r651 = icmp eq i64 %r650, 0    
-    %r652 = zext i1 %r651     to i64
-    %r653 = icmp ne i64 %r652    , 0
-    br i1 %r653, label %Label_3364, label %Label_3365    
-Label_3364:
-    %r654 = ptrtoint ptr @str.449     to i64
-    %r655 = call i64 @_eq_print_raw_str(i64 %r654    )
-    %r656 = load i64, ptr %p3    
-    %r657 = icmp eq i64 %r656    , 0
-    br i1 %r657, label %Label_PanicNull, label %Label_3367    
-Label_3367:
-    %r658 = inttoptr i64 %r656     to ptr
-    %r659 = getelementptr i64, ptr %r658, i64 3    
-    %r660 = load i64, ptr %r659    
-    %r661 = ptrtoint ptr @str.448     to i64
-    %r662 = call i64 @_eq_vec_push(i64 %r660, i64 %r661    )
-    %r663 = load i64, ptr %p3    
-    %r664 = inttoptr i64 %r663     to ptr
-    %r665 = getelementptr i64, ptr %r664, i64 3    
-    %r666 = load i64, ptr %r665    
-    store i64 %r662, ptr %r665    
-    br label %Label_3366    
-Label_3365:
-    br label %Label_3366    
+    %r577 = inttoptr i64 %r575     to ptr
+    %r578 = getelementptr i64, ptr %r577, i64 3    
+    %r579 = load i64, ptr %r578    
+    %r580 = ptrtoint ptr @str.443     to i64
+    %r581 = call i64 @_eq_vec_push(i64 %r579, i64 %r580    )
+    %r582 = load i64, ptr %p3    
+    %r583 = inttoptr i64 %r582     to ptr
+    %r584 = getelementptr i64, ptr %r583, i64 3    
+    %r585 = load i64, ptr %r584    
+    store i64 %r581, ptr %r584    
+    br label %Label_3361    
+Label_3360:
+    br label %Label_3361    
+Label_3361:
+    %r586 = load i64, ptr %p3    
+    %r587 = ptrtoint ptr @str.445     to i64
+    %r588 = call i64 @_eq_is_extern(i64 %r586, i64 %r587    )
+    %r589 = icmp eq i64 %r588, 0    
+    %r590 = zext i1 %r589     to i64
+    %r591 = icmp ne i64 %r590    , 0
+    br i1 %r591, label %Label_3363, label %Label_3364    
+Label_3363:
+    %r592 = ptrtoint ptr @str.446     to i64
+    %r593 = call i64 @_eq_print_raw_str(i64 %r592    )
+    %r594 = load i64, ptr %p3    
+    %r595 = icmp eq i64 %r594    , 0
+    br i1 %r595, label %Label_PanicNull, label %Label_3366    
 Label_3366:
-    %r667 = load i64, ptr %p3    
-    %r668 = ptrtoint ptr @str.450     to i64
-    %r669 = call i64 @_eq_is_extern(i64 %r667, i64 %r668    )
-    %r670 = icmp eq i64 %r669, 0    
-    %r671 = zext i1 %r670     to i64
-    %r672 = icmp ne i64 %r671    , 0
-    br i1 %r672, label %Label_3368, label %Label_3369    
-Label_3368:
-    %r673 = ptrtoint ptr @str.451     to i64
-    %r674 = call i64 @_eq_print_raw_str(i64 %r673    )
-    %r675 = load i64, ptr %p3    
-    %r676 = icmp eq i64 %r675    , 0
-    br i1 %r676, label %Label_PanicNull, label %Label_3371    
-Label_3371:
-    %r677 = inttoptr i64 %r675     to ptr
-    %r678 = getelementptr i64, ptr %r677, i64 3    
-    %r679 = load i64, ptr %r678    
-    %r680 = ptrtoint ptr @str.450     to i64
-    %r681 = call i64 @_eq_vec_push(i64 %r679, i64 %r680    )
-    %r682 = load i64, ptr %p3    
-    %r683 = inttoptr i64 %r682     to ptr
-    %r684 = getelementptr i64, ptr %r683, i64 3    
-    %r685 = load i64, ptr %r684    
-    store i64 %r681, ptr %r684    
-    br label %Label_3370    
-Label_3369:
-    br label %Label_3370    
+    %r596 = inttoptr i64 %r594     to ptr
+    %r597 = getelementptr i64, ptr %r596, i64 3    
+    %r598 = load i64, ptr %r597    
+    %r599 = ptrtoint ptr @str.445     to i64
+    %r600 = call i64 @_eq_vec_push(i64 %r598, i64 %r599    )
+    %r601 = load i64, ptr %p3    
+    %r602 = inttoptr i64 %r601     to ptr
+    %r603 = getelementptr i64, ptr %r602, i64 3    
+    %r604 = load i64, ptr %r603    
+    store i64 %r600, ptr %r603    
+    br label %Label_3365    
+Label_3364:
+    br label %Label_3365    
+Label_3365:
+    %r605 = load i64, ptr %p3    
+    %r606 = ptrtoint ptr @str.224     to i64
+    %r607 = call i64 @_eq_is_extern(i64 %r605, i64 %r606    )
+    %r608 = icmp eq i64 %r607, 0    
+    %r609 = zext i1 %r608     to i64
+    %r610 = icmp ne i64 %r609    , 0
+    br i1 %r610, label %Label_3367, label %Label_3368    
+Label_3367:
+    %r611 = ptrtoint ptr @str.447     to i64
+    %r612 = call i64 @_eq_print_raw_str(i64 %r611    )
+    %r613 = load i64, ptr %p3    
+    %r614 = icmp eq i64 %r613    , 0
+    br i1 %r614, label %Label_PanicNull, label %Label_3370    
 Label_3370:
-    %r686 = load i64, ptr %p3    
-    %r687 = ptrtoint ptr @str.452     to i64
-    %r688 = call i64 @_eq_is_extern(i64 %r686, i64 %r687    )
-    %r689 = icmp eq i64 %r688, 0    
-    %r690 = zext i1 %r689     to i64
-    %r691 = icmp ne i64 %r690    , 0
-    br i1 %r691, label %Label_3372, label %Label_3373    
-Label_3372:
-    %r692 = ptrtoint ptr @str.453     to i64
-    %r693 = call i64 @_eq_print_raw_str(i64 %r692    )
-    %r694 = load i64, ptr %p3    
-    %r695 = icmp eq i64 %r694    , 0
-    br i1 %r695, label %Label_PanicNull, label %Label_3375    
-Label_3375:
-    %r696 = inttoptr i64 %r694     to ptr
-    %r697 = getelementptr i64, ptr %r696, i64 3    
-    %r698 = load i64, ptr %r697    
-    %r699 = ptrtoint ptr @str.452     to i64
-    %r700 = call i64 @_eq_vec_push(i64 %r698, i64 %r699    )
-    %r701 = load i64, ptr %p3    
-    %r702 = inttoptr i64 %r701     to ptr
-    %r703 = getelementptr i64, ptr %r702, i64 3    
-    %r704 = load i64, ptr %r703    
-    store i64 %r700, ptr %r703    
-    br label %Label_3374    
-Label_3373:
-    br label %Label_3374    
+    %r615 = inttoptr i64 %r613     to ptr
+    %r616 = getelementptr i64, ptr %r615, i64 3    
+    %r617 = load i64, ptr %r616    
+    %r618 = ptrtoint ptr @str.224     to i64
+    %r619 = call i64 @_eq_vec_push(i64 %r617, i64 %r618    )
+    %r620 = load i64, ptr %p3    
+    %r621 = inttoptr i64 %r620     to ptr
+    %r622 = getelementptr i64, ptr %r621, i64 3    
+    %r623 = load i64, ptr %r622    
+    store i64 %r619, ptr %r622    
+    br label %Label_3369    
+Label_3368:
+    br label %Label_3369    
+Label_3369:
+    %r624 = load i64, ptr %p3    
+    %r625 = ptrtoint ptr @str.448     to i64
+    %r626 = call i64 @_eq_is_extern(i64 %r624, i64 %r625    )
+    %r627 = icmp eq i64 %r626, 0    
+    %r628 = zext i1 %r627     to i64
+    %r629 = icmp ne i64 %r628    , 0
+    br i1 %r629, label %Label_3371, label %Label_3372    
+Label_3371:
+    %r630 = ptrtoint ptr @str.449     to i64
+    %r631 = call i64 @_eq_print_raw_str(i64 %r630    )
+    %r632 = load i64, ptr %p3    
+    %r633 = icmp eq i64 %r632    , 0
+    br i1 %r633, label %Label_PanicNull, label %Label_3374    
 Label_3374:
-    %r705 = load i64, ptr %p6    
-    store i64 0, ptr %p6    
-    br label %Label_3376    
-Label_3376:
-    %r706 = load volatile i32, ptr @g_needs_yield
-    %r707 = icmp ne i32 %r706, 0
-    br i1 %r707, label %Preywh_3379, label %Checkwh_3379    
-Preywh_3379:
-        store i32 0, ptr @g_needs_yield
-        call i64 @_eq_fiber_yield()
-    br label %Checkwh_3379    
-Checkwh_3379:
-    %r708 = load i64, ptr %p6    
-    %r709 = load i64, ptr %p5    
-    %r710 = icmp slt i64 %r708, %r709    
-    %r711 = zext i1 %r710     to i64
-    %r712 = icmp ne i64 %r711    , 0
-    br i1 %r712, label %Label_3377, label %Label_3378    
-Label_3377:
-    %r713 = load i64, ptr %p4    
-    %r714 = load i64, ptr %p6    
-    %r715 = call i64 @_eq_vec_get(i64 %r713, i64 %r714    )
-    %r716 = load i64, ptr %p7    
-    store i64 %r715, ptr %p7    
-    %r717 = load i64, ptr %p7    
-    %r718 = icmp ne i64 %r717    , 0
-    br i1 %r718, label %Label_3380, label %Label_3381    
-Label_3380:
-    %r719 = load i64, ptr %p7    
-    %r720 = icmp eq i64 %r719    , 0
-    br i1 %r720, label %Label_PanicNull, label %Label_3383    
-Label_3383:
-    %r721 = inttoptr i64 %r719     to ptr
-    %r722 = getelementptr i64, ptr %r721, i64 0    
-    %r723 = load i64, ptr %r722    
-    %r724 = load i64, ptr @Global_STMT_FUNCTION    
-    %r725 = icmp eq i64 %r723, %r724    
-    %r726 = zext i1 %r725     to i64
-    %r727 = icmp ne i64 %r726    , 0
-    br i1 %r727, label %Label_3384, label %Label_3385    
-Label_3384:
-    %r728 = load i64, ptr %p7    
-    %r729 = icmp eq i64 %r728    , 0
-    br i1 %r729, label %Label_PanicNull, label %Label_3387    
-Label_3387:
-    %r730 = inttoptr i64 %r728     to ptr
-    %r731 = getelementptr i64, ptr %r730, i64 1    
-    %r732 = load i64, ptr %r731    
-    %r733 = load i64, ptr %p8    
-    store i64 %r732, ptr %p8    
-    %r734 = load i64, ptr %p7    
-    %r735 = icmp eq i64 %r734    , 0
-    br i1 %r735, label %Label_PanicNull, label %Label_3388    
-Label_3388:
-    %r736 = inttoptr i64 %r734     to ptr
-    %r737 = getelementptr i64, ptr %r736, i64 2    
-    %r738 = load i64, ptr %r737    
-    %r739 = load i64, ptr %p9    
-    store i64 %r738, ptr %p9    
-    %r740 = load i64, ptr %p7    
-    %r741 = icmp eq i64 %r740    , 0
-    br i1 %r741, label %Label_PanicNull, label %Label_3389    
-Label_3389:
-    %r742 = inttoptr i64 %r740     to ptr
-    %r743 = getelementptr i64, ptr %r742, i64 3    
-    %r744 = load i64, ptr %r743    
-    %r745 = load i64, ptr %p17    
-    store i64 %r744, ptr %p17    
-    %r746 = load i64, ptr %p9    
-    %r747 = call i64 @_eq_vec_size(i64 %r746    )
-    %r748 = load i64, ptr %p10    
-    store i64 %r747, ptr %p10    
-    %r749 = ptrtoint ptr @str.454     to i64
-    %r750 = call i64 @_eq_print_raw_str(i64 %r749    )
-    %r751 = load i64, ptr %p8    
-    %r752 = call i64 @_eq_print_raw_str(i64 %r751    )
-    %r753 = ptrtoint ptr @str.63     to i64
-    %r754 = call i64 @_eq_print_raw_str(i64 %r753    )
-    %r755 = load i64, ptr %p11    
-    store i64 0, ptr %p11    
-    br label %Label_3390    
-Label_3390:
-    %r756 = load volatile i32, ptr @g_needs_yield
-    %r757 = icmp ne i32 %r756, 0
-    br i1 %r757, label %Preywh_3393, label %Checkwh_3393    
-Preywh_3393:
-        store i32 0, ptr @g_needs_yield
-        call i64 @_eq_fiber_yield()
-    br label %Checkwh_3393    
-Checkwh_3393:
-    %r758 = load i64, ptr %p11    
-    %r759 = load i64, ptr %p10    
-    %r760 = icmp slt i64 %r758, %r759    
-    %r761 = zext i1 %r760     to i64
-    %r762 = icmp ne i64 %r761    , 0
-    br i1 %r762, label %Label_3391, label %Label_3392    
-Label_3391:
-    %r763 = ptrtoint ptr @str.455     to i64
-    %r764 = call i64 @_eq_print_raw_str(i64 %r763    )
-    %r765 = load i64, ptr %p9    
-    %r766 = load i64, ptr %p11    
-    %r767 = call i64 @_eq_vec_get(i64 %r765, i64 %r766    )
-    %r768 = call i64 @_eq_print_raw_str(i64 %r767    )
-    %r769 = load i64, ptr %p11    
-    %r770 = load i64, ptr %p10    
-    %r771 = sub i64 %r770, 1    
-    %r772 = icmp slt i64 %r769, %r771    
-    %r773 = zext i1 %r772     to i64
-    %r774 = icmp ne i64 %r773    , 0
-    br i1 %r774, label %Label_3394, label %Label_3395    
-Label_3394:
-    %r775 = ptrtoint ptr @str.308     to i64
-    %r776 = call i64 @_eq_print_raw_str(i64 %r775    )
-    br label %Label_3396    
-Label_3395:
-    br label %Label_3396    
-Label_3396:
-    %r777 = load i64, ptr %p11    
-    %r778 = add i64 %r777, 1    
-    %r779 = load i64, ptr %p11    
-    store i64 %r778, ptr %p11    
-    br label %Label_3390    
-Label_3392:
-    %r780 = ptrtoint ptr @str.456     to i64
-    %r781 = call i64 @_eq_print_raw_str(i64 %r780    )
-    %r782 = load i64, ptr %p3    
-    %r783 = inttoptr i64 %r782     to ptr
-    %r784 = getelementptr i64, ptr %r783, i64 0    
-    %r785 = load i64, ptr %r784    
-    store i64 1, ptr %r784    
-    %r786 = call i64 @_eq_vec_new(i64 1024    )
-    %r787 = load i64, ptr %p3    
-    %r788 = inttoptr i64 %r787     to ptr
-    %r789 = getelementptr i64, ptr %r788, i64 4    
-    %r790 = load i64, ptr %r789    
-    store i64 %r786, ptr %r789    
-    %p791     = alloca i64
-    store i64 0, ptr %p791    
-    %r792 = load i64, ptr %p3    
-    %r793 = call i64 @_eq_freshen_reg(i64 %r792    )
-    store i64 %r793, ptr %p791    
-    %r794 = ptrtoint ptr @str.287     to i64
-    %r795 = call i64 @_eq_print_raw_str(i64 %r794    )
-    %r796 = load i64, ptr %p791    
-    %r797 = call i64 @_eq_print_raw(i64 %r796    )
-    %r798 = ptrtoint ptr @str.354     to i64
-    %r799 = call i64 @_eq_print_raw_str(i64 %r798    )
-    %p800     = alloca i64
-    store i64 0, ptr %p800    
-    %r801 = load i64, ptr %p3    
-    %r802 = call i64 @_eq_freshen_reg(i64 %r801    )
-    store i64 %r802, ptr %p800    
-    %r803 = ptrtoint ptr @str.287     to i64
-    %r804 = call i64 @_eq_print_raw_str(i64 %r803    )
-    %r805 = load i64, ptr %p800    
-    %r806 = call i64 @_eq_print_raw(i64 %r805    )
-    %r807 = ptrtoint ptr @str.355     to i64
-    %r808 = call i64 @_eq_print_raw_str(i64 %r807    )
-    %r809 = load i64, ptr %p791    
-    %r810 = call i64 @_eq_print_raw(i64 %r809    )
-    %r811 = ptrtoint ptr @str.356     to i64
-    %r812 = call i64 @_eq_print_raw_str(i64 %r811    )
-    %r813 = ptrtoint ptr @str.317     to i64
-    %r814 = call i64 @_eq_print_raw_str(i64 %r813    )
-    %r815 = load i64, ptr %p800    
-    %r816 = call i64 @_eq_print_raw(i64 %r815    )
-    %r817 = ptrtoint ptr @str.457     to i64
-    %r818 = call i64 @_eq_print_raw_str(i64 %r817    )
-    %r819 = ptrtoint ptr @str.458     to i64
-    %r820 = call i64 @_eq_print_raw_str(i64 %r819    )
-    %r821 = ptrtoint ptr @str.360     to i64
-    %r822 = call i64 @_eq_emit_ln(i64 %r821    )
-    %r823 = ptrtoint ptr @str.361     to i64
-    %r824 = call i64 @_eq_emit_ln(i64 %r823    )
-    %r825 = ptrtoint ptr @str.459     to i64
-    %r826 = call i64 @_eq_emit_ln(i64 %r825    )
-    %r827 = ptrtoint ptr @str.460     to i64
-    %r828 = call i64 @_eq_print_raw_str(i64 %r827    )
-    %r829 = load i64, ptr %p12    
-    store i64 0, ptr %p12    
-    %r830 = load i64, ptr %p14    
-    store i64 0, ptr %p14    
-    %r831 = load i64, ptr %p15    
-    store i64 0, ptr %p15    
-    %r832 = load i64, ptr %p16    
-    store i64 0, ptr %p16    
-    br label %Label_3397    
-Label_3397:
-    %r833 = load volatile i32, ptr @g_needs_yield
-    %r834 = icmp ne i32 %r833, 0
-    br i1 %r834, label %Preywh_3400, label %Checkwh_3400    
-Preywh_3400:
-        store i32 0, ptr @g_needs_yield
-        call i64 @_eq_fiber_yield()
-    br label %Checkwh_3400    
-Checkwh_3400:
-    %r835 = load i64, ptr %p12    
-    %r836 = load i64, ptr %p10    
-    %r837 = icmp slt i64 %r835, %r836    
-    %r838 = zext i1 %r837     to i64
-    %r839 = icmp ne i64 %r838    , 0
-    br i1 %r839, label %Label_3398, label %Label_3399    
-Label_3398:
-    %r840 = load i64, ptr %p9    
-    %r841 = load i64, ptr %p12    
-    %r842 = call i64 @_eq_vec_get(i64 %r840, i64 %r841    )
-    %r843 = load i64, ptr %p14    
-    store i64 %r842, ptr %p14    
-    %r844 = load i64, ptr %p3    
-    %r845 = call i64 @_eq_freshen_ptr(i64 %r844    )
-    %r846 = load i64, ptr %p15    
-    store i64 %r845, ptr %p15    
-    %r847 = ptrtoint ptr @str.349     to i64
-    %r848 = call i64 @_eq_print_raw_str(i64 %r847    )
-    %r849 = load i64, ptr %p15    
-    %r850 = call i64 @_eq_print_raw(i64 %r849    )
-    %r851 = ptrtoint ptr @str.350     to i64
-    %r852 = call i64 @_eq_emit_ln(i64 %r851    )
-    %r853 = ptrtoint ptr @str.461     to i64
-    %r854 = call i64 @_eq_print_raw_str(i64 %r853    )
-    %r855 = load i64, ptr %p14    
-    %r856 = call i64 @_eq_print_raw_str(i64 %r855    )
-    %r857 = ptrtoint ptr @str.64     to i64
-    %r858 = call i64 @_eq_emit_ln(i64 %r857    )
-    %r859 = ptrtoint ptr @str.462     to i64
-    %r860 = call i64 @_eq_print_raw_str(i64 %r859    )
-    %r861 = load i64, ptr %p14    
-    %r862 = call i64 @_eq_print_raw_str(i64 %r861    )
-    %r863 = ptrtoint ptr @str.346     to i64
-    %r864 = call i64 @_eq_print_raw_str(i64 %r863    )
-    %r865 = load i64, ptr %p15    
-    %r866 = call i64 @_eq_print_raw(i64 %r865    )
-    %r867 = ptrtoint ptr @str.2     to i64
-    %r868 = call i64 @_eq_emit_ln(i64 %r867    )
-    %r869 = call i64 @sys_malloc(i64 16    )
-    %r870 = load i64, ptr %p16    
-    store i64 %r869, ptr %p16    
-    %r871 = load i64, ptr %p14    
-    %r872 = load i64, ptr %p16    
-    %r873 = inttoptr i64 %r872     to ptr
-    %r874 = getelementptr i64, ptr %r873, i64 0    
-    %r875 = load i64, ptr %r874    
-    store i64 %r871, ptr %r874    
-    %r876 = load i64, ptr %p15    
-    %r877 = load i64, ptr %p16    
-    %r878 = inttoptr i64 %r877     to ptr
-    %r879 = getelementptr i64, ptr %r878, i64 1    
-    %r880 = load i64, ptr %r879    
-    store i64 %r876, ptr %r879    
-    %r881 = load i64, ptr %p3    
-    %r882 = icmp eq i64 %r881    , 0
-    br i1 %r882, label %Label_PanicNull, label %Label_3401    
-Label_3401:
-    %r883 = inttoptr i64 %r881     to ptr
-    %r884 = getelementptr i64, ptr %r883, i64 4    
-    %r885 = load i64, ptr %r884    
-    %r886 = load i64, ptr %p16    
-    %r887 = call i64 @_eq_vec_push(i64 %r885, i64 %r886    )
-    %r888 = load i64, ptr %p3    
-    %r889 = inttoptr i64 %r888     to ptr
-    %r890 = getelementptr i64, ptr %r889, i64 4    
-    %r891 = load i64, ptr %r890    
-    store i64 %r887, ptr %r890    
-    %r892 = load i64, ptr %p12    
-    %r893 = add i64 %r892, 1    
-    %r894 = load i64, ptr %p12    
-    store i64 %r893, ptr %p12    
-    br label %Label_3397    
-Label_3399:
-    %r895 = load i64, ptr %p3    
-    %r896 = load i64, ptr %p17    
-    %r897 = call i64 @_eq_gen_stmt(i64 %r895, i64 %r896    )
-    %r898 = load i64, ptr %p3    
-    %r899 = load i64, ptr %p3    
-    %r900 = icmp eq i64 %r899    , 0
-    br i1 %r900, label %Label_PanicNull, label %Label_3402    
-Label_3402:
-    %r901 = inttoptr i64 %r899     to ptr
-    %r902 = getelementptr i64, ptr %r901, i64 4    
-    %r903 = load i64, ptr %r902    
-    %r904 = call i64 @_eq_gen_release_locals(i64 %r898, i64 %r903    )
-    %r905 = ptrtoint ptr @str.463     to i64
-    %r906 = call i64 @_eq_print_raw_str(i64 %r905    )
-    br label %Label_3386    
-Label_3385:
-    br label %Label_3386    
-Label_3386:
-    %r907 = load i64, ptr %p7    
-    %r908 = icmp eq i64 %r907    , 0
-    br i1 %r908, label %Label_PanicNull, label %Label_3403    
-Label_3403:
-    %r909 = inttoptr i64 %r907     to ptr
-    %r910 = getelementptr i64, ptr %r909, i64 0    
-    %r911 = load i64, ptr %r910    
-    %r912 = load i64, ptr @Global_STMT_EVENT    
-    %r913 = icmp eq i64 %r911, %r912    
-    %r914 = zext i1 %r913     to i64
-    %r915 = icmp ne i64 %r914    , 0
-    br i1 %r915, label %Label_3404, label %Label_3405    
-Label_3404:
-    %r916 = load i64, ptr %p3    
-    %r917 = load i64, ptr %p7    
-    %r918 = call i64 @_eq_gen_stmt(i64 %r916, i64 %r917    )
-    br label %Label_3406    
-Label_3405:
-    br label %Label_3406    
-Label_3406:
-    br label %Label_3382    
-Label_3381:
-    br label %Label_3382    
-Label_3382:
-    %r919 = load i64, ptr %p6    
-    %r920 = add i64 %r919, 1    
-    %r921 = load i64, ptr %p6    
-    store i64 %r920, ptr %p6    
-    br label %Label_3376    
+    %r634 = inttoptr i64 %r632     to ptr
+    %r635 = getelementptr i64, ptr %r634, i64 3    
+    %r636 = load i64, ptr %r635    
+    %r637 = ptrtoint ptr @str.448     to i64
+    %r638 = call i64 @_eq_vec_push(i64 %r636, i64 %r637    )
+    %r639 = load i64, ptr %p3    
+    %r640 = inttoptr i64 %r639     to ptr
+    %r641 = getelementptr i64, ptr %r640, i64 3    
+    %r642 = load i64, ptr %r641    
+    store i64 %r638, ptr %r641    
+    br label %Label_3373    
+Label_3372:
+    br label %Label_3373    
+Label_3373:
+    %r643 = load i64, ptr %p3    
+    %r644 = ptrtoint ptr @str.450     to i64
+    %r645 = call i64 @_eq_is_extern(i64 %r643, i64 %r644    )
+    %r646 = icmp eq i64 %r645, 0    
+    %r647 = zext i1 %r646     to i64
+    %r648 = icmp ne i64 %r647    , 0
+    br i1 %r648, label %Label_3375, label %Label_3376    
+Label_3375:
+    %r649 = ptrtoint ptr @str.451     to i64
+    %r650 = call i64 @_eq_print_raw_str(i64 %r649    )
+    %r651 = load i64, ptr %p3    
+    %r652 = icmp eq i64 %r651    , 0
+    br i1 %r652, label %Label_PanicNull, label %Label_3378    
 Label_3378:
-    %r922 = load i64, ptr %p3    
-    %r923 = icmp eq i64 %r922    , 0
-    br i1 %r923, label %Label_PanicNull, label %Label_3407    
-Label_3407:
-    %r924 = inttoptr i64 %r922     to ptr
-    %r925 = getelementptr i64, ptr %r924, i64 6    
-    %r926 = load i64, ptr %r925    
-    %r927 = icmp eq i64 %r926, 1    
-    %r928 = zext i1 %r927     to i64
-    %r929 = icmp ne i64 %r928    , 0
-    br i1 %r929, label %Label_3408, label %Label_3409    
-Label_3408:
-    %r930 = load i64, ptr %p3    
-    %r931 = ptrtoint ptr @str.464     to i64
-    %r932 = call i64 @_eq_is_defined(i64 %r930, i64 %r931    )
-    %r933 = icmp eq i64 %r932, 0    
-    %r934 = zext i1 %r933     to i64
-    %r935 = icmp ne i64 %r934    , 0
-    br i1 %r935, label %Label_3411, label %Label_3412    
-Label_3411:
-    %r936 = ptrtoint ptr @str.465     to i64
-    %r937 = call i64 @_eq_print_raw_str(i64 %r936    )
-    br label %Label_3413    
-Label_3412:
-    br label %Label_3413    
-Label_3413:
-    %r938 = ptrtoint ptr @str.466     to i64
-    %r939 = call i64 @_eq_print_raw_str(i64 %r938    )
-    %r940 = ptrtoint ptr @str.467     to i64
-    %r941 = call i64 @_eq_print_raw_str(i64 %r940    )
-    %r942 = load i64, ptr %p3    
-    %r943 = inttoptr i64 %r942     to ptr
-    %r944 = getelementptr i64, ptr %r943, i64 0    
-    %r945 = load i64, ptr %r944    
-    store i64 1, ptr %r944    
-    %r946 = load i64, ptr %p3    
-    %r947 = inttoptr i64 %r946     to ptr
-    %r948 = getelementptr i64, ptr %r947, i64 4    
-    %r949 = load i64, ptr %r948    
-    store i64 0, ptr %r948    
-    %r950 = load i64, ptr %p6    
+    %r653 = inttoptr i64 %r651     to ptr
+    %r654 = getelementptr i64, ptr %r653, i64 3    
+    %r655 = load i64, ptr %r654    
+    %r656 = ptrtoint ptr @str.450     to i64
+    %r657 = call i64 @_eq_vec_push(i64 %r655, i64 %r656    )
+    %r658 = load i64, ptr %p3    
+    %r659 = inttoptr i64 %r658     to ptr
+    %r660 = getelementptr i64, ptr %r659, i64 3    
+    %r661 = load i64, ptr %r660    
+    store i64 %r657, ptr %r660    
+    br label %Label_3377    
+Label_3376:
+    br label %Label_3377    
+Label_3377:
+    %r662 = load i64, ptr %p3    
+    %r663 = ptrtoint ptr @str.452     to i64
+    %r664 = call i64 @_eq_is_extern(i64 %r662, i64 %r663    )
+    %r665 = icmp eq i64 %r664, 0    
+    %r666 = zext i1 %r665     to i64
+    %r667 = icmp ne i64 %r666    , 0
+    br i1 %r667, label %Label_3379, label %Label_3380    
+Label_3379:
+    %r668 = ptrtoint ptr @str.453     to i64
+    %r669 = call i64 @_eq_print_raw_str(i64 %r668    )
+    %r670 = load i64, ptr %p3    
+    %r671 = icmp eq i64 %r670    , 0
+    br i1 %r671, label %Label_PanicNull, label %Label_3382    
+Label_3382:
+    %r672 = inttoptr i64 %r670     to ptr
+    %r673 = getelementptr i64, ptr %r672, i64 3    
+    %r674 = load i64, ptr %r673    
+    %r675 = ptrtoint ptr @str.452     to i64
+    %r676 = call i64 @_eq_vec_push(i64 %r674, i64 %r675    )
+    %r677 = load i64, ptr %p3    
+    %r678 = inttoptr i64 %r677     to ptr
+    %r679 = getelementptr i64, ptr %r678, i64 3    
+    %r680 = load i64, ptr %r679    
+    store i64 %r676, ptr %r679    
+    br label %Label_3381    
+Label_3380:
+    br label %Label_3381    
+Label_3381:
+    %r681 = load i64, ptr %p3    
+    %r682 = ptrtoint ptr @str.454     to i64
+    %r683 = call i64 @_eq_is_extern(i64 %r681, i64 %r682    )
+    %r684 = icmp eq i64 %r683, 0    
+    %r685 = zext i1 %r684     to i64
+    %r686 = icmp ne i64 %r685    , 0
+    br i1 %r686, label %Label_3383, label %Label_3384    
+Label_3383:
+    %r687 = ptrtoint ptr @str.455     to i64
+    %r688 = call i64 @_eq_print_raw_str(i64 %r687    )
+    %r689 = load i64, ptr %p3    
+    %r690 = icmp eq i64 %r689    , 0
+    br i1 %r690, label %Label_PanicNull, label %Label_3386    
+Label_3386:
+    %r691 = inttoptr i64 %r689     to ptr
+    %r692 = getelementptr i64, ptr %r691, i64 3    
+    %r693 = load i64, ptr %r692    
+    %r694 = ptrtoint ptr @str.454     to i64
+    %r695 = call i64 @_eq_vec_push(i64 %r693, i64 %r694    )
+    %r696 = load i64, ptr %p3    
+    %r697 = inttoptr i64 %r696     to ptr
+    %r698 = getelementptr i64, ptr %r697, i64 3    
+    %r699 = load i64, ptr %r698    
+    store i64 %r695, ptr %r698    
+    br label %Label_3385    
+Label_3384:
+    br label %Label_3385    
+Label_3385:
+    %r700 = load i64, ptr %p3    
+    %r701 = ptrtoint ptr @str.456     to i64
+    %r702 = call i64 @_eq_is_extern(i64 %r700, i64 %r701    )
+    %r703 = icmp eq i64 %r702, 0    
+    %r704 = zext i1 %r703     to i64
+    %r705 = icmp ne i64 %r704    , 0
+    br i1 %r705, label %Label_3387, label %Label_3388    
+Label_3387:
+    %r706 = ptrtoint ptr @str.457     to i64
+    %r707 = call i64 @_eq_print_raw_str(i64 %r706    )
+    %r708 = load i64, ptr %p3    
+    %r709 = icmp eq i64 %r708    , 0
+    br i1 %r709, label %Label_PanicNull, label %Label_3390    
+Label_3390:
+    %r710 = inttoptr i64 %r708     to ptr
+    %r711 = getelementptr i64, ptr %r710, i64 3    
+    %r712 = load i64, ptr %r711    
+    %r713 = ptrtoint ptr @str.456     to i64
+    %r714 = call i64 @_eq_vec_push(i64 %r712, i64 %r713    )
+    %r715 = load i64, ptr %p3    
+    %r716 = inttoptr i64 %r715     to ptr
+    %r717 = getelementptr i64, ptr %r716, i64 3    
+    %r718 = load i64, ptr %r717    
+    store i64 %r714, ptr %r717    
+    br label %Label_3389    
+Label_3388:
+    br label %Label_3389    
+Label_3389:
+    %r719 = load i64, ptr %p6    
     store i64 0, ptr %p6    
-    %r951 = load i64, ptr %p18    
-    store i64 0, ptr %p18    
-    %r952 = load i64, ptr %p19    
-    store i64 0, ptr %p19    
-    br label %Label_3414    
-Label_3414:
-    %r953 = load volatile i32, ptr @g_needs_yield
-    %r954 = icmp ne i32 %r953, 0
-    br i1 %r954, label %Preywh_3417, label %Checkwh_3417    
-Preywh_3417:
+    br label %Label_3391    
+Label_3391:
+    %r720 = load volatile i32, ptr @g_needs_yield
+    %r721 = icmp ne i32 %r720, 0
+    br i1 %r721, label %Preywh_3394, label %Checkwh_3394    
+Preywh_3394:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3417    
-Checkwh_3417:
-    %r955 = load i64, ptr %p6    
-    %r956 = load i64, ptr %p5    
-    %r957 = icmp slt i64 %r955, %r956    
-    %r958 = zext i1 %r957     to i64
-    %r959 = icmp ne i64 %r958    , 0
-    br i1 %r959, label %Label_3415, label %Label_3416    
-Label_3415:
-    %r960 = load i64, ptr %p4    
-    %r961 = load i64, ptr %p6    
-    %r962 = call i64 @_eq_vec_get(i64 %r960, i64 %r961    )
-    %r963 = load i64, ptr %p18    
-    store i64 %r962, ptr %p18    
-    %r964 = load i64, ptr %p18    
-    %r965 = icmp eq i64 %r964    , 0
-    br i1 %r965, label %Label_PanicNull, label %Label_3418    
-Label_3418:
-    %r966 = inttoptr i64 %r964     to ptr
-    %r967 = getelementptr i64, ptr %r966, i64 0    
-    %r968 = load i64, ptr %r967    
-    %r969 = load i64, ptr %p19    
-    store i64 %r968, ptr %p19    
-    %r970 = load i64, ptr %p19    
-    %r971 = load i64, ptr @Global_STMT_LET    
-    %r972 = icmp eq i64 %r970, %r971    
-    %r973 = zext i1 %r972     to i64
-    %r974 = load i64, ptr %p19    
-    %r975 = load i64, ptr @Global_STMT_EXPRESSION    
-    %r976 = icmp eq i64 %r974, %r975    
-    %r977 = zext i1 %r976     to i64
-    %r978 = or i64 %r973, %r977    
-    %r979 = load i64, ptr %p19    
-    %r980 = load i64, ptr @Global_STMT_EXECUTE    
-    %r981 = icmp eq i64 %r979, %r980    
-    %r982 = zext i1 %r981     to i64
-    %r983 = or i64 %r978, %r982    
-    %r984 = load i64, ptr %p19    
-    %r985 = load i64, ptr @Global_STMT_ASSERT    
-    %r986 = icmp eq i64 %r984, %r985    
-    %r987 = zext i1 %r986     to i64
-    %r988 = or i64 %r983, %r987    
-    %r989 = load i64, ptr %p19    
-    %r990 = load i64, ptr @Global_STMT_PRINT    
-    %r991 = icmp eq i64 %r989, %r990    
-    %r992 = zext i1 %r991     to i64
-    %r993 = or i64 %r988, %r992    
-    %r994 = load i64, ptr %p19    
-    %r995 = load i64, ptr @Global_STMT_REVERSE    
-    %r996 = icmp eq i64 %r994, %r995    
-    %r997 = zext i1 %r996     to i64
-    %r998 = or i64 %r993, %r997    
-    %r999 = load i64, ptr %p19    
-    %r1000 = load i64, ptr @Global_STMT_STRUCT    
-    %r1001 = icmp eq i64 %r999, %r1000    
-    %r1002 = zext i1 %r1001     to i64
-    %r1003 = or i64 %r998, %r1002    
-    %r1004 = load i64, ptr %p19    
-    %r1005 = load i64, ptr @Global_STMT_AGENT    
-    %r1006 = icmp eq i64 %r1004, %r1005    
-    %r1007 = zext i1 %r1006     to i64
-    %r1008 = or i64 %r1003, %r1007    
-    %r1009 = load i64, ptr %p19    
-    %r1010 = load i64, ptr @Global_STMT_RESOURCE    
-    %r1011 = icmp eq i64 %r1009, %r1010    
-    %r1012 = zext i1 %r1011     to i64
-    %r1013 = or i64 %r1008, %r1012    
-    %r1014 = icmp ne i64 %r1013    , 0
-    br i1 %r1014, label %Label_3419, label %Label_3420    
-Label_3419:
-    %r1015 = load i64, ptr %p3    
-    %r1016 = load i64, ptr %p18    
-    %r1017 = call i64 @_eq_gen_stmt(i64 %r1015, i64 %r1016    )
-    br label %Label_3421    
-Label_3420:
-    br label %Label_3421    
-Label_3421:
-    %r1018 = load i64, ptr %p6    
-    %r1019 = add i64 %r1018, 1    
-    %r1020 = load i64, ptr %p6    
-    store i64 %r1019, ptr %p6    
-    br label %Label_3414    
-Label_3416:
-    %r1021 = ptrtoint ptr @str.468     to i64
-    %r1022 = call i64 @_eq_print_raw_str(i64 %r1021    )
-    %r1023 = load i64, ptr %p3    
-    %r1024 = ptrtoint ptr @str.469     to i64
-    %r1025 = call i64 @_eq_is_defined(i64 %r1023, i64 %r1024    )
-    %r1026 = icmp eq i64 %r1025, 0    
-    %r1027 = zext i1 %r1026     to i64
-    %r1028 = icmp ne i64 %r1027    , 0
-    br i1 %r1028, label %Label_3422, label %Label_3423    
-Label_3422:
-    %r1029 = ptrtoint ptr @str.470     to i64
-    %r1030 = call i64 @_eq_print_raw_str(i64 %r1029    )
-    br label %Label_3424    
-Label_3423:
-    br label %Label_3424    
-Label_3424:
-    %r1031 = ptrtoint ptr @str.471     to i64
-    %r1032 = call i64 @_eq_print_raw_str(i64 %r1031    )
+    br label %Checkwh_3394    
+Checkwh_3394:
+    %r722 = load i64, ptr %p6    
+    %r723 = load i64, ptr %p5    
+    %r724 = icmp slt i64 %r722, %r723    
+    %r725 = zext i1 %r724     to i64
+    %r726 = icmp ne i64 %r725    , 0
+    br i1 %r726, label %Label_3392, label %Label_3393    
+Label_3392:
+    %r727 = load i64, ptr %p4    
+    %r728 = load i64, ptr %p6    
+    %r729 = call i64 @_eq_vec_get(i64 %r727, i64 %r728    )
+    %r730 = load i64, ptr %p7    
+    store i64 %r729, ptr %p7    
+    %r731 = load i64, ptr %p7    
+    %r732 = icmp ne i64 %r731    , 0
+    br i1 %r732, label %Label_3395, label %Label_3396    
+Label_3395:
+    %r733 = load i64, ptr %p7    
+    %r734 = icmp sge i64 %r733, 4096    
+    %r735 = zext i1 %r734     to i64
+    %r736 = icmp ne i64 %r735    , 0
+    br i1 %r736, label %Label_3398, label %Label_3399    
+Label_3398:
+    %r737 = load i64, ptr %p7    
+    %r738 = icmp eq i64 %r737    , 0
+    br i1 %r738, label %Label_PanicNull, label %Label_3401    
+Label_3401:
+    %r739 = inttoptr i64 %r737     to ptr
+    %r740 = getelementptr i64, ptr %r739, i64 0    
+    %r741 = load i64, ptr %r740    
+    %r742 = load i64, ptr @Global_STMT_FUNCTION    
+    %r743 = icmp eq i64 %r741, %r742    
+    %r744 = zext i1 %r743     to i64
+    %r745 = icmp ne i64 %r744    , 0
+    br i1 %r745, label %Label_3402, label %Label_3403    
+Label_3402:
+    %r746 = load i64, ptr %p7    
+    %r747 = icmp eq i64 %r746    , 0
+    br i1 %r747, label %Label_PanicNull, label %Label_3405    
+Label_3405:
+    %r748 = inttoptr i64 %r746     to ptr
+    %r749 = getelementptr i64, ptr %r748, i64 1    
+    %r750 = load i64, ptr %r749    
+    %r751 = load i64, ptr %p8    
+    store i64 %r750, ptr %p8    
+    %r752 = load i64, ptr %p7    
+    %r753 = icmp eq i64 %r752    , 0
+    br i1 %r753, label %Label_PanicNull, label %Label_3406    
+Label_3406:
+    %r754 = inttoptr i64 %r752     to ptr
+    %r755 = getelementptr i64, ptr %r754, i64 2    
+    %r756 = load i64, ptr %r755    
+    %r757 = load i64, ptr %p9    
+    store i64 %r756, ptr %p9    
+    %r758 = load i64, ptr %p7    
+    %r759 = icmp eq i64 %r758    , 0
+    br i1 %r759, label %Label_PanicNull, label %Label_3407    
+Label_3407:
+    %r760 = inttoptr i64 %r758     to ptr
+    %r761 = getelementptr i64, ptr %r760, i64 3    
+    %r762 = load i64, ptr %r761    
+    %r763 = load i64, ptr %p17    
+    store i64 %r762, ptr %p17    
+    %r764 = load i64, ptr %p9    
+    %r765 = call i64 @_eq_vec_size(i64 %r764    )
+    %r766 = load i64, ptr %p10    
+    store i64 %r765, ptr %p10    
+    %r767 = load i64, ptr %p8    
+    %r768 = icmp sge i64 %r767, 4096    
+    %r769 = zext i1 %r768     to i64
+    %r770 = icmp ne i64 %r769    , 0
+    br i1 %r770, label %Label_3408, label %Label_3409    
+Label_3408:
+    %r771 = ptrtoint ptr @str.458     to i64
+    %r772 = call i64 @write(i64 2, i64 %r771, i64 12    )
+    %r773 = load i64, ptr %p8    
+    %r774 = load i64, ptr %p8    
+    %r775 = call i64 @sys_strlen(i64 %r774    )
+    %r776 = call i64 @write(i64 2, i64 %r773, i64 %r775    )
+    %r777 = ptrtoint ptr @str.62     to i64
+    %r778 = call i64 @write(i64 2, i64 %r777, i64 1    )
     br label %Label_3410    
 Label_3409:
     br label %Label_3410    
 Label_3410:
-    %r1033 = load i64, ptr %p3    
-    %r1034 = icmp eq i64 %r1033    , 0
-    br i1 %r1034, label %Label_PanicNull, label %Label_3425    
-Label_3425:
-    %r1035 = inttoptr i64 %r1033     to ptr
-    %r1036 = getelementptr i64, ptr %r1035, i64 2    
-    %r1037 = load i64, ptr %r1036    
-    %r1038 = load i64, ptr %p20    
-    store i64 %r1037, ptr %p20    
-    %r1039 = load i64, ptr %p20    
-    %r1040 = call i64 @_eq_vec_size(i64 %r1039    )
-    %r1041 = load i64, ptr %p21    
-    store i64 %r1040, ptr %p21    
-    %r1042 = load i64, ptr %p22    
-    store i64 0, ptr %p22    
-    br label %Label_3426    
-Label_3426:
-    %r1043 = load volatile i32, ptr @g_needs_yield
-    %r1044 = icmp ne i32 %r1043, 0
-    br i1 %r1044, label %Preywh_3429, label %Checkwh_3429    
-Preywh_3429:
+    %r779 = ptrtoint ptr @str.459     to i64
+    %r780 = call i64 @_eq_print_raw_str(i64 %r779    )
+    %r781 = load i64, ptr %p8    
+    %r782 = call i64 @_eq_print_raw_str(i64 %r781    )
+    %r783 = ptrtoint ptr @str.63     to i64
+    %r784 = call i64 @_eq_print_raw_str(i64 %r783    )
+    %r785 = load i64, ptr %p11    
+    store i64 0, ptr %p11    
+    br label %Label_3411    
+Label_3411:
+    %r786 = load volatile i32, ptr @g_needs_yield
+    %r787 = icmp ne i32 %r786, 0
+    br i1 %r787, label %Preywh_3414, label %Checkwh_3414    
+Preywh_3414:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3429    
-Checkwh_3429:
-    %r1045 = load i64, ptr %p22    
-    %r1046 = load i64, ptr %p21    
-    %r1047 = icmp slt i64 %r1045, %r1046    
-    %r1048 = zext i1 %r1047     to i64
-    %r1049 = icmp ne i64 %r1048    , 0
-    br i1 %r1049, label %Label_3427, label %Label_3428    
+    br label %Checkwh_3414    
+Checkwh_3414:
+    %r788 = load i64, ptr %p11    
+    %r789 = load i64, ptr %p10    
+    %r790 = icmp slt i64 %r788, %r789    
+    %r791 = zext i1 %r790     to i64
+    %r792 = icmp ne i64 %r791    , 0
+    br i1 %r792, label %Label_3412, label %Label_3413    
+Label_3412:
+    %r793 = ptrtoint ptr @str.460     to i64
+    %r794 = call i64 @_eq_print_raw_str(i64 %r793    )
+    %r795 = load i64, ptr %p9    
+    %r796 = load i64, ptr %p11    
+    %r797 = call i64 @_eq_vec_get(i64 %r795, i64 %r796    )
+    %r798 = call i64 @_eq_print_raw_str(i64 %r797    )
+    %r799 = load i64, ptr %p11    
+    %r800 = load i64, ptr %p10    
+    %r801 = sub i64 %r800, 1    
+    %r802 = icmp slt i64 %r799, %r801    
+    %r803 = zext i1 %r802     to i64
+    %r804 = icmp ne i64 %r803    , 0
+    br i1 %r804, label %Label_3415, label %Label_3416    
+Label_3415:
+    %r805 = ptrtoint ptr @str.308     to i64
+    %r806 = call i64 @_eq_print_raw_str(i64 %r805    )
+    br label %Label_3417    
+Label_3416:
+    br label %Label_3417    
+Label_3417:
+    %r807 = load i64, ptr %p11    
+    %r808 = add i64 %r807, 1    
+    %r809 = load i64, ptr %p11    
+    store i64 %r808, ptr %p11    
+    br label %Label_3411    
+Label_3413:
+    %r810 = ptrtoint ptr @str.461     to i64
+    %r811 = call i64 @_eq_print_raw_str(i64 %r810    )
+    %r812 = load i64, ptr %p3    
+    %r813 = inttoptr i64 %r812     to ptr
+    %r814 = getelementptr i64, ptr %r813, i64 0    
+    %r815 = load i64, ptr %r814    
+    store i64 1, ptr %r814    
+    %r816 = call i64 @_eq_vec_new(i64 1024    )
+    %r817 = load i64, ptr %p3    
+    %r818 = inttoptr i64 %r817     to ptr
+    %r819 = getelementptr i64, ptr %r818, i64 4    
+    %r820 = load i64, ptr %r819    
+    store i64 %r816, ptr %r819    
+    %p821     = alloca i64
+    store i64 0, ptr %p821    
+    %r822 = load i64, ptr %p3    
+    %r823 = call i64 @_eq_freshen_reg(i64 %r822    )
+    store i64 %r823, ptr %p821    
+    %r824 = ptrtoint ptr @str.287     to i64
+    %r825 = call i64 @_eq_print_raw_str(i64 %r824    )
+    %r826 = load i64, ptr %p821    
+    %r827 = call i64 @_eq_print_raw(i64 %r826    )
+    %r828 = ptrtoint ptr @str.354     to i64
+    %r829 = call i64 @_eq_print_raw_str(i64 %r828    )
+    %p830     = alloca i64
+    store i64 0, ptr %p830    
+    %r831 = load i64, ptr %p3    
+    %r832 = call i64 @_eq_freshen_reg(i64 %r831    )
+    store i64 %r832, ptr %p830    
+    %r833 = ptrtoint ptr @str.287     to i64
+    %r834 = call i64 @_eq_print_raw_str(i64 %r833    )
+    %r835 = load i64, ptr %p830    
+    %r836 = call i64 @_eq_print_raw(i64 %r835    )
+    %r837 = ptrtoint ptr @str.355     to i64
+    %r838 = call i64 @_eq_print_raw_str(i64 %r837    )
+    %r839 = load i64, ptr %p821    
+    %r840 = call i64 @_eq_print_raw(i64 %r839    )
+    %r841 = ptrtoint ptr @str.356     to i64
+    %r842 = call i64 @_eq_print_raw_str(i64 %r841    )
+    %r843 = ptrtoint ptr @str.317     to i64
+    %r844 = call i64 @_eq_print_raw_str(i64 %r843    )
+    %r845 = load i64, ptr %p830    
+    %r846 = call i64 @_eq_print_raw(i64 %r845    )
+    %r847 = ptrtoint ptr @str.462     to i64
+    %r848 = call i64 @_eq_print_raw_str(i64 %r847    )
+    %r849 = ptrtoint ptr @str.463     to i64
+    %r850 = call i64 @_eq_print_raw_str(i64 %r849    )
+    %r851 = ptrtoint ptr @str.360     to i64
+    %r852 = call i64 @_eq_emit_ln(i64 %r851    )
+    %r853 = ptrtoint ptr @str.361     to i64
+    %r854 = call i64 @_eq_emit_ln(i64 %r853    )
+    %r855 = ptrtoint ptr @str.464     to i64
+    %r856 = call i64 @_eq_emit_ln(i64 %r855    )
+    %r857 = ptrtoint ptr @str.465     to i64
+    %r858 = call i64 @_eq_print_raw_str(i64 %r857    )
+    %r859 = load i64, ptr %p12    
+    store i64 0, ptr %p12    
+    %r860 = load i64, ptr %p14    
+    store i64 0, ptr %p14    
+    %r861 = load i64, ptr %p15    
+    store i64 0, ptr %p15    
+    %r862 = load i64, ptr %p16    
+    store i64 0, ptr %p16    
+    br label %Label_3418    
+Label_3418:
+    %r863 = load volatile i32, ptr @g_needs_yield
+    %r864 = icmp ne i32 %r863, 0
+    br i1 %r864, label %Preywh_3421, label %Checkwh_3421    
+Preywh_3421:
+        store i32 0, ptr @g_needs_yield
+        call i64 @_eq_fiber_yield()
+    br label %Checkwh_3421    
+Checkwh_3421:
+    %r865 = load i64, ptr %p12    
+    %r866 = load i64, ptr %p10    
+    %r867 = icmp slt i64 %r865, %r866    
+    %r868 = zext i1 %r867     to i64
+    %r869 = icmp ne i64 %r868    , 0
+    br i1 %r869, label %Label_3419, label %Label_3420    
+Label_3419:
+    %r870 = load i64, ptr %p9    
+    %r871 = load i64, ptr %p12    
+    %r872 = call i64 @_eq_vec_get(i64 %r870, i64 %r871    )
+    %r873 = load i64, ptr %p14    
+    store i64 %r872, ptr %p14    
+    %r874 = load i64, ptr %p3    
+    %r875 = call i64 @_eq_freshen_ptr(i64 %r874    )
+    %r876 = load i64, ptr %p15    
+    store i64 %r875, ptr %p15    
+    %r877 = ptrtoint ptr @str.349     to i64
+    %r878 = call i64 @_eq_print_raw_str(i64 %r877    )
+    %r879 = load i64, ptr %p15    
+    %r880 = call i64 @_eq_print_raw(i64 %r879    )
+    %r881 = ptrtoint ptr @str.350     to i64
+    %r882 = call i64 @_eq_emit_ln(i64 %r881    )
+    %r883 = ptrtoint ptr @str.466     to i64
+    %r884 = call i64 @_eq_print_raw_str(i64 %r883    )
+    %r885 = load i64, ptr %p14    
+    %r886 = call i64 @_eq_print_raw_str(i64 %r885    )
+    %r887 = ptrtoint ptr @str.64     to i64
+    %r888 = call i64 @_eq_emit_ln(i64 %r887    )
+    %r889 = ptrtoint ptr @str.467     to i64
+    %r890 = call i64 @_eq_print_raw_str(i64 %r889    )
+    %r891 = load i64, ptr %p14    
+    %r892 = call i64 @_eq_print_raw_str(i64 %r891    )
+    %r893 = ptrtoint ptr @str.346     to i64
+    %r894 = call i64 @_eq_print_raw_str(i64 %r893    )
+    %r895 = load i64, ptr %p15    
+    %r896 = call i64 @_eq_print_raw(i64 %r895    )
+    %r897 = ptrtoint ptr @str.2     to i64
+    %r898 = call i64 @_eq_emit_ln(i64 %r897    )
+    %r899 = call i64 @sys_malloc(i64 16    )
+    %r900 = load i64, ptr %p16    
+    store i64 %r899, ptr %p16    
+    %r901 = load i64, ptr %p14    
+    %r902 = load i64, ptr %p16    
+    %r903 = inttoptr i64 %r902     to ptr
+    %r904 = getelementptr i64, ptr %r903, i64 0    
+    %r905 = load i64, ptr %r904    
+    store i64 %r901, ptr %r904    
+    %r906 = load i64, ptr %p15    
+    %r907 = load i64, ptr %p16    
+    %r908 = inttoptr i64 %r907     to ptr
+    %r909 = getelementptr i64, ptr %r908, i64 1    
+    %r910 = load i64, ptr %r909    
+    store i64 %r906, ptr %r909    
+    %r911 = load i64, ptr %p3    
+    %r912 = icmp eq i64 %r911    , 0
+    br i1 %r912, label %Label_PanicNull, label %Label_3422    
+Label_3422:
+    %r913 = inttoptr i64 %r911     to ptr
+    %r914 = getelementptr i64, ptr %r913, i64 4    
+    %r915 = load i64, ptr %r914    
+    %r916 = load i64, ptr %p16    
+    %r917 = call i64 @_eq_vec_push(i64 %r915, i64 %r916    )
+    %r918 = load i64, ptr %p3    
+    %r919 = inttoptr i64 %r918     to ptr
+    %r920 = getelementptr i64, ptr %r919, i64 4    
+    %r921 = load i64, ptr %r920    
+    store i64 %r917, ptr %r920    
+    %r922 = load i64, ptr %p12    
+    %r923 = add i64 %r922, 1    
+    %r924 = load i64, ptr %p12    
+    store i64 %r923, ptr %p12    
+    br label %Label_3418    
+Label_3420:
+    %r925 = load i64, ptr %p3    
+    %r926 = load i64, ptr %p17    
+    %r927 = call i64 @_eq_gen_stmt(i64 %r925, i64 %r926    )
+    %r928 = load i64, ptr %p3    
+    %r929 = load i64, ptr %p3    
+    %r930 = icmp eq i64 %r929    , 0
+    br i1 %r930, label %Label_PanicNull, label %Label_3423    
+Label_3423:
+    %r931 = inttoptr i64 %r929     to ptr
+    %r932 = getelementptr i64, ptr %r931, i64 4    
+    %r933 = load i64, ptr %r932    
+    %r934 = call i64 @_eq_gen_release_locals(i64 %r928, i64 %r933    )
+    %r935 = ptrtoint ptr @str.468     to i64
+    %r936 = call i64 @_eq_print_raw_str(i64 %r935    )
+    br label %Label_3404    
+Label_3403:
+    br label %Label_3404    
+Label_3404:
+    %r937 = load i64, ptr %p7    
+    %r938 = icmp eq i64 %r937    , 0
+    br i1 %r938, label %Label_PanicNull, label %Label_3424    
+Label_3424:
+    %r939 = inttoptr i64 %r937     to ptr
+    %r940 = getelementptr i64, ptr %r939, i64 0    
+    %r941 = load i64, ptr %r940    
+    %r942 = load i64, ptr @Global_STMT_EVENT    
+    %r943 = icmp eq i64 %r941, %r942    
+    %r944 = zext i1 %r943     to i64
+    %r945 = icmp ne i64 %r944    , 0
+    br i1 %r945, label %Label_3425, label %Label_3426    
+Label_3425:
+    %r946 = load i64, ptr %p3    
+    %r947 = load i64, ptr %p7    
+    %r948 = call i64 @_eq_gen_stmt(i64 %r946, i64 %r947    )
+    br label %Label_3427    
+Label_3426:
+    br label %Label_3427    
 Label_3427:
-    %r1050 = load i64, ptr %p20    
-    %r1051 = load i64, ptr %p22    
-    %r1052 = call i64 @_eq_vec_get(i64 %r1050, i64 %r1051    )
-    %r1053 = load i64, ptr %p23    
-    store i64 %r1052, ptr %p23    
-    %r1054 = ptrtoint ptr @str.472     to i64
-    %r1055 = call i64 @_eq_print_raw_str(i64 %r1054    )
-    %r1056 = load i64, ptr %p22    
-    %r1057 = call i64 @_eq_print_raw(i64 %r1056    )
-    %r1058 = ptrtoint ptr @str.473     to i64
-    %r1059 = call i64 @_eq_print_raw_str(i64 %r1058    )
-    %r1060 = load i64, ptr %p23    
-    %r1061 = call i64 @_eq_gen_escaped_len(i64 %r1060    )
-    %r1062 = call i64 @_eq_print_raw(i64 %r1061    )
-    %r1063 = ptrtoint ptr @str.474     to i64
-    %r1064 = call i64 @_eq_print_raw_str(i64 %r1063    )
-    %r1065 = load i64, ptr %p23    
-    %r1066 = call i64 @_eq_print_escaped_str(i64 %r1065    )
-    %r1067 = ptrtoint ptr @str.475     to i64
-    %r1068 = call i64 @_eq_print_raw_str(i64 %r1067    )
-    %r1069 = load i64, ptr %p22    
-    %r1070 = add i64 %r1069, 1    
-    %r1071 = load i64, ptr %p22    
-    store i64 %r1070, ptr %p22    
-    br label %Label_3426    
+    br label %Label_3400    
+Label_3399:
+    br label %Label_3400    
+Label_3400:
+    br label %Label_3397    
+Label_3396:
+    br label %Label_3397    
+Label_3397:
+    %r949 = load i64, ptr %p6    
+    %r950 = add i64 %r949, 1    
+    %r951 = load i64, ptr %p6    
+    store i64 %r950, ptr %p6    
+    br label %Label_3391    
+Label_3393:
+    %r952 = load i64, ptr %p3    
+    %r953 = icmp eq i64 %r952    , 0
+    br i1 %r953, label %Label_PanicNull, label %Label_3428    
 Label_3428:
+    %r954 = inttoptr i64 %r952     to ptr
+    %r955 = getelementptr i64, ptr %r954, i64 6    
+    %r956 = load i64, ptr %r955    
+    %r957 = icmp eq i64 %r956, 1    
+    %r958 = zext i1 %r957     to i64
+    %r959 = icmp ne i64 %r958    , 0
+    br i1 %r959, label %Label_3429, label %Label_3430    
+Label_3429:
+    %r960 = load i64, ptr %p3    
+    %r961 = ptrtoint ptr @str.469     to i64
+    %r962 = call i64 @_eq_is_defined(i64 %r960, i64 %r961    )
+    %r963 = icmp eq i64 %r962, 0    
+    %r964 = zext i1 %r963     to i64
+    %r965 = icmp ne i64 %r964    , 0
+    br i1 %r965, label %Label_3432, label %Label_3433    
+Label_3432:
+    %r966 = ptrtoint ptr @str.470     to i64
+    %r967 = call i64 @_eq_print_raw_str(i64 %r966    )
+    br label %Label_3434    
+Label_3433:
+    br label %Label_3434    
+Label_3434:
+    %r968 = ptrtoint ptr @str.471     to i64
+    %r969 = call i64 @_eq_print_raw_str(i64 %r968    )
+    %r970 = ptrtoint ptr @str.472     to i64
+    %r971 = call i64 @_eq_print_raw_str(i64 %r970    )
+    %r972 = load i64, ptr %p3    
+    %r973 = inttoptr i64 %r972     to ptr
+    %r974 = getelementptr i64, ptr %r973, i64 0    
+    %r975 = load i64, ptr %r974    
+    store i64 1, ptr %r974    
+    %r976 = load i64, ptr %p3    
+    %r977 = inttoptr i64 %r976     to ptr
+    %r978 = getelementptr i64, ptr %r977, i64 4    
+    %r979 = load i64, ptr %r978    
+    store i64 0, ptr %r978    
+    %r980 = load i64, ptr %p6    
+    store i64 0, ptr %p6    
+    %r981 = load i64, ptr %p18    
+    store i64 0, ptr %p18    
+    %r982 = load i64, ptr %p19    
+    store i64 0, ptr %p19    
+    br label %Label_3435    
+Label_3435:
+    %r983 = load volatile i32, ptr @g_needs_yield
+    %r984 = icmp ne i32 %r983, 0
+    br i1 %r984, label %Preywh_3438, label %Checkwh_3438    
+Preywh_3438:
+        store i32 0, ptr @g_needs_yield
+        call i64 @_eq_fiber_yield()
+    br label %Checkwh_3438    
+Checkwh_3438:
+    %r985 = load i64, ptr %p6    
+    %r986 = load i64, ptr %p5    
+    %r987 = icmp slt i64 %r985, %r986    
+    %r988 = zext i1 %r987     to i64
+    %r989 = icmp ne i64 %r988    , 0
+    br i1 %r989, label %Label_3436, label %Label_3437    
+Label_3436:
+    %r990 = load i64, ptr %p4    
+    %r991 = load i64, ptr %p6    
+    %r992 = call i64 @_eq_vec_get(i64 %r990, i64 %r991    )
+    %r993 = load i64, ptr %p18    
+    store i64 %r992, ptr %p18    
+    %r994 = load i64, ptr %p18    
+    %r995 = icmp sge i64 %r994, 4096    
+    %r996 = zext i1 %r995     to i64
+    %r997 = icmp ne i64 %r996    , 0
+    br i1 %r997, label %Label_3439, label %Label_3440    
+Label_3439:
+    %r998 = load i64, ptr %p18    
+    %r999 = icmp eq i64 %r998    , 0
+    br i1 %r999, label %Label_PanicNull, label %Label_3442    
+Label_3442:
+    %r1000 = inttoptr i64 %r998     to ptr
+    %r1001 = getelementptr i64, ptr %r1000, i64 0    
+    %r1002 = load i64, ptr %r1001    
+    %r1003 = load i64, ptr %p19    
+    store i64 %r1002, ptr %p19    
+    %r1004 = load i64, ptr %p19    
+    %r1005 = load i64, ptr @Global_STMT_LET    
+    %r1006 = icmp eq i64 %r1004, %r1005    
+    %r1007 = zext i1 %r1006     to i64
+    %r1008 = load i64, ptr %p19    
+    %r1009 = load i64, ptr @Global_STMT_EXPRESSION    
+    %r1010 = icmp eq i64 %r1008, %r1009    
+    %r1011 = zext i1 %r1010     to i64
+    %r1012 = or i64 %r1007, %r1011    
+    %r1013 = load i64, ptr %p19    
+    %r1014 = load i64, ptr @Global_STMT_EXECUTE    
+    %r1015 = icmp eq i64 %r1013, %r1014    
+    %r1016 = zext i1 %r1015     to i64
+    %r1017 = or i64 %r1012, %r1016    
+    %r1018 = load i64, ptr %p19    
+    %r1019 = load i64, ptr @Global_STMT_ASSERT    
+    %r1020 = icmp eq i64 %r1018, %r1019    
+    %r1021 = zext i1 %r1020     to i64
+    %r1022 = or i64 %r1017, %r1021    
+    %r1023 = load i64, ptr %p19    
+    %r1024 = load i64, ptr @Global_STMT_PRINT    
+    %r1025 = icmp eq i64 %r1023, %r1024    
+    %r1026 = zext i1 %r1025     to i64
+    %r1027 = or i64 %r1022, %r1026    
+    %r1028 = load i64, ptr %p19    
+    %r1029 = load i64, ptr @Global_STMT_REVERSE    
+    %r1030 = icmp eq i64 %r1028, %r1029    
+    %r1031 = zext i1 %r1030     to i64
+    %r1032 = or i64 %r1027, %r1031    
+    %r1033 = load i64, ptr %p19    
+    %r1034 = load i64, ptr @Global_STMT_STRUCT    
+    %r1035 = icmp eq i64 %r1033, %r1034    
+    %r1036 = zext i1 %r1035     to i64
+    %r1037 = or i64 %r1032, %r1036    
+    %r1038 = load i64, ptr %p19    
+    %r1039 = load i64, ptr @Global_STMT_AGENT    
+    %r1040 = icmp eq i64 %r1038, %r1039    
+    %r1041 = zext i1 %r1040     to i64
+    %r1042 = or i64 %r1037, %r1041    
+    %r1043 = load i64, ptr %p19    
+    %r1044 = load i64, ptr @Global_STMT_RESOURCE    
+    %r1045 = icmp eq i64 %r1043, %r1044    
+    %r1046 = zext i1 %r1045     to i64
+    %r1047 = or i64 %r1042, %r1046    
+    %r1048 = icmp ne i64 %r1047    , 0
+    br i1 %r1048, label %Label_3443, label %Label_3444    
+Label_3443:
+    %r1049 = load i64, ptr %p3    
+    %r1050 = load i64, ptr %p18    
+    %r1051 = call i64 @_eq_gen_stmt(i64 %r1049, i64 %r1050    )
+    br label %Label_3445    
+Label_3444:
+    br label %Label_3445    
+Label_3445:
+    br label %Label_3441    
+Label_3440:
+    br label %Label_3441    
+Label_3441:
+    %r1052 = load i64, ptr %p6    
+    %r1053 = add i64 %r1052, 1    
+    %r1054 = load i64, ptr %p6    
+    store i64 %r1053, ptr %p6    
+    br label %Label_3435    
+Label_3437:
+    %r1055 = ptrtoint ptr @str.473     to i64
+    %r1056 = call i64 @_eq_print_raw_str(i64 %r1055    )
+    %r1057 = load i64, ptr %p3    
+    %r1058 = ptrtoint ptr @str.474     to i64
+    %r1059 = call i64 @_eq_is_defined(i64 %r1057, i64 %r1058    )
+    %r1060 = icmp eq i64 %r1059, 0    
+    %r1061 = zext i1 %r1060     to i64
+    %r1062 = icmp ne i64 %r1061    , 0
+    br i1 %r1062, label %Label_3446, label %Label_3447    
+Label_3446:
+    %r1063 = ptrtoint ptr @str.475     to i64
+    %r1064 = call i64 @_eq_print_raw_str(i64 %r1063    )
+    br label %Label_3448    
+Label_3447:
+    br label %Label_3448    
+Label_3448:
+    %r1065 = ptrtoint ptr @str.476     to i64
+    %r1066 = call i64 @_eq_print_raw_str(i64 %r1065    )
+    br label %Label_3431    
+Label_3430:
+    br label %Label_3431    
+Label_3431:
+    %r1067 = load i64, ptr %p3    
+    %r1068 = icmp eq i64 %r1067    , 0
+    br i1 %r1068, label %Label_PanicNull, label %Label_3449    
+Label_3449:
+    %r1069 = inttoptr i64 %r1067     to ptr
+    %r1070 = getelementptr i64, ptr %r1069, i64 2    
+    %r1071 = load i64, ptr %r1070    
+    %r1072 = load i64, ptr %p20    
+    store i64 %r1071, ptr %p20    
+    %r1073 = load i64, ptr %p20    
+    %r1074 = call i64 @_eq_vec_size(i64 %r1073    )
+    %r1075 = load i64, ptr %p21    
+    store i64 %r1074, ptr %p21    
+    %r1076 = load i64, ptr %p22    
+    store i64 0, ptr %p22    
+    br label %Label_3450    
+Label_3450:
+    %r1077 = load volatile i32, ptr @g_needs_yield
+    %r1078 = icmp ne i32 %r1077, 0
+    br i1 %r1078, label %Preywh_3453, label %Checkwh_3453    
+Preywh_3453:
+        store i32 0, ptr @g_needs_yield
+        call i64 @_eq_fiber_yield()
+    br label %Checkwh_3453    
+Checkwh_3453:
+    %r1079 = load i64, ptr %p22    
+    %r1080 = load i64, ptr %p21    
+    %r1081 = icmp slt i64 %r1079, %r1080    
+    %r1082 = zext i1 %r1081     to i64
+    %r1083 = icmp ne i64 %r1082    , 0
+    br i1 %r1083, label %Label_3451, label %Label_3452    
+Label_3451:
+    %r1084 = load i64, ptr %p20    
+    %r1085 = load i64, ptr %p22    
+    %r1086 = call i64 @_eq_vec_get(i64 %r1084, i64 %r1085    )
+    %r1087 = load i64, ptr %p23    
+    store i64 %r1086, ptr %p23    
+    %r1088 = ptrtoint ptr @str.477     to i64
+    %r1089 = call i64 @_eq_print_raw_str(i64 %r1088    )
+    %r1090 = load i64, ptr %p22    
+    %r1091 = call i64 @_eq_print_raw(i64 %r1090    )
+    %r1092 = ptrtoint ptr @str.478     to i64
+    %r1093 = call i64 @_eq_print_raw_str(i64 %r1092    )
+    %r1094 = load i64, ptr %p23    
+    %r1095 = call i64 @_eq_gen_escaped_len(i64 %r1094    )
+    %r1096 = call i64 @_eq_print_raw(i64 %r1095    )
+    %r1097 = ptrtoint ptr @str.479     to i64
+    %r1098 = call i64 @_eq_print_raw_str(i64 %r1097    )
+    %r1099 = load i64, ptr %p23    
+    %r1100 = call i64 @_eq_print_escaped_str(i64 %r1099    )
+    %r1101 = ptrtoint ptr @str.480     to i64
+    %r1102 = call i64 @_eq_print_raw_str(i64 %r1101    )
+    %r1103 = load i64, ptr %p22    
+    %r1104 = add i64 %r1103, 1    
+    %r1105 = load i64, ptr %p22    
+    store i64 %r1104, ptr %p22    
+    br label %Label_3450    
+Label_3452:
     ret i64 0
 Label_PanicNull:
     call i64 @sys_panic_null()
@@ -32123,19 +32239,19 @@ start_fn:
     %r6 = icmp eq i64 %r5, 0    
     %r7 = zext i1 %r6     to i64
     %r8 = icmp ne i64 %r7    , 0
-    br i1 %r8, label %Label_3430, label %Label_3431    
-Label_3430:
+    br i1 %r8, label %Label_3454, label %Label_3455    
+Label_3454:
     ret i64 0    
-    br label %Label_3432    
-Label_3431:
-    br label %Label_3432    
-Label_3432:
+    br label %Label_3456    
+Label_3455:
+    br label %Label_3456    
+Label_3456:
     %p9     = alloca i64
     store i64 0, ptr %p9    
     %r10 = load i64, ptr %p4    
     %r11 = icmp eq i64 %r10    , 0
-    br i1 %r11, label %Label_PanicNull, label %Label_3433    
-Label_3433:
+    br i1 %r11, label %Label_PanicNull, label %Label_3457    
+Label_3457:
     %r12 = inttoptr i64 %r10     to ptr
     %r13 = getelementptr i64, ptr %r12, i64 0    
     %r14 = load i64, ptr %r13    
@@ -32145,48 +32261,48 @@ Label_3433:
     %r17 = icmp eq i64 %r15, %r16    
     %r18 = zext i1 %r17     to i64
     %r19 = icmp ne i64 %r18    , 0
-    br i1 %r19, label %Label_3434, label %Label_3435    
-Label_3434:
+    br i1 %r19, label %Label_3458, label %Label_3459    
+Label_3458:
     %p20     = alloca i64
     store i64 0, ptr %p20    
     %r21 = load i64, ptr %p4    
     %r22 = icmp eq i64 %r21    , 0
-    br i1 %r22, label %Label_PanicNull, label %Label_3437    
-Label_3437:
+    br i1 %r22, label %Label_PanicNull, label %Label_3461    
+Label_3461:
     %r23 = inttoptr i64 %r21     to ptr
     %r24 = getelementptr i64, ptr %r23, i64 1    
     %r25 = load i64, ptr %r24    
     %r26 = call i64 @_eq_intern_string(i64 %r25    )
     store i64 %r26, ptr %p20    
     %r27 = load i64, ptr %p20    
-    %r28 = ptrtoint ptr @str.476     to i64
+    %r28 = ptrtoint ptr @str.481     to i64
     %r29 = call i64 @_eq_str_starts_with(i64 %r27, i64 %r28    )
     %r30 = icmp ne i64 %r29    , 0
-    br i1 %r30, label %Label_3438, label %Label_3439    
-Label_3438:
+    br i1 %r30, label %Label_3462, label %Label_3463    
+Label_3462:
     ret i64 0    
-    br label %Label_3440    
-Label_3439:
-    br label %Label_3440    
-Label_3440:
+    br label %Label_3464    
+Label_3463:
+    br label %Label_3464    
+Label_3464:
     %r31 = load i64, ptr %p3    
     %r32 = icmp eq i64 %r31    , 0
-    br i1 %r32, label %Label_PanicNull, label %Label_3441    
-Label_3441:
+    br i1 %r32, label %Label_PanicNull, label %Label_3465    
+Label_3465:
     %r33 = inttoptr i64 %r31     to ptr
     %r34 = getelementptr i64, ptr %r33, i64 0    
     %r35 = load i64, ptr %r34    
     %r36 = load i64, ptr %p20    
     %r37 = call i64 @_eq_map_has(i64 %r35, i64 %r36    )
     %r38 = icmp ne i64 %r37    , 0
-    br i1 %r38, label %Label_3442, label %Label_3443    
-Label_3442:
+    br i1 %r38, label %Label_3466, label %Label_3467    
+Label_3466:
     %p39     = alloca i64
     store i64 0, ptr %p39    
     %r40 = load i64, ptr %p3    
     %r41 = icmp eq i64 %r40    , 0
-    br i1 %r41, label %Label_PanicNull, label %Label_3445    
-Label_3445:
+    br i1 %r41, label %Label_PanicNull, label %Label_3469    
+Label_3469:
     %r42 = inttoptr i64 %r40     to ptr
     %r43 = getelementptr i64, ptr %r42, i64 0    
     %r44 = load i64, ptr %r43    
@@ -32197,51 +32313,51 @@ Label_3445:
     %r48 = icmp eq i64 %r47, 3    
     %r49 = zext i1 %r48     to i64
     %r50 = icmp ne i64 %r49    , 0
-    br i1 %r50, label %Label_3446, label %Label_3447    
-Label_3446:
+    br i1 %r50, label %Label_3470, label %Label_3471    
+Label_3470:
     %r51 = load i64, ptr %p3    
-    %r52 = ptrtoint ptr @str.477     to i64
+    %r52 = ptrtoint ptr @str.482     to i64
     %r53 = load i64, ptr %p20    
-    %r54 = ptrtoint ptr @str.478     to i64
+    %r54 = ptrtoint ptr @str.483     to i64
     %r55 = call i64 @_eq_str_concat(i64 %r53, i64 %r54    )
     %r56 = call i64 @_eq_str_concat(i64 %r52, i64 %r55    )
     %r57 = load i64, ptr %p4    
     %r58 = icmp eq i64 %r57    , 0
-    br i1 %r58, label %Label_PanicNull, label %Label_3449    
-Label_3449:
+    br i1 %r58, label %Label_PanicNull, label %Label_3473    
+Label_3473:
     %r59 = inttoptr i64 %r57     to ptr
     %r60 = getelementptr i64, ptr %r59, i64 2    
     %r61 = load i64, ptr %r60    
     %r62 = load i64, ptr %p4    
     %r63 = icmp eq i64 %r62    , 0
-    br i1 %r63, label %Label_PanicNull, label %Label_3450    
-Label_3450:
+    br i1 %r63, label %Label_PanicNull, label %Label_3474    
+Label_3474:
     %r64 = inttoptr i64 %r62     to ptr
     %r65 = getelementptr i64, ptr %r64, i64 3    
     %r66 = load i64, ptr %r65    
     %r67 = call i64 @_eq_bc_error(i64 %r51, i64 %r56, i64 %r61, i64 %r66    )
-    br label %Label_3448    
-Label_3447:
-    br label %Label_3448    
-Label_3448:
-    br label %Label_3444    
-Label_3443:
-    br label %Label_3444    
-Label_3444:
-    br label %Label_3436    
-Label_3435:
+    br label %Label_3472    
+Label_3471:
+    br label %Label_3472    
+Label_3472:
+    br label %Label_3468    
+Label_3467:
+    br label %Label_3468    
+Label_3468:
+    br label %Label_3460    
+Label_3459:
     %r68 = load i64, ptr %p9    
     %r69 = load i64, ptr @Global_EXPR_BINARY    
     %r70 = icmp eq i64 %r68, %r69    
     %r71 = zext i1 %r70     to i64
     %r72 = icmp ne i64 %r71    , 0
-    br i1 %r72, label %Label_3451, label %Label_3452    
-Label_3451:
+    br i1 %r72, label %Label_3475, label %Label_3476    
+Label_3475:
     %r73 = load i64, ptr %p3    
     %r74 = load i64, ptr %p4    
     %r75 = icmp eq i64 %r74    , 0
-    br i1 %r75, label %Label_PanicNull, label %Label_3454    
-Label_3454:
+    br i1 %r75, label %Label_PanicNull, label %Label_3478    
+Label_3478:
     %r76 = inttoptr i64 %r74     to ptr
     %r77 = getelementptr i64, ptr %r76, i64 1    
     %r78 = load i64, ptr %r77    
@@ -32249,26 +32365,26 @@ Label_3454:
     %r80 = load i64, ptr %p3    
     %r81 = load i64, ptr %p4    
     %r82 = icmp eq i64 %r81    , 0
-    br i1 %r82, label %Label_PanicNull, label %Label_3455    
-Label_3455:
+    br i1 %r82, label %Label_PanicNull, label %Label_3479    
+Label_3479:
     %r83 = inttoptr i64 %r81     to ptr
     %r84 = getelementptr i64, ptr %r83, i64 3    
     %r85 = load i64, ptr %r84    
     %r86 = call i64 @_eq_bc_check_expr(i64 %r80, i64 %r85    )
-    br label %Label_3453    
-Label_3452:
+    br label %Label_3477    
+Label_3476:
     %r87 = load i64, ptr %p9    
     %r88 = load i64, ptr @Global_EXPR_CALL    
     %r89 = icmp eq i64 %r87, %r88    
     %r90 = zext i1 %r89     to i64
     %r91 = icmp ne i64 %r90    , 0
-    br i1 %r91, label %Label_3456, label %Label_3457    
-Label_3456:
+    br i1 %r91, label %Label_3480, label %Label_3481    
+Label_3480:
     %r92 = load i64, ptr %p3    
     %r93 = load i64, ptr %p4    
     %r94 = icmp eq i64 %r93    , 0
-    br i1 %r94, label %Label_PanicNull, label %Label_3459    
-Label_3459:
+    br i1 %r94, label %Label_PanicNull, label %Label_3483    
+Label_3483:
     %r95 = inttoptr i64 %r93     to ptr
     %r96 = getelementptr i64, ptr %r95, i64 1    
     %r97 = load i64, ptr %r96    
@@ -32277,8 +32393,8 @@ Label_3459:
     store i64 0, ptr %p99    
     %r100 = load i64, ptr %p4    
     %r101 = icmp eq i64 %r100    , 0
-    br i1 %r101, label %Label_PanicNull, label %Label_3460    
-Label_3460:
+    br i1 %r101, label %Label_PanicNull, label %Label_3484    
+Label_3484:
     %r102 = inttoptr i64 %r100     to ptr
     %r103 = getelementptr i64, ptr %r102, i64 2    
     %r104 = load i64, ptr %r103    
@@ -32291,23 +32407,23 @@ Label_3460:
     %r107 = load i64, ptr %p99    
     %r108 = call i64 @_eq_vec_size(i64 %r107    )
     store i64 %r108, ptr %p106    
-    br label %Label_3461    
-Label_3461:
+    br label %Label_3485    
+Label_3485:
     %r109 = load volatile i32, ptr @g_needs_yield
     %r110 = icmp ne i32 %r109, 0
-    br i1 %r110, label %Preywh_3464, label %Checkwh_3464    
-Preywh_3464:
+    br i1 %r110, label %Preywh_3488, label %Checkwh_3488    
+Preywh_3488:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3464    
-Checkwh_3464:
+    br label %Checkwh_3488    
+Checkwh_3488:
     %r111 = load i64, ptr %p105    
     %r112 = load i64, ptr %p106    
     %r113 = icmp slt i64 %r111, %r112    
     %r114 = zext i1 %r113     to i64
     %r115 = icmp ne i64 %r114    , 0
-    br i1 %r115, label %Label_3462, label %Label_3463    
-Label_3462:
+    br i1 %r115, label %Label_3486, label %Label_3487    
+Label_3486:
     %p116     = alloca i64
     store i64 0, ptr %p116    
     %r117 = load i64, ptr %p99    
@@ -32319,8 +32435,8 @@ Label_3462:
     %r122 = call i64 @_eq_bc_check_expr(i64 %r120, i64 %r121    )
     %r123 = load i64, ptr %p116    
     %r124 = icmp eq i64 %r123    , 0
-    br i1 %r124, label %Label_PanicNull, label %Label_3465    
-Label_3465:
+    br i1 %r124, label %Label_PanicNull, label %Label_3489    
+Label_3489:
     %r125 = inttoptr i64 %r123     to ptr
     %r126 = getelementptr i64, ptr %r125, i64 0    
     %r127 = load i64, ptr %r126    
@@ -32328,41 +32444,41 @@ Label_3465:
     %r129 = icmp eq i64 %r127, %r128    
     %r130 = zext i1 %r129     to i64
     %r131 = icmp ne i64 %r130    , 0
-    br i1 %r131, label %Label_3466, label %Label_3467    
-Label_3466:
+    br i1 %r131, label %Label_3490, label %Label_3491    
+Label_3490:
     %r132 = load i64, ptr %p116    
     %r133 = icmp eq i64 %r132    , 0
-    br i1 %r133, label %Label_PanicNull, label %Label_3469    
-Label_3469:
+    br i1 %r133, label %Label_PanicNull, label %Label_3493    
+Label_3493:
     %r134 = inttoptr i64 %r132     to ptr
     %r135 = getelementptr i64, ptr %r134, i64 1    
     %r136 = load i64, ptr %r135    
     %r137 = call i64 @_eq_intern_string(i64 %r136    )
     store i64 %r137, ptr %p20    
     %r138 = load i64, ptr %p20    
-    %r139 = ptrtoint ptr @str.476     to i64
+    %r139 = ptrtoint ptr @str.481     to i64
     %r140 = call i64 @_eq_str_starts_with(i64 %r138, i64 %r139    )
     %r141 = icmp eq i64 %r140, 0    
     %r142 = zext i1 %r141     to i64
     %r143 = icmp ne i64 %r142    , 0
-    br i1 %r143, label %Label_3470, label %Label_3471    
-Label_3470:
+    br i1 %r143, label %Label_3494, label %Label_3495    
+Label_3494:
     %r144 = load i64, ptr %p3    
     %r145 = icmp eq i64 %r144    , 0
-    br i1 %r145, label %Label_PanicNull, label %Label_3473    
-Label_3473:
+    br i1 %r145, label %Label_PanicNull, label %Label_3497    
+Label_3497:
     %r146 = inttoptr i64 %r144     to ptr
     %r147 = getelementptr i64, ptr %r146, i64 0    
     %r148 = load i64, ptr %r147    
     %r149 = load i64, ptr %p20    
     %r150 = call i64 @_eq_map_has(i64 %r148, i64 %r149    )
     %r151 = icmp ne i64 %r150    , 0
-    br i1 %r151, label %Label_3474, label %Label_3475    
-Label_3474:
+    br i1 %r151, label %Label_3498, label %Label_3499    
+Label_3498:
     %r152 = load i64, ptr %p3    
     %r153 = icmp eq i64 %r152    , 0
-    br i1 %r153, label %Label_PanicNull, label %Label_3477    
-Label_3477:
+    br i1 %r153, label %Label_PanicNull, label %Label_3501    
+Label_3501:
     %r154 = inttoptr i64 %r152     to ptr
     %r155 = getelementptr i64, ptr %r154, i64 0    
     %r156 = load i64, ptr %r155    
@@ -32373,54 +32489,54 @@ Label_3477:
     %r160 = icmp eq i64 %r159, 2    
     %r161 = zext i1 %r160     to i64
     %r162 = icmp ne i64 %r161    , 0
-    br i1 %r162, label %Label_3478, label %Label_3479    
-Label_3478:
+    br i1 %r162, label %Label_3502, label %Label_3503    
+Label_3502:
     %r163 = load i64, ptr %p3    
     %r164 = icmp eq i64 %r163    , 0
-    br i1 %r164, label %Label_PanicNull, label %Label_3481    
-Label_3481:
+    br i1 %r164, label %Label_PanicNull, label %Label_3505    
+Label_3505:
     %r165 = inttoptr i64 %r163     to ptr
     %r166 = getelementptr i64, ptr %r165, i64 0    
     %r167 = load i64, ptr %r166    
     %r168 = load i64, ptr %p20    
     %r169 = call i64 @_eq_map_put(i64 %r167, i64 %r168, i64 3    )
-    br label %Label_3480    
-Label_3479:
-    br label %Label_3480    
-Label_3480:
-    br label %Label_3476    
-Label_3475:
-    br label %Label_3476    
-Label_3476:
-    br label %Label_3472    
-Label_3471:
-    br label %Label_3472    
-Label_3472:
-    br label %Label_3468    
-Label_3467:
-    br label %Label_3468    
-Label_3468:
+    br label %Label_3504    
+Label_3503:
+    br label %Label_3504    
+Label_3504:
+    br label %Label_3500    
+Label_3499:
+    br label %Label_3500    
+Label_3500:
+    br label %Label_3496    
+Label_3495:
+    br label %Label_3496    
+Label_3496:
+    br label %Label_3492    
+Label_3491:
+    br label %Label_3492    
+Label_3492:
     %r170 = load i64, ptr %p105    
     %r171 = add i64 %r170, 1    
     %r172 = load i64, ptr %p105    
     store i64 %r171, ptr %p105    
-    br label %Label_3461    
-Label_3463:
-    br label %Label_3458    
-Label_3457:
+    br label %Label_3485    
+Label_3487:
+    br label %Label_3482    
+Label_3481:
     %r173 = load i64, ptr %p9    
     %r174 = load i64, ptr @Global_EXPR_ASSIGNMENT    
     %r175 = icmp eq i64 %r173, %r174    
     %r176 = zext i1 %r175     to i64
     %r177 = icmp ne i64 %r176    , 0
-    br i1 %r177, label %Label_3482, label %Label_3483    
-Label_3482:
+    br i1 %r177, label %Label_3506, label %Label_3507    
+Label_3506:
     %p178     = alloca i64
     store i64 0, ptr %p178    
     %r179 = load i64, ptr %p4    
     %r180 = icmp eq i64 %r179    , 0
-    br i1 %r180, label %Label_PanicNull, label %Label_3485    
-Label_3485:
+    br i1 %r180, label %Label_PanicNull, label %Label_3509    
+Label_3509:
     %r181 = inttoptr i64 %r179     to ptr
     %r182 = getelementptr i64, ptr %r181, i64 1    
     %r183 = load i64, ptr %r182    
@@ -32429,8 +32545,8 @@ Label_3485:
     store i64 0, ptr %p184    
     %r185 = load i64, ptr %p4    
     %r186 = icmp eq i64 %r185    , 0
-    br i1 %r186, label %Label_PanicNull, label %Label_3486    
-Label_3486:
+    br i1 %r186, label %Label_PanicNull, label %Label_3510    
+Label_3510:
     %r187 = inttoptr i64 %r185     to ptr
     %r188 = getelementptr i64, ptr %r187, i64 2    
     %r189 = load i64, ptr %r188    
@@ -32440,8 +32556,8 @@ Label_3486:
     %r192 = call i64 @_eq_bc_check_expr(i64 %r190, i64 %r191    )
     %r193 = load i64, ptr %p178    
     %r194 = icmp eq i64 %r193    , 0
-    br i1 %r194, label %Label_PanicNull, label %Label_3487    
-Label_3487:
+    br i1 %r194, label %Label_PanicNull, label %Label_3511    
+Label_3511:
     %r195 = inttoptr i64 %r193     to ptr
     %r196 = getelementptr i64, ptr %r195, i64 0    
     %r197 = load i64, ptr %r196    
@@ -32449,72 +32565,72 @@ Label_3487:
     %r199 = icmp eq i64 %r197, %r198    
     %r200 = zext i1 %r199     to i64
     %r201 = icmp ne i64 %r200    , 0
-    br i1 %r201, label %Label_3488, label %Label_3489    
-Label_3488:
+    br i1 %r201, label %Label_3512, label %Label_3513    
+Label_3512:
     %r202 = load i64, ptr %p178    
     %r203 = icmp eq i64 %r202    , 0
-    br i1 %r203, label %Label_PanicNull, label %Label_3491    
-Label_3491:
+    br i1 %r203, label %Label_PanicNull, label %Label_3515    
+Label_3515:
     %r204 = inttoptr i64 %r202     to ptr
     %r205 = getelementptr i64, ptr %r204, i64 1    
     %r206 = load i64, ptr %r205    
     %r207 = call i64 @_eq_intern_string(i64 %r206    )
     store i64 %r207, ptr %p20    
     %r208 = load i64, ptr %p20    
-    %r209 = ptrtoint ptr @str.476     to i64
+    %r209 = ptrtoint ptr @str.481     to i64
     %r210 = call i64 @_eq_str_starts_with(i64 %r208, i64 %r209    )
     %r211 = icmp eq i64 %r210, 0    
     %r212 = zext i1 %r211     to i64
     %r213 = icmp ne i64 %r212    , 0
-    br i1 %r213, label %Label_3492, label %Label_3493    
-Label_3492:
+    br i1 %r213, label %Label_3516, label %Label_3517    
+Label_3516:
     %r214 = load i64, ptr %p3    
     %r215 = icmp eq i64 %r214    , 0
-    br i1 %r215, label %Label_PanicNull, label %Label_3495    
-Label_3495:
+    br i1 %r215, label %Label_PanicNull, label %Label_3519    
+Label_3519:
     %r216 = inttoptr i64 %r214     to ptr
     %r217 = getelementptr i64, ptr %r216, i64 0    
     %r218 = load i64, ptr %r217    
     %r219 = load i64, ptr %p20    
     %r220 = call i64 @_eq_map_has(i64 %r218, i64 %r219    )
     %r221 = icmp ne i64 %r220    , 0
-    br i1 %r221, label %Label_3496, label %Label_3497    
-Label_3496:
+    br i1 %r221, label %Label_3520, label %Label_3521    
+Label_3520:
     %r222 = load i64, ptr %p3    
     %r223 = icmp eq i64 %r222    , 0
-    br i1 %r223, label %Label_PanicNull, label %Label_3499    
-Label_3499:
+    br i1 %r223, label %Label_PanicNull, label %Label_3523    
+Label_3523:
     %r224 = inttoptr i64 %r222     to ptr
     %r225 = getelementptr i64, ptr %r224, i64 0    
     %r226 = load i64, ptr %r225    
     %r227 = load i64, ptr %p20    
     %r228 = call i64 @_eq_map_put(i64 %r226, i64 %r227, i64 2    )
-    br label %Label_3498    
-Label_3497:
-    br label %Label_3498    
-Label_3498:
-    br label %Label_3494    
-Label_3493:
-    br label %Label_3494    
-Label_3494:
-    br label %Label_3490    
-Label_3489:
-    br label %Label_3490    
-Label_3490:
-    br label %Label_3484    
-Label_3483:
+    br label %Label_3522    
+Label_3521:
+    br label %Label_3522    
+Label_3522:
+    br label %Label_3518    
+Label_3517:
+    br label %Label_3518    
+Label_3518:
+    br label %Label_3514    
+Label_3513:
+    br label %Label_3514    
+Label_3514:
+    br label %Label_3508    
+Label_3507:
     %r229 = load i64, ptr %p9    
     %r230 = load i64, ptr @Global_EXPR_INDEX    
     %r231 = icmp eq i64 %r229, %r230    
     %r232 = zext i1 %r231     to i64
     %r233 = icmp ne i64 %r232    , 0
-    br i1 %r233, label %Label_3500, label %Label_3501    
-Label_3500:
+    br i1 %r233, label %Label_3524, label %Label_3525    
+Label_3524:
     %r234 = load i64, ptr %p3    
     %r235 = load i64, ptr %p4    
     %r236 = icmp eq i64 %r235    , 0
-    br i1 %r236, label %Label_PanicNull, label %Label_3503    
-Label_3503:
+    br i1 %r236, label %Label_PanicNull, label %Label_3527    
+Label_3527:
     %r237 = inttoptr i64 %r235     to ptr
     %r238 = getelementptr i64, ptr %r237, i64 1    
     %r239 = load i64, ptr %r238    
@@ -32522,44 +32638,44 @@ Label_3503:
     %r241 = load i64, ptr %p3    
     %r242 = load i64, ptr %p4    
     %r243 = icmp eq i64 %r242    , 0
-    br i1 %r243, label %Label_PanicNull, label %Label_3504    
-Label_3504:
+    br i1 %r243, label %Label_PanicNull, label %Label_3528    
+Label_3528:
     %r244 = inttoptr i64 %r242     to ptr
     %r245 = getelementptr i64, ptr %r244, i64 2    
     %r246 = load i64, ptr %r245    
     %r247 = call i64 @_eq_bc_check_expr(i64 %r241, i64 %r246    )
-    br label %Label_3502    
-Label_3501:
+    br label %Label_3526    
+Label_3525:
     %r248 = load i64, ptr %p9    
     %r249 = load i64, ptr @Global_EXPR_GET    
     %r250 = icmp eq i64 %r248, %r249    
     %r251 = zext i1 %r250     to i64
     %r252 = icmp ne i64 %r251    , 0
-    br i1 %r252, label %Label_3505, label %Label_3506    
-Label_3505:
+    br i1 %r252, label %Label_3529, label %Label_3530    
+Label_3529:
     %r253 = load i64, ptr %p3    
     %r254 = load i64, ptr %p4    
     %r255 = icmp eq i64 %r254    , 0
-    br i1 %r255, label %Label_PanicNull, label %Label_3508    
-Label_3508:
+    br i1 %r255, label %Label_PanicNull, label %Label_3532    
+Label_3532:
     %r256 = inttoptr i64 %r254     to ptr
     %r257 = getelementptr i64, ptr %r256, i64 1    
     %r258 = load i64, ptr %r257    
     %r259 = call i64 @_eq_bc_check_expr(i64 %r253, i64 %r258    )
-    br label %Label_3507    
-Label_3506:
-    br label %Label_3507    
-Label_3507:
-    br label %Label_3502    
-Label_3502:
-    br label %Label_3484    
-Label_3484:
-    br label %Label_3458    
-Label_3458:
-    br label %Label_3453    
-Label_3453:
-    br label %Label_3436    
-Label_3436:
+    br label %Label_3531    
+Label_3530:
+    br label %Label_3531    
+Label_3531:
+    br label %Label_3526    
+Label_3526:
+    br label %Label_3508    
+Label_3508:
+    br label %Label_3482    
+Label_3482:
+    br label %Label_3477    
+Label_3477:
+    br label %Label_3460    
+Label_3460:
     ret i64 1    
     ret i64 0
 Label_PanicNull:
@@ -32587,19 +32703,19 @@ start_fn:
     %r6 = icmp eq i64 %r5, 0    
     %r7 = zext i1 %r6     to i64
     %r8 = icmp ne i64 %r7    , 0
-    br i1 %r8, label %Label_3509, label %Label_3510    
-Label_3509:
+    br i1 %r8, label %Label_3533, label %Label_3534    
+Label_3533:
     ret i64 0    
-    br label %Label_3511    
-Label_3510:
-    br label %Label_3511    
-Label_3511:
+    br label %Label_3535    
+Label_3534:
+    br label %Label_3535    
+Label_3535:
     %p9     = alloca i64
     store i64 0, ptr %p9    
     %r10 = load i64, ptr %p4    
     %r11 = icmp eq i64 %r10    , 0
-    br i1 %r11, label %Label_PanicNull, label %Label_3512    
-Label_3512:
+    br i1 %r11, label %Label_PanicNull, label %Label_3536    
+Label_3536:
     %r12 = inttoptr i64 %r10     to ptr
     %r13 = getelementptr i64, ptr %r12, i64 0    
     %r14 = load i64, ptr %r13    
@@ -32609,14 +32725,14 @@ Label_3512:
     %r17 = icmp eq i64 %r15, %r16    
     %r18 = zext i1 %r17     to i64
     %r19 = icmp ne i64 %r18    , 0
-    br i1 %r19, label %Label_3513, label %Label_3514    
-Label_3513:
+    br i1 %r19, label %Label_3537, label %Label_3538    
+Label_3537:
     %p20     = alloca i64
     store i64 0, ptr %p20    
     %r21 = load i64, ptr %p3    
     %r22 = icmp eq i64 %r21    , 0
-    br i1 %r22, label %Label_PanicNull, label %Label_3516    
-Label_3516:
+    br i1 %r22, label %Label_PanicNull, label %Label_3540    
+Label_3540:
     %r23 = inttoptr i64 %r21     to ptr
     %r24 = getelementptr i64, ptr %r23, i64 0    
     %r25 = load i64, ptr %r24    
@@ -32631,8 +32747,8 @@ Label_3516:
     %r32 = load i64, ptr %p4    
     %r33 = load i64, ptr @Global_FUNC_BODY    
     %r34 = icmp eq i64 %r32    , 0
-    br i1 %r34, label %Label_PanicNull, label %Label_3517    
-Label_3517:
+    br i1 %r34, label %Label_PanicNull, label %Label_3541    
+Label_3541:
     %r35 = inttoptr i64 %r32     to ptr
     %r36 = getelementptr i64, ptr %r35, i64 %r33    
     %r37 = load i64, ptr %r36    
@@ -32643,22 +32759,22 @@ Label_3517:
     %r42 = getelementptr i64, ptr %r41, i64 0    
     %r43 = load i64, ptr %r42    
     store i64 %r39, ptr %r42    
-    br label %Label_3515    
-Label_3514:
+    br label %Label_3539    
+Label_3538:
     %r44 = load i64, ptr %p9    
     %r45 = load i64, ptr @Global_STMT_LET    
     %r46 = icmp eq i64 %r44, %r45    
     %r47 = zext i1 %r46     to i64
     %r48 = icmp ne i64 %r47    , 0
-    br i1 %r48, label %Label_3518, label %Label_3519    
-Label_3518:
+    br i1 %r48, label %Label_3542, label %Label_3543    
+Label_3542:
     %p49     = alloca i64
     store i64 0, ptr %p49    
     %r50 = load i64, ptr %p4    
     %r51 = load i64, ptr @Global_LET_VAL    
     %r52 = icmp eq i64 %r50    , 0
-    br i1 %r52, label %Label_PanicNull, label %Label_3521    
-Label_3521:
+    br i1 %r52, label %Label_PanicNull, label %Label_3545    
+Label_3545:
     %r53 = inttoptr i64 %r50     to ptr
     %r54 = getelementptr i64, ptr %r53, i64 %r51    
     %r55 = load i64, ptr %r54    
@@ -32668,8 +32784,8 @@ Label_3521:
     %r58 = call i64 @_eq_bc_check_expr(i64 %r56, i64 %r57    )
     %r59 = load i64, ptr %p49    
     %r60 = icmp eq i64 %r59    , 0
-    br i1 %r60, label %Label_PanicNull, label %Label_3522    
-Label_3522:
+    br i1 %r60, label %Label_PanicNull, label %Label_3546    
+Label_3546:
     %r61 = inttoptr i64 %r59     to ptr
     %r62 = getelementptr i64, ptr %r61, i64 0    
     %r63 = load i64, ptr %r62    
@@ -32677,45 +32793,45 @@ Label_3522:
     %r65 = icmp eq i64 %r63, %r64    
     %r66 = zext i1 %r65     to i64
     %r67 = icmp ne i64 %r66    , 0
-    br i1 %r67, label %Label_3523, label %Label_3524    
-Label_3523:
+    br i1 %r67, label %Label_3547, label %Label_3548    
+Label_3547:
     %p68     = alloca i64
     store i64 0, ptr %p68    
     %r69 = load i64, ptr %p49    
     %r70 = icmp eq i64 %r69    , 0
-    br i1 %r70, label %Label_PanicNull, label %Label_3526    
-Label_3526:
+    br i1 %r70, label %Label_PanicNull, label %Label_3550    
+Label_3550:
     %r71 = inttoptr i64 %r69     to ptr
     %r72 = getelementptr i64, ptr %r71, i64 1    
     %r73 = load i64, ptr %r72    
     %r74 = call i64 @_eq_intern_string(i64 %r73    )
     store i64 %r74, ptr %p68    
     %r75 = load i64, ptr %p68    
-    %r76 = ptrtoint ptr @str.476     to i64
+    %r76 = ptrtoint ptr @str.481     to i64
     %r77 = call i64 @_eq_str_starts_with(i64 %r75, i64 %r76    )
     %r78 = icmp eq i64 %r77, 0    
     %r79 = zext i1 %r78     to i64
     %r80 = icmp ne i64 %r79    , 0
-    br i1 %r80, label %Label_3527, label %Label_3528    
-Label_3527:
+    br i1 %r80, label %Label_3551, label %Label_3552    
+Label_3551:
     %r81 = load i64, ptr %p3    
     %r82 = icmp eq i64 %r81    , 0
-    br i1 %r82, label %Label_PanicNull, label %Label_3530    
-Label_3530:
+    br i1 %r82, label %Label_PanicNull, label %Label_3554    
+Label_3554:
     %r83 = inttoptr i64 %r81     to ptr
     %r84 = getelementptr i64, ptr %r83, i64 0    
     %r85 = load i64, ptr %r84    
     %r86 = load i64, ptr %p68    
     %r87 = call i64 @_eq_map_has(i64 %r85, i64 %r86    )
     %r88 = icmp ne i64 %r87    , 0
-    br i1 %r88, label %Label_3531, label %Label_3532    
-Label_3531:
+    br i1 %r88, label %Label_3555, label %Label_3556    
+Label_3555:
     %p89     = alloca i64
     store i64 0, ptr %p89    
     %r90 = load i64, ptr %p3    
     %r91 = icmp eq i64 %r90    , 0
-    br i1 %r91, label %Label_PanicNull, label %Label_3534    
-Label_3534:
+    br i1 %r91, label %Label_PanicNull, label %Label_3558    
+Label_3558:
     %r92 = inttoptr i64 %r90     to ptr
     %r93 = getelementptr i64, ptr %r92, i64 0    
     %r94 = load i64, ptr %r93    
@@ -32726,40 +32842,40 @@ Label_3534:
     %r98 = icmp eq i64 %r97, 2    
     %r99 = zext i1 %r98     to i64
     %r100 = icmp ne i64 %r99    , 0
-    br i1 %r100, label %Label_3535, label %Label_3536    
-Label_3535:
+    br i1 %r100, label %Label_3559, label %Label_3560    
+Label_3559:
     %r101 = load i64, ptr %p3    
     %r102 = icmp eq i64 %r101    , 0
-    br i1 %r102, label %Label_PanicNull, label %Label_3538    
-Label_3538:
+    br i1 %r102, label %Label_PanicNull, label %Label_3562    
+Label_3562:
     %r103 = inttoptr i64 %r101     to ptr
     %r104 = getelementptr i64, ptr %r103, i64 0    
     %r105 = load i64, ptr %r104    
     %r106 = load i64, ptr %p68    
     %r107 = call i64 @_eq_map_put(i64 %r105, i64 %r106, i64 3    )
-    br label %Label_3537    
-Label_3536:
-    br label %Label_3537    
-Label_3537:
-    br label %Label_3533    
-Label_3532:
-    br label %Label_3533    
-Label_3533:
-    br label %Label_3529    
-Label_3528:
-    br label %Label_3529    
-Label_3529:
-    br label %Label_3525    
-Label_3524:
-    br label %Label_3525    
-Label_3525:
+    br label %Label_3561    
+Label_3560:
+    br label %Label_3561    
+Label_3561:
+    br label %Label_3557    
+Label_3556:
+    br label %Label_3557    
+Label_3557:
+    br label %Label_3553    
+Label_3552:
+    br label %Label_3553    
+Label_3553:
+    br label %Label_3549    
+Label_3548:
+    br label %Label_3549    
+Label_3549:
     %p108     = alloca i64
     store i64 0, ptr %p108    
     %r109 = load i64, ptr %p4    
     %r110 = load i64, ptr @Global_LET_NAME    
     %r111 = icmp eq i64 %r109    , 0
-    br i1 %r111, label %Label_PanicNull, label %Label_3539    
-Label_3539:
+    br i1 %r111, label %Label_PanicNull, label %Label_3563    
+Label_3563:
     %r112 = inttoptr i64 %r109     to ptr
     %r113 = getelementptr i64, ptr %r112, i64 %r110    
     %r114 = load i64, ptr %r113    
@@ -32768,51 +32884,51 @@ Label_3539:
     %r116 = load i64, ptr %p4    
     %r117 = load i64, ptr @Global_LET_IS_RESOURCE    
     %r118 = icmp eq i64 %r116    , 0
-    br i1 %r118, label %Label_PanicNull, label %Label_3540    
-Label_3540:
+    br i1 %r118, label %Label_PanicNull, label %Label_3564    
+Label_3564:
     %r119 = inttoptr i64 %r116     to ptr
     %r120 = getelementptr i64, ptr %r119, i64 %r117    
     %r121 = load i64, ptr %r120    
     %r122 = icmp ne i64 %r121    , 0
-    br i1 %r122, label %Label_3541, label %Label_3542    
-Label_3541:
+    br i1 %r122, label %Label_3565, label %Label_3566    
+Label_3565:
     %r123 = load i64, ptr %p3    
     %r124 = icmp eq i64 %r123    , 0
-    br i1 %r124, label %Label_PanicNull, label %Label_3544    
-Label_3544:
+    br i1 %r124, label %Label_PanicNull, label %Label_3568    
+Label_3568:
     %r125 = inttoptr i64 %r123     to ptr
     %r126 = getelementptr i64, ptr %r125, i64 0    
     %r127 = load i64, ptr %r126    
     %r128 = load i64, ptr %p108    
     %r129 = call i64 @_eq_map_put(i64 %r127, i64 %r128, i64 2    )
-    br label %Label_3543    
-Label_3542:
+    br label %Label_3567    
+Label_3566:
     %r130 = load i64, ptr %p3    
     %r131 = icmp eq i64 %r130    , 0
-    br i1 %r131, label %Label_PanicNull, label %Label_3545    
-Label_3545:
+    br i1 %r131, label %Label_PanicNull, label %Label_3569    
+Label_3569:
     %r132 = inttoptr i64 %r130     to ptr
     %r133 = getelementptr i64, ptr %r132, i64 0    
     %r134 = load i64, ptr %r133    
     %r135 = load i64, ptr %p108    
     %r136 = call i64 @_eq_map_remove(i64 %r134, i64 %r135    )
-    br label %Label_3543    
+    br label %Label_3567    
+Label_3567:
+    br label %Label_3544    
 Label_3543:
-    br label %Label_3520    
-Label_3519:
     %r137 = load i64, ptr %p9    
     %r138 = load i64, ptr @Global_STMT_BLOCK    
     %r139 = icmp eq i64 %r137, %r138    
     %r140 = zext i1 %r139     to i64
     %r141 = icmp ne i64 %r140    , 0
-    br i1 %r141, label %Label_3546, label %Label_3547    
-Label_3546:
+    br i1 %r141, label %Label_3570, label %Label_3571    
+Label_3570:
     %p142     = alloca i64
     store i64 0, ptr %p142    
     %r143 = load i64, ptr %p4    
     %r144 = icmp eq i64 %r143    , 0
-    br i1 %r144, label %Label_PanicNull, label %Label_3549    
-Label_3549:
+    br i1 %r144, label %Label_PanicNull, label %Label_3573    
+Label_3573:
     %r145 = inttoptr i64 %r143     to ptr
     %r146 = getelementptr i64, ptr %r145, i64 1    
     %r147 = load i64, ptr %r146    
@@ -32825,23 +32941,23 @@ Label_3549:
     %r150 = load i64, ptr %p142    
     %r151 = call i64 @_eq_vec_size(i64 %r150    )
     store i64 %r151, ptr %p149    
-    br label %Label_3550    
-Label_3550:
+    br label %Label_3574    
+Label_3574:
     %r152 = load volatile i32, ptr @g_needs_yield
     %r153 = icmp ne i32 %r152, 0
-    br i1 %r153, label %Preywh_3553, label %Checkwh_3553    
-Preywh_3553:
+    br i1 %r153, label %Preywh_3577, label %Checkwh_3577    
+Preywh_3577:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3553    
-Checkwh_3553:
+    br label %Checkwh_3577    
+Checkwh_3577:
     %r154 = load i64, ptr %p148    
     %r155 = load i64, ptr %p149    
     %r156 = icmp slt i64 %r154, %r155    
     %r157 = zext i1 %r156     to i64
     %r158 = icmp ne i64 %r157    , 0
-    br i1 %r158, label %Label_3551, label %Label_3552    
-Label_3551:
+    br i1 %r158, label %Label_3575, label %Label_3576    
+Label_3575:
     %r159 = load i64, ptr %p3    
     %r160 = load i64, ptr %p142    
     %r161 = load i64, ptr %p148    
@@ -32851,22 +32967,22 @@ Label_3551:
     %r165 = add i64 %r164, 1    
     %r166 = load i64, ptr %p148    
     store i64 %r165, ptr %p148    
-    br label %Label_3550    
-Label_3552:
-    br label %Label_3548    
-Label_3547:
+    br label %Label_3574    
+Label_3576:
+    br label %Label_3572    
+Label_3571:
     %r167 = load i64, ptr %p9    
     %r168 = load i64, ptr @Global_STMT_IF    
     %r169 = icmp eq i64 %r167, %r168    
     %r170 = zext i1 %r169     to i64
     %r171 = icmp ne i64 %r170    , 0
-    br i1 %r171, label %Label_3554, label %Label_3555    
-Label_3554:
+    br i1 %r171, label %Label_3578, label %Label_3579    
+Label_3578:
     %r172 = load i64, ptr %p3    
     %r173 = load i64, ptr %p4    
     %r174 = icmp eq i64 %r173    , 0
-    br i1 %r174, label %Label_PanicNull, label %Label_3557    
-Label_3557:
+    br i1 %r174, label %Label_PanicNull, label %Label_3581    
+Label_3581:
     %r175 = inttoptr i64 %r173     to ptr
     %r176 = getelementptr i64, ptr %r175, i64 1    
     %r177 = load i64, ptr %r176    
@@ -32874,49 +32990,49 @@ Label_3557:
     %r179 = load i64, ptr %p3    
     %r180 = load i64, ptr %p4    
     %r181 = icmp eq i64 %r180    , 0
-    br i1 %r181, label %Label_PanicNull, label %Label_3558    
-Label_3558:
+    br i1 %r181, label %Label_PanicNull, label %Label_3582    
+Label_3582:
     %r182 = inttoptr i64 %r180     to ptr
     %r183 = getelementptr i64, ptr %r182, i64 2    
     %r184 = load i64, ptr %r183    
     %r185 = call i64 @_eq_bc_check_stmt(i64 %r179, i64 %r184    )
     %r186 = load i64, ptr %p4    
     %r187 = icmp eq i64 %r186    , 0
-    br i1 %r187, label %Label_PanicNull, label %Label_3559    
-Label_3559:
+    br i1 %r187, label %Label_PanicNull, label %Label_3583    
+Label_3583:
     %r188 = inttoptr i64 %r186     to ptr
     %r189 = getelementptr i64, ptr %r188, i64 3    
     %r190 = load i64, ptr %r189    
     %r191 = icmp ne i64 %r190    , 0
-    br i1 %r191, label %Label_3560, label %Label_3561    
-Label_3560:
+    br i1 %r191, label %Label_3584, label %Label_3585    
+Label_3584:
     %r192 = load i64, ptr %p3    
     %r193 = load i64, ptr %p4    
     %r194 = icmp eq i64 %r193    , 0
-    br i1 %r194, label %Label_PanicNull, label %Label_3563    
-Label_3563:
+    br i1 %r194, label %Label_PanicNull, label %Label_3587    
+Label_3587:
     %r195 = inttoptr i64 %r193     to ptr
     %r196 = getelementptr i64, ptr %r195, i64 3    
     %r197 = load i64, ptr %r196    
     %r198 = call i64 @_eq_bc_check_stmt(i64 %r192, i64 %r197    )
-    br label %Label_3562    
-Label_3561:
-    br label %Label_3562    
-Label_3562:
-    br label %Label_3556    
-Label_3555:
+    br label %Label_3586    
+Label_3585:
+    br label %Label_3586    
+Label_3586:
+    br label %Label_3580    
+Label_3579:
     %r199 = load i64, ptr %p9    
     %r200 = load i64, ptr @Global_STMT_WHILE    
     %r201 = icmp eq i64 %r199, %r200    
     %r202 = zext i1 %r201     to i64
     %r203 = icmp ne i64 %r202    , 0
-    br i1 %r203, label %Label_3564, label %Label_3565    
-Label_3564:
+    br i1 %r203, label %Label_3588, label %Label_3589    
+Label_3588:
     %r204 = load i64, ptr %p3    
     %r205 = load i64, ptr %p4    
     %r206 = icmp eq i64 %r205    , 0
-    br i1 %r206, label %Label_PanicNull, label %Label_3567    
-Label_3567:
+    br i1 %r206, label %Label_PanicNull, label %Label_3591    
+Label_3591:
     %r207 = inttoptr i64 %r205     to ptr
     %r208 = getelementptr i64, ptr %r207, i64 1    
     %r209 = load i64, ptr %r208    
@@ -32924,64 +33040,64 @@ Label_3567:
     %r211 = load i64, ptr %p3    
     %r212 = load i64, ptr %p4    
     %r213 = icmp eq i64 %r212    , 0
-    br i1 %r213, label %Label_PanicNull, label %Label_3568    
-Label_3568:
+    br i1 %r213, label %Label_PanicNull, label %Label_3592    
+Label_3592:
     %r214 = inttoptr i64 %r212     to ptr
     %r215 = getelementptr i64, ptr %r214, i64 2    
     %r216 = load i64, ptr %r215    
     %r217 = call i64 @_eq_bc_check_stmt(i64 %r211, i64 %r216    )
-    br label %Label_3566    
-Label_3565:
+    br label %Label_3590    
+Label_3589:
     %r218 = load i64, ptr %p9    
     %r219 = load i64, ptr @Global_STMT_EXPRESSION    
     %r220 = icmp eq i64 %r218, %r219    
     %r221 = zext i1 %r220     to i64
     %r222 = icmp ne i64 %r221    , 0
-    br i1 %r222, label %Label_3569, label %Label_3570    
-Label_3569:
+    br i1 %r222, label %Label_3593, label %Label_3594    
+Label_3593:
     %r223 = load i64, ptr %p3    
     %r224 = load i64, ptr %p4    
     %r225 = icmp eq i64 %r224    , 0
-    br i1 %r225, label %Label_PanicNull, label %Label_3572    
-Label_3572:
+    br i1 %r225, label %Label_PanicNull, label %Label_3596    
+Label_3596:
     %r226 = inttoptr i64 %r224     to ptr
     %r227 = getelementptr i64, ptr %r226, i64 1    
     %r228 = load i64, ptr %r227    
     %r229 = call i64 @_eq_bc_check_expr(i64 %r223, i64 %r228    )
-    br label %Label_3571    
-Label_3570:
+    br label %Label_3595    
+Label_3594:
     %r230 = load i64, ptr %p9    
     %r231 = load i64, ptr @Global_STMT_RETURN    
     %r232 = icmp eq i64 %r230, %r231    
     %r233 = zext i1 %r232     to i64
     %r234 = icmp ne i64 %r233    , 0
-    br i1 %r234, label %Label_3573, label %Label_3574    
-Label_3573:
+    br i1 %r234, label %Label_3597, label %Label_3598    
+Label_3597:
     %r235 = load i64, ptr %p3    
     %r236 = load i64, ptr %p4    
     %r237 = icmp eq i64 %r236    , 0
-    br i1 %r237, label %Label_PanicNull, label %Label_3576    
-Label_3576:
+    br i1 %r237, label %Label_PanicNull, label %Label_3600    
+Label_3600:
     %r238 = inttoptr i64 %r236     to ptr
     %r239 = getelementptr i64, ptr %r238, i64 1    
     %r240 = load i64, ptr %r239    
     %r241 = call i64 @_eq_bc_check_expr(i64 %r235, i64 %r240    )
-    br label %Label_3575    
-Label_3574:
-    br label %Label_3575    
-Label_3575:
-    br label %Label_3571    
-Label_3571:
-    br label %Label_3566    
-Label_3566:
-    br label %Label_3556    
-Label_3556:
-    br label %Label_3548    
-Label_3548:
-    br label %Label_3520    
-Label_3520:
-    br label %Label_3515    
-Label_3515:
+    br label %Label_3599    
+Label_3598:
+    br label %Label_3599    
+Label_3599:
+    br label %Label_3595    
+Label_3595:
+    br label %Label_3590    
+Label_3590:
+    br label %Label_3580    
+Label_3580:
+    br label %Label_3572    
+Label_3572:
+    br label %Label_3544    
+Label_3544:
+    br label %Label_3539    
+Label_3539:
     ret i64 0
 Label_PanicNull:
     call i64 @sys_panic_null()
@@ -33012,23 +33128,23 @@ start_fn:
     %r7 = load i64, ptr %p4    
     %r8 = call i64 @_eq_vec_size(i64 %r7    )
     store i64 %r8, ptr %p6    
-    br label %Label_3577    
-Label_3577:
+    br label %Label_3601    
+Label_3601:
     %r9 = load volatile i32, ptr @g_needs_yield
     %r10 = icmp ne i32 %r9, 0
-    br i1 %r10, label %Preywh_3580, label %Checkwh_3580    
-Preywh_3580:
+    br i1 %r10, label %Preywh_3604, label %Checkwh_3604    
+Preywh_3604:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3580    
-Checkwh_3580:
+    br label %Checkwh_3604    
+Checkwh_3604:
     %r11 = load i64, ptr %p5    
     %r12 = load i64, ptr %p6    
     %r13 = icmp slt i64 %r11, %r12    
     %r14 = zext i1 %r13     to i64
     %r15 = icmp ne i64 %r14    , 0
-    br i1 %r15, label %Label_3578, label %Label_3579    
-Label_3578:
+    br i1 %r15, label %Label_3602, label %Label_3603    
+Label_3602:
     %r16 = load i64, ptr %p3    
     %r17 = load i64, ptr %p4    
     %r18 = load i64, ptr %p5    
@@ -33038,8 +33154,8 @@ Label_3578:
     %r22 = add i64 %r21, 1    
     %r23 = load i64, ptr %p5    
     store i64 %r22, ptr %p5    
-    br label %Label_3577    
-Label_3579:
+    br label %Label_3601    
+Label_3603:
     ret i64 0
 Label_PanicNull:
     call i64 @sys_panic_null()
@@ -33234,16 +33350,16 @@ start_fn:
     %r22 = icmp slt i64 %r21, 0    
     %r23 = zext i1 %r22     to i64
     %r24 = icmp ne i64 %r23    , 0
-    br i1 %r24, label %Label_3581, label %Label_3582    
-Label_3581:
+    br i1 %r24, label %Label_3605, label %Label_3606    
+Label_3605:
     %r25 = load i64, ptr %p15    
     %r26 = sub i64 0, %r25    
     %r27 = load i64, ptr %p15    
     store i64 %r26, ptr %p15    
-    br label %Label_3583    
-Label_3582:
-    br label %Label_3583    
-Label_3583:
+    br label %Label_3607    
+Label_3606:
+    br label %Label_3607    
+Label_3607:
     %p28     = alloca i64
     store i64 0, ptr %p28    
     %r29 = load i64, ptr %p5    
@@ -33254,35 +33370,35 @@ Label_3583:
     %r33 = icmp sgt i64 %r31, %r32    
     %r34 = zext i1 %r33     to i64
     %r35 = icmp ne i64 %r34    , 0
-    br i1 %r35, label %Label_3584, label %Label_3585    
-Label_3584:
+    br i1 %r35, label %Label_3608, label %Label_3609    
+Label_3608:
     %r36 = load i64, ptr %p7    
     %r37 = icmp slt i64 %r36, 0    
     %r38 = zext i1 %r37     to i64
     %r39 = icmp ne i64 %r38    , 0
-    br i1 %r39, label %Label_3587, label %Label_3588    
-Label_3587:
+    br i1 %r39, label %Label_3611, label %Label_3612    
+Label_3611:
     %r40 = load i64, ptr %p11    
     %r41 = sub i64 %r40, 1    
     %r42 = load i64, ptr %p11    
     store i64 %r41, ptr %p11    
-    br label %Label_3589    
-Label_3588:
+    br label %Label_3613    
+Label_3612:
     %r43 = load i64, ptr %p11    
     %r44 = add i64 %r43, 1    
     %r45 = load i64, ptr %p11    
     store i64 %r44, ptr %p11    
-    br label %Label_3589    
-Label_3589:
-    br label %Label_3586    
-Label_3585:
+    br label %Label_3613    
+Label_3613:
+    br label %Label_3610    
+Label_3609:
     %r46 = load i64, ptr %p15    
     %r47 = load i64, ptr %p28    
     %r48 = icmp eq i64 %r46, %r47    
     %r49 = zext i1 %r48     to i64
     %r50 = icmp ne i64 %r49    , 0
-    br i1 %r50, label %Label_3590, label %Label_3591    
-Label_3590:
+    br i1 %r50, label %Label_3614, label %Label_3615    
+Label_3614:
     %p51     = alloca i64
     store i64 0, ptr %p51    
     %r52 = load i64, ptr %p11    
@@ -33294,36 +33410,36 @@ Label_3590:
     %r57 = icmp ne i64 %r54, %r56    
     %r58 = zext i1 %r57     to i64
     %r59 = icmp ne i64 %r58    , 0
-    br i1 %r59, label %Label_3593, label %Label_3594    
-Label_3593:
+    br i1 %r59, label %Label_3617, label %Label_3618    
+Label_3617:
     %r60 = load i64, ptr %p7    
     %r61 = icmp slt i64 %r60, 0    
     %r62 = zext i1 %r61     to i64
     %r63 = icmp ne i64 %r62    , 0
-    br i1 %r63, label %Label_3596, label %Label_3597    
-Label_3596:
+    br i1 %r63, label %Label_3620, label %Label_3621    
+Label_3620:
     %r64 = load i64, ptr %p11    
     %r65 = sub i64 %r64, 1    
     %r66 = load i64, ptr %p11    
     store i64 %r65, ptr %p11    
-    br label %Label_3598    
-Label_3597:
+    br label %Label_3622    
+Label_3621:
     %r67 = load i64, ptr %p11    
     %r68 = add i64 %r67, 1    
     %r69 = load i64, ptr %p11    
     store i64 %r68, ptr %p11    
-    br label %Label_3598    
-Label_3598:
-    br label %Label_3595    
-Label_3594:
-    br label %Label_3595    
-Label_3595:
-    br label %Label_3592    
-Label_3591:
-    br label %Label_3592    
-Label_3592:
-    br label %Label_3586    
-Label_3586:
+    br label %Label_3622    
+Label_3622:
+    br label %Label_3619    
+Label_3618:
+    br label %Label_3619    
+Label_3619:
+    br label %Label_3616    
+Label_3615:
+    br label %Label_3616    
+Label_3616:
+    br label %Label_3610    
+Label_3610:
     %r70 = load i64, ptr %p11    
     ret i64 %r70    
     ret i64 0
@@ -33376,16 +33492,16 @@ start_fn:
     %r22 = icmp slt i64 %r21, 0    
     %r23 = zext i1 %r22     to i64
     %r24 = icmp ne i64 %r23    , 0
-    br i1 %r24, label %Label_3599, label %Label_3600    
-Label_3599:
+    br i1 %r24, label %Label_3623, label %Label_3624    
+Label_3623:
     %r25 = load i64, ptr %p15    
     %r26 = sub i64 0, %r25    
     %r27 = load i64, ptr %p15    
     store i64 %r26, ptr %p15    
-    br label %Label_3601    
-Label_3600:
-    br label %Label_3601    
-Label_3601:
+    br label %Label_3625    
+Label_3624:
+    br label %Label_3625    
+Label_3625:
     %p28     = alloca i64
     store i64 0, ptr %p28    
     store i64 0, ptr %p28    
@@ -33393,28 +33509,28 @@ Label_3601:
     %r30 = icmp slt i64 %r29, 0    
     %r31 = zext i1 %r30     to i64
     %r32 = icmp ne i64 %r31    , 0
-    br i1 %r32, label %Label_3602, label %Label_3603    
-Label_3602:
+    br i1 %r32, label %Label_3626, label %Label_3627    
+Label_3626:
     %r33 = load i64, ptr %p4    
     %r34 = sub i64 0, %r33    
     %r35 = sdiv i64 %r34, 2    
     %r36 = load i64, ptr %p28    
     store i64 %r35, ptr %p28    
-    br label %Label_3604    
-Label_3603:
+    br label %Label_3628    
+Label_3627:
     %r37 = load i64, ptr %p4    
     %r38 = sdiv i64 %r37, 2    
     %r39 = load i64, ptr %p28    
     store i64 %r38, ptr %p28    
-    br label %Label_3604    
-Label_3604:
+    br label %Label_3628    
+Label_3628:
     %r40 = load i64, ptr %p15    
     %r41 = load i64, ptr %p28    
     %r42 = icmp sgt i64 %r40, %r41    
     %r43 = zext i1 %r42     to i64
     %r44 = icmp ne i64 %r43    , 0
-    br i1 %r44, label %Label_3605, label %Label_3606    
-Label_3605:
+    br i1 %r44, label %Label_3629, label %Label_3630    
+Label_3629:
     %r45 = load i64, ptr %p7    
     %r46 = icmp slt i64 %r45, 0    
     %r47 = zext i1 %r46     to i64
@@ -33431,29 +33547,29 @@ Label_3605:
     %r58 = and i64 %r54, %r57    
     %r59 = or i64 %r51, %r58    
     %r60 = icmp ne i64 %r59    , 0
-    br i1 %r60, label %Label_3608, label %Label_3609    
-Label_3608:
+    br i1 %r60, label %Label_3632, label %Label_3633    
+Label_3632:
     %r61 = load i64, ptr %p11    
     %r62 = sub i64 %r61, 1    
     %r63 = load i64, ptr %p11    
     store i64 %r62, ptr %p11    
-    br label %Label_3610    
-Label_3609:
+    br label %Label_3634    
+Label_3633:
     %r64 = load i64, ptr %p11    
     %r65 = add i64 %r64, 1    
     %r66 = load i64, ptr %p11    
     store i64 %r65, ptr %p11    
-    br label %Label_3610    
-Label_3610:
-    br label %Label_3607    
-Label_3606:
+    br label %Label_3634    
+Label_3634:
+    br label %Label_3631    
+Label_3630:
     %r67 = load i64, ptr %p15    
     %r68 = load i64, ptr %p28    
     %r69 = icmp eq i64 %r67, %r68    
     %r70 = zext i1 %r69     to i64
     %r71 = icmp ne i64 %r70    , 0
-    br i1 %r71, label %Label_3611, label %Label_3612    
-Label_3611:
+    br i1 %r71, label %Label_3635, label %Label_3636    
+Label_3635:
     %p72     = alloca i64
     store i64 0, ptr %p72    
     %r73 = load i64, ptr %p11    
@@ -33465,8 +33581,8 @@ Label_3611:
     %r78 = icmp ne i64 %r75, %r77    
     %r79 = zext i1 %r78     to i64
     %r80 = icmp ne i64 %r79    , 0
-    br i1 %r80, label %Label_3614, label %Label_3615    
-Label_3614:
+    br i1 %r80, label %Label_3638, label %Label_3639    
+Label_3638:
     %r81 = load i64, ptr %p7    
     %r82 = icmp slt i64 %r81, 0    
     %r83 = zext i1 %r82     to i64
@@ -33483,30 +33599,30 @@ Label_3614:
     %r94 = and i64 %r90, %r93    
     %r95 = or i64 %r87, %r94    
     %r96 = icmp ne i64 %r95    , 0
-    br i1 %r96, label %Label_3617, label %Label_3618    
-Label_3617:
+    br i1 %r96, label %Label_3641, label %Label_3642    
+Label_3641:
     %r97 = load i64, ptr %p11    
     %r98 = sub i64 %r97, 1    
     %r99 = load i64, ptr %p11    
     store i64 %r98, ptr %p11    
-    br label %Label_3619    
-Label_3618:
+    br label %Label_3643    
+Label_3642:
     %r100 = load i64, ptr %p11    
     %r101 = add i64 %r100, 1    
     %r102 = load i64, ptr %p11    
     store i64 %r101, ptr %p11    
-    br label %Label_3619    
-Label_3619:
-    br label %Label_3616    
-Label_3615:
-    br label %Label_3616    
-Label_3616:
-    br label %Label_3613    
-Label_3612:
-    br label %Label_3613    
-Label_3613:
-    br label %Label_3607    
-Label_3607:
+    br label %Label_3643    
+Label_3643:
+    br label %Label_3640    
+Label_3639:
+    br label %Label_3640    
+Label_3640:
+    br label %Label_3637    
+Label_3636:
+    br label %Label_3637    
+Label_3637:
+    br label %Label_3631    
+Label_3631:
     %r103 = load i64, ptr %p11    
     ret i64 %r103    
     ret i64 0
@@ -33536,8 +33652,8 @@ start_fn:
     %r7 = icmp slt i64 %r6, 0    
     %r8 = zext i1 %r7     to i64
     %r9 = icmp ne i64 %r8    , 0
-    br i1 %r9, label %Label_3620, label %Label_3621    
-Label_3620:
+    br i1 %r9, label %Label_3644, label %Label_3645    
+Label_3644:
     %r10 = ptrtoint ptr @str.3     to i64
     %r11 = load i64, ptr %p4    
     store i64 %r10, ptr %p4    
@@ -33545,10 +33661,10 @@ Label_3620:
     %r13 = sub i64 0, %r12    
     %r14 = load i64, ptr %p3    
     store i64 %r13, ptr %p3    
-    br label %Label_3622    
-Label_3621:
-    br label %Label_3622    
-Label_3622:
+    br label %Label_3646    
+Label_3645:
+    br label %Label_3646    
+Label_3646:
     %p15     = alloca i64
     store i64 0, ptr %p15    
     store i64 0, ptr %p15    
@@ -33594,77 +33710,77 @@ Label_3622:
     %r43 = icmp slt i64 %r42, 100000    
     %r44 = zext i1 %r43     to i64
     %r45 = icmp ne i64 %r44    , 0
-    br i1 %r45, label %Label_3623, label %Label_3624    
-Label_3623:
+    br i1 %r45, label %Label_3647, label %Label_3648    
+Label_3647:
     %r46 = load i64, ptr %p4    
     %r47 = ptrtoint ptr @str.0     to i64
     %r48 = call i64 @_eq_str_concat(i64 %r46, i64 %r47    )
     %r49 = load i64, ptr %p4    
     store i64 %r48, ptr %p4    
-    br label %Label_3625    
-Label_3624:
-    br label %Label_3625    
-Label_3625:
+    br label %Label_3649    
+Label_3648:
+    br label %Label_3649    
+Label_3649:
     %r50 = load i64, ptr %p23    
     %r51 = icmp slt i64 %r50, 10000    
     %r52 = zext i1 %r51     to i64
     %r53 = icmp ne i64 %r52    , 0
-    br i1 %r53, label %Label_3626, label %Label_3627    
-Label_3626:
+    br i1 %r53, label %Label_3650, label %Label_3651    
+Label_3650:
     %r54 = load i64, ptr %p4    
     %r55 = ptrtoint ptr @str.0     to i64
     %r56 = call i64 @_eq_str_concat(i64 %r54, i64 %r55    )
     %r57 = load i64, ptr %p4    
     store i64 %r56, ptr %p4    
-    br label %Label_3628    
-Label_3627:
-    br label %Label_3628    
-Label_3628:
+    br label %Label_3652    
+Label_3651:
+    br label %Label_3652    
+Label_3652:
     %r58 = load i64, ptr %p23    
     %r59 = icmp slt i64 %r58, 1000    
     %r60 = zext i1 %r59     to i64
     %r61 = icmp ne i64 %r60    , 0
-    br i1 %r61, label %Label_3629, label %Label_3630    
-Label_3629:
+    br i1 %r61, label %Label_3653, label %Label_3654    
+Label_3653:
     %r62 = load i64, ptr %p4    
     %r63 = ptrtoint ptr @str.0     to i64
     %r64 = call i64 @_eq_str_concat(i64 %r62, i64 %r63    )
     %r65 = load i64, ptr %p4    
     store i64 %r64, ptr %p4    
-    br label %Label_3631    
-Label_3630:
-    br label %Label_3631    
-Label_3631:
+    br label %Label_3655    
+Label_3654:
+    br label %Label_3655    
+Label_3655:
     %r66 = load i64, ptr %p23    
     %r67 = icmp slt i64 %r66, 100    
     %r68 = zext i1 %r67     to i64
     %r69 = icmp ne i64 %r68    , 0
-    br i1 %r69, label %Label_3632, label %Label_3633    
-Label_3632:
+    br i1 %r69, label %Label_3656, label %Label_3657    
+Label_3656:
     %r70 = load i64, ptr %p4    
     %r71 = ptrtoint ptr @str.0     to i64
     %r72 = call i64 @_eq_str_concat(i64 %r70, i64 %r71    )
     %r73 = load i64, ptr %p4    
     store i64 %r72, ptr %p4    
-    br label %Label_3634    
-Label_3633:
-    br label %Label_3634    
-Label_3634:
+    br label %Label_3658    
+Label_3657:
+    br label %Label_3658    
+Label_3658:
     %r74 = load i64, ptr %p23    
     %r75 = icmp slt i64 %r74, 10    
     %r76 = zext i1 %r75     to i64
     %r77 = icmp ne i64 %r76    , 0
-    br i1 %r77, label %Label_3635, label %Label_3636    
-Label_3635:
+    br i1 %r77, label %Label_3659, label %Label_3660    
+Label_3659:
     %r78 = load i64, ptr %p4    
     %r79 = ptrtoint ptr @str.0     to i64
     %r80 = call i64 @_eq_str_concat(i64 %r78, i64 %r79    )
     %r81 = load i64, ptr %p4    
     store i64 %r80, ptr %p4    
-    br label %Label_3637    
-Label_3636:
-    br label %Label_3637    
-Label_3637:
+    br label %Label_3661    
+Label_3660:
+    br label %Label_3661    
+Label_3661:
     %p82     = alloca i64
     store i64 0, ptr %p82    
     store i64 0, ptr %p82    
@@ -34047,20 +34163,20 @@ start_fn:
     %r5 = icmp eq i64 %r4, 0    
     %r6 = zext i1 %r5     to i64
     %r7 = icmp ne i64 %r6    , 0
-    br i1 %r7, label %Label_3638, label %Label_3639    
-Label_3638:
-    %r8 = ptrtoint ptr @str.479     to i64
+    br i1 %r7, label %Label_3662, label %Label_3663    
+Label_3662:
+    %r8 = ptrtoint ptr @str.484     to i64
     ret i64 %r8    
-    br label %Label_3640    
-Label_3639:
-    br label %Label_3640    
-Label_3640:
+    br label %Label_3664    
+Label_3663:
+    br label %Label_3664    
+Label_3664:
     %p9     = alloca i64
     store i64 0, ptr %p9    
     %r10 = load i64, ptr %p3    
     %r11 = icmp eq i64 %r10    , 0
-    br i1 %r11, label %Label_PanicNull, label %Label_3641    
-Label_3641:
+    br i1 %r11, label %Label_PanicNull, label %Label_3665    
+Label_3665:
     %r12 = inttoptr i64 %r10     to ptr
     %r13 = getelementptr i64, ptr %r12, i64 0    
     %r14 = load i64, ptr %r13    
@@ -34069,8 +34185,8 @@ Label_3641:
     store i64 0, ptr %p15    
     %r16 = load i64, ptr %p3    
     %r17 = icmp eq i64 %r16    , 0
-    br i1 %r17, label %Label_PanicNull, label %Label_3642    
-Label_3642:
+    br i1 %r17, label %Label_PanicNull, label %Label_3666    
+Label_3666:
     %r18 = inttoptr i64 %r16     to ptr
     %r19 = getelementptr i64, ptr %r18, i64 1    
     %r20 = load i64, ptr %r19    
@@ -34080,53 +34196,53 @@ Label_3642:
     %r23 = icmp eq i64 %r21, %r22    
     %r24 = zext i1 %r23     to i64
     %r25 = icmp ne i64 %r24    , 0
-    br i1 %r25, label %Label_3643, label %Label_3644    
-Label_3643:
-    %r26 = ptrtoint ptr @str.480     to i64
+    br i1 %r25, label %Label_3667, label %Label_3668    
+Label_3667:
+    %r26 = ptrtoint ptr @str.485     to i64
     %r27 = load i64, ptr %p15    
-    %r28 = ptrtoint ptr @str.480     to i64
+    %r28 = ptrtoint ptr @str.485     to i64
     %r29 = call i64 @_eq_str_concat(i64 %r27, i64 %r28    )
     %r30 = call i64 @_eq_str_concat(i64 %r26, i64 %r29    )
     ret i64 %r30    
-    br label %Label_3645    
-Label_3644:
-    br label %Label_3645    
-Label_3645:
+    br label %Label_3669    
+Label_3668:
+    br label %Label_3669    
+Label_3669:
     %r31 = load i64, ptr %p9    
     %r32 = load i64, ptr @Global_JSON_TYPE_INT    
     %r33 = icmp eq i64 %r31, %r32    
     %r34 = zext i1 %r33     to i64
     %r35 = icmp ne i64 %r34    , 0
-    br i1 %r35, label %Label_3646, label %Label_3647    
-Label_3646:
+    br i1 %r35, label %Label_3670, label %Label_3671    
+Label_3670:
     %r36 = load i64, ptr %p15    
     %r37 = call i64 @_eq_str_from_int(i64 %r36    )
     ret i64 %r37    
-    br label %Label_3648    
-Label_3647:
-    br label %Label_3648    
-Label_3648:
+    br label %Label_3672    
+Label_3671:
+    br label %Label_3672    
+Label_3672:
     %r38 = load i64, ptr %p9    
     %r39 = load i64, ptr @Global_JSON_TYPE_OBJECT    
     %r40 = icmp eq i64 %r38, %r39    
     %r41 = zext i1 %r40     to i64
     %r42 = icmp ne i64 %r41    , 0
-    br i1 %r42, label %Label_3649, label %Label_3650    
-Label_3649:
+    br i1 %r42, label %Label_3673, label %Label_3674    
+Label_3673:
     %r43 = load i64, ptr %p15    
     %r44 = call i64 @_eq_json_serialize(i64 %r43    )
     ret i64 %r44    
-    br label %Label_3651    
-Label_3650:
-    br label %Label_3651    
-Label_3651:
+    br label %Label_3675    
+Label_3674:
+    br label %Label_3675    
+Label_3675:
     %r45 = load i64, ptr %p9    
     %r46 = load i64, ptr @Global_JSON_TYPE_ARRAY    
     %r47 = icmp eq i64 %r45, %r46    
     %r48 = zext i1 %r47     to i64
     %r49 = icmp ne i64 %r48    , 0
-    br i1 %r49, label %Label_3652, label %Label_3653    
-Label_3652:
+    br i1 %r49, label %Label_3676, label %Label_3677    
+Label_3676:
     %p50     = alloca i64
     store i64 0, ptr %p50    
     %r51 = ptrtoint ptr @str.67     to i64
@@ -34139,23 +34255,23 @@ Label_3652:
     %r54 = load i64, ptr %p15    
     %r55 = call i64 @_eq_vec_size(i64 %r54    )
     store i64 %r55, ptr %p53    
-    br label %Label_3655    
-Label_3655:
+    br label %Label_3679    
+Label_3679:
     %r56 = load volatile i32, ptr @g_needs_yield
     %r57 = icmp ne i32 %r56, 0
-    br i1 %r57, label %Preywh_3658, label %Checkwh_3658    
-Preywh_3658:
+    br i1 %r57, label %Preywh_3682, label %Checkwh_3682    
+Preywh_3682:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3658    
-Checkwh_3658:
+    br label %Checkwh_3682    
+Checkwh_3682:
     %r58 = load i64, ptr %p52    
     %r59 = load i64, ptr %p53    
     %r60 = icmp slt i64 %r58, %r59    
     %r61 = zext i1 %r60     to i64
     %r62 = icmp ne i64 %r61    , 0
-    br i1 %r62, label %Label_3656, label %Label_3657    
-Label_3656:
+    br i1 %r62, label %Label_3680, label %Label_3681    
+Label_3680:
     %r63 = load i64, ptr %p50    
     %r64 = load i64, ptr %p15    
     %r65 = load i64, ptr %p52    
@@ -34170,32 +34286,32 @@ Label_3656:
     %r73 = icmp slt i64 %r70, %r72    
     %r74 = zext i1 %r73     to i64
     %r75 = icmp ne i64 %r74    , 0
-    br i1 %r75, label %Label_3659, label %Label_3660    
-Label_3659:
+    br i1 %r75, label %Label_3683, label %Label_3684    
+Label_3683:
     %r76 = load i64, ptr %p50    
     %r77 = ptrtoint ptr @str.69     to i64
     %r78 = call i64 @_eq_str_concat(i64 %r76, i64 %r77    )
     %r79 = load i64, ptr %p50    
     store i64 %r78, ptr %p50    
-    br label %Label_3661    
-Label_3660:
-    br label %Label_3661    
-Label_3661:
+    br label %Label_3685    
+Label_3684:
+    br label %Label_3685    
+Label_3685:
     %r80 = load i64, ptr %p52    
     %r81 = add i64 %r80, 1    
     %r82 = load i64, ptr %p52    
     store i64 %r81, ptr %p52    
-    br label %Label_3655    
-Label_3657:
+    br label %Label_3679    
+Label_3681:
     %r83 = load i64, ptr %p50    
     %r84 = ptrtoint ptr @str.68     to i64
     %r85 = call i64 @_eq_str_concat(i64 %r83, i64 %r84    )
     ret i64 %r85    
-    br label %Label_3654    
-Label_3653:
-    br label %Label_3654    
-Label_3654:
-    %r86 = ptrtoint ptr @str.479     to i64
+    br label %Label_3678    
+Label_3677:
+    br label %Label_3678    
+Label_3678:
+    %r86 = ptrtoint ptr @str.484     to i64
     ret i64 %r86    
     ret i64 0
 Label_PanicNull:
@@ -34233,23 +34349,23 @@ start_fn:
     %r11 = load i64, ptr %p6    
     %r12 = call i64 @_eq_vec_size(i64 %r11    )
     store i64 %r12, ptr %p10    
-    br label %Label_3662    
-Label_3662:
+    br label %Label_3686    
+Label_3686:
     %r13 = load volatile i32, ptr @g_needs_yield
     %r14 = icmp ne i32 %r13, 0
-    br i1 %r14, label %Preywh_3665, label %Checkwh_3665    
-Preywh_3665:
+    br i1 %r14, label %Preywh_3689, label %Checkwh_3689    
+Preywh_3689:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3665    
-Checkwh_3665:
+    br label %Checkwh_3689    
+Checkwh_3689:
     %r15 = load i64, ptr %p9    
     %r16 = load i64, ptr %p10    
     %r17 = icmp slt i64 %r15, %r16    
     %r18 = zext i1 %r17     to i64
     %r19 = icmp ne i64 %r18    , 0
-    br i1 %r19, label %Label_3663, label %Label_3664    
-Label_3663:
+    br i1 %r19, label %Label_3687, label %Label_3688    
+Label_3687:
     %p20     = alloca i64
     store i64 0, ptr %p20    
     %r21 = load i64, ptr %p6    
@@ -34263,7 +34379,7 @@ Label_3663:
     %r27 = call i64 @_eq_map_get(i64 %r25, i64 %r26    )
     store i64 %r27, ptr %p24    
     %r28 = load i64, ptr %p4    
-    %r29 = ptrtoint ptr @str.480     to i64
+    %r29 = ptrtoint ptr @str.485     to i64
     %r30 = call i64 @_eq_str_concat(i64 %r28, i64 %r29    )
     %r31 = load i64, ptr %p4    
     store i64 %r30, ptr %p4    
@@ -34273,7 +34389,7 @@ Label_3663:
     %r35 = load i64, ptr %p4    
     store i64 %r34, ptr %p4    
     %r36 = load i64, ptr %p4    
-    %r37 = ptrtoint ptr @str.481     to i64
+    %r37 = ptrtoint ptr @str.486     to i64
     %r38 = call i64 @_eq_str_concat(i64 %r36, i64 %r37    )
     %r39 = load i64, ptr %p4    
     store i64 %r38, ptr %p4    
@@ -34289,23 +34405,23 @@ Label_3663:
     %r48 = icmp slt i64 %r45, %r47    
     %r49 = zext i1 %r48     to i64
     %r50 = icmp ne i64 %r49    , 0
-    br i1 %r50, label %Label_3666, label %Label_3667    
-Label_3666:
+    br i1 %r50, label %Label_3690, label %Label_3691    
+Label_3690:
     %r51 = load i64, ptr %p4    
     %r52 = ptrtoint ptr @str.69     to i64
     %r53 = call i64 @_eq_str_concat(i64 %r51, i64 %r52    )
     %r54 = load i64, ptr %p4    
     store i64 %r53, ptr %p4    
-    br label %Label_3668    
-Label_3667:
-    br label %Label_3668    
-Label_3668:
+    br label %Label_3692    
+Label_3691:
+    br label %Label_3692    
+Label_3692:
     %r55 = load i64, ptr %p9    
     %r56 = add i64 %r55, 1    
     %r57 = load i64, ptr %p9    
     store i64 %r56, ptr %p9    
-    br label %Label_3662    
-Label_3664:
+    br label %Label_3686    
+Label_3688:
     %r58 = load i64, ptr %p4    
     %r59 = ptrtoint ptr @str.66     to i64
     %r60 = call i64 @_eq_str_concat(i64 %r58, i64 %r59    )
@@ -34360,23 +34476,23 @@ start_fn:
     %p16     = alloca i64
     store i64 0, ptr %p16    
     store i64 0, ptr %p16    
-    br label %Label_3669    
-Label_3669:
+    br label %Label_3693    
+Label_3693:
     %r17 = load volatile i32, ptr @g_needs_yield
     %r18 = icmp ne i32 %r17, 0
-    br i1 %r18, label %Preywh_3672, label %Checkwh_3672    
-Preywh_3672:
+    br i1 %r18, label %Preywh_3696, label %Checkwh_3696    
+Preywh_3696:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3672    
-Checkwh_3672:
+    br label %Checkwh_3696    
+Checkwh_3696:
     %r19 = load i64, ptr %p11    
     %r20 = load i64, ptr %p7    
     %r21 = icmp slt i64 %r19, %r20    
     %r22 = zext i1 %r21     to i64
     %r23 = icmp ne i64 %r22    , 0
-    br i1 %r23, label %Label_3670, label %Label_3671    
-Label_3670:
+    br i1 %r23, label %Label_3694, label %Label_3695    
+Label_3694:
     %p24     = alloca i64
     store i64 0, ptr %p24    
     store i64 0, ptr %p24    
@@ -34392,38 +34508,38 @@ Label_3670:
     %r33 = icmp eq i64 %r32, 0    
     %r34 = zext i1 %r33     to i64
     %r35 = icmp ne i64 %r34    , 0
-    br i1 %r35, label %Label_3673, label %Label_3674    
-Label_3673:
+    br i1 %r35, label %Label_3697, label %Label_3698    
+Label_3697:
     %r36 = load i64, ptr %p24    
     %r37 = icmp eq i64 %r36, 34    
     %r38 = zext i1 %r37     to i64
     %r39 = icmp ne i64 %r38    , 0
-    br i1 %r39, label %Label_3676, label %Label_3677    
-Label_3676:
+    br i1 %r39, label %Label_3700, label %Label_3701    
+Label_3700:
     %r40 = load i64, ptr %p11    
     %r41 = add i64 %r40, 1    
     %r42 = load i64, ptr %p13    
     store i64 %r41, ptr %p13    
     %r43 = load i64, ptr %p12    
     store i64 1, ptr %p12    
-    br label %Label_3678    
-Label_3677:
-    br label %Label_3678    
-Label_3678:
-    br label %Label_3675    
-Label_3674:
+    br label %Label_3702    
+Label_3701:
+    br label %Label_3702    
+Label_3702:
+    br label %Label_3699    
+Label_3698:
     %r44 = load i64, ptr %p12    
     %r45 = icmp eq i64 %r44, 1    
     %r46 = zext i1 %r45     to i64
     %r47 = icmp ne i64 %r46    , 0
-    br i1 %r47, label %Label_3679, label %Label_3680    
-Label_3679:
+    br i1 %r47, label %Label_3703, label %Label_3704    
+Label_3703:
     %r48 = load i64, ptr %p24    
     %r49 = icmp eq i64 %r48, 34    
     %r50 = zext i1 %r49     to i64
     %r51 = icmp ne i64 %r50    , 0
-    br i1 %r51, label %Label_3682, label %Label_3683    
-Label_3682:
+    br i1 %r51, label %Label_3706, label %Label_3707    
+Label_3706:
     %p52     = alloca i64
     store i64 0, ptr %p52    
     store i64 0, ptr %p52    
@@ -34440,23 +34556,23 @@ Label_3682:
     %p61     = alloca i64
     store i64 0, ptr %p61    
     store i64 0, ptr %p61    
-    br label %Label_3685    
-Label_3685:
+    br label %Label_3709    
+Label_3709:
     %r62 = load volatile i32, ptr @g_needs_yield
     %r63 = icmp ne i32 %r62, 0
-    br i1 %r63, label %Preywh_3688, label %Checkwh_3688    
-Preywh_3688:
+    br i1 %r63, label %Preywh_3712, label %Checkwh_3712    
+Preywh_3712:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3688    
-Checkwh_3688:
+    br label %Checkwh_3712    
+Checkwh_3712:
     %r64 = load i64, ptr %p61    
     %r65 = load i64, ptr %p52    
     %r66 = icmp slt i64 %r64, %r65    
     %r67 = zext i1 %r66     to i64
     %r68 = icmp ne i64 %r67    , 0
-    br i1 %r68, label %Label_3686, label %Label_3687    
-Label_3686:
+    br i1 %r68, label %Label_3710, label %Label_3711    
+Label_3710:
     %r69 = load i64, ptr %p15    
     %r70 = load i64, ptr %p61    
     %r71 = load i64, ptr %p3    
@@ -34474,8 +34590,8 @@ Label_3686:
     %r83 = add i64 %r82, 1    
     %r84 = load i64, ptr %p61    
     store i64 %r83, ptr %p61    
-    br label %Label_3685    
-Label_3687:
+    br label %Label_3709    
+Label_3711:
     %r85 = load i64, ptr %p15    
     %r86 = load i64, ptr %p52    
     %r88 = ptrtoint ptr @_eq_set_char     to i64
@@ -34483,142 +34599,142 @@ Label_3687:
     %r87 = call i64 %r89(i64 %r85, i64 %r86, i64 0    )
     %r90 = load i64, ptr %p12    
     store i64 2, ptr %p12    
-    br label %Label_3684    
-Label_3683:
-    br label %Label_3684    
-Label_3684:
-    br label %Label_3681    
-Label_3680:
+    br label %Label_3708    
+Label_3707:
+    br label %Label_3708    
+Label_3708:
+    br label %Label_3705    
+Label_3704:
     %r91 = load i64, ptr %p12    
     %r92 = icmp eq i64 %r91, 2    
     %r93 = zext i1 %r92     to i64
     %r94 = icmp ne i64 %r93    , 0
-    br i1 %r94, label %Label_3689, label %Label_3690    
-Label_3689:
+    br i1 %r94, label %Label_3713, label %Label_3714    
+Label_3713:
     %r95 = load i64, ptr %p24    
     %r96 = icmp eq i64 %r95, 58    
     %r97 = zext i1 %r96     to i64
     %r98 = icmp ne i64 %r97    , 0
-    br i1 %r98, label %Label_3692, label %Label_3693    
-Label_3692:
+    br i1 %r98, label %Label_3716, label %Label_3717    
+Label_3716:
     %r99 = load i64, ptr %p12    
     store i64 3, ptr %p12    
-    br label %Label_3694    
-Label_3693:
-    br label %Label_3694    
-Label_3694:
-    br label %Label_3691    
-Label_3690:
+    br label %Label_3718    
+Label_3717:
+    br label %Label_3718    
+Label_3718:
+    br label %Label_3715    
+Label_3714:
     %r100 = load i64, ptr %p12    
     %r101 = icmp eq i64 %r100, 3    
     %r102 = zext i1 %r101     to i64
     %r103 = icmp ne i64 %r102    , 0
-    br i1 %r103, label %Label_3695, label %Label_3696    
-Label_3695:
+    br i1 %r103, label %Label_3719, label %Label_3720    
+Label_3719:
     %r104 = load i64, ptr %p24    
     %r105 = icmp ne i64 %r104, 32    
     %r106 = zext i1 %r105     to i64
     %r107 = icmp ne i64 %r106    , 0
-    br i1 %r107, label %Label_3698, label %Label_3699    
-Label_3698:
+    br i1 %r107, label %Label_3722, label %Label_3723    
+Label_3722:
     %r108 = load i64, ptr %p24    
     %r109 = icmp eq i64 %r108, 34    
     %r110 = zext i1 %r109     to i64
     %r111 = icmp ne i64 %r110    , 0
-    br i1 %r111, label %Label_3701, label %Label_3702    
-Label_3701:
+    br i1 %r111, label %Label_3725, label %Label_3726    
+Label_3725:
     %r112 = load i64, ptr %p16    
     store i64 1, ptr %p16    
     %r113 = load i64, ptr %p11    
     %r114 = add i64 %r113, 1    
     %r115 = load i64, ptr %p14    
     store i64 %r114, ptr %p14    
-    br label %Label_3703    
-Label_3702:
+    br label %Label_3727    
+Label_3726:
     %r116 = load i64, ptr %p16    
     store i64 0, ptr %p16    
     %r117 = load i64, ptr %p11    
     %r118 = load i64, ptr %p14    
     store i64 %r117, ptr %p14    
-    br label %Label_3703    
-Label_3703:
+    br label %Label_3727    
+Label_3727:
     %r119 = load i64, ptr %p12    
     store i64 4, ptr %p12    
-    br label %Label_3700    
-Label_3699:
-    br label %Label_3700    
-Label_3700:
-    br label %Label_3697    
-Label_3696:
+    br label %Label_3724    
+Label_3723:
+    br label %Label_3724    
+Label_3724:
+    br label %Label_3721    
+Label_3720:
     %r120 = load i64, ptr %p12    
     %r121 = icmp eq i64 %r120, 4    
     %r122 = zext i1 %r121     to i64
     %r123 = icmp ne i64 %r122    , 0
-    br i1 %r123, label %Label_3704, label %Label_3705    
-Label_3704:
+    br i1 %r123, label %Label_3728, label %Label_3729    
+Label_3728:
     %p124     = alloca i64
     store i64 0, ptr %p124    
     store i64 0, ptr %p124    
     %r125 = load i64, ptr %p16    
     %r126 = icmp ne i64 %r125    , 0
-    br i1 %r126, label %Label_3707, label %Label_3708    
-Label_3707:
+    br i1 %r126, label %Label_3731, label %Label_3732    
+Label_3731:
     %r127 = load i64, ptr %p24    
     %r128 = icmp eq i64 %r127, 34    
     %r129 = zext i1 %r128     to i64
     %r130 = icmp ne i64 %r129    , 0
-    br i1 %r130, label %Label_3710, label %Label_3711    
-Label_3710:
+    br i1 %r130, label %Label_3734, label %Label_3735    
+Label_3734:
     %r131 = load i64, ptr %p124    
     store i64 1, ptr %p124    
-    br label %Label_3712    
-Label_3711:
-    br label %Label_3712    
-Label_3712:
-    br label %Label_3709    
-Label_3708:
+    br label %Label_3736    
+Label_3735:
+    br label %Label_3736    
+Label_3736:
+    br label %Label_3733    
+Label_3732:
     %r132 = load i64, ptr %p24    
     %r133 = icmp eq i64 %r132, 44    
     %r134 = zext i1 %r133     to i64
     %r135 = icmp ne i64 %r134    , 0
-    br i1 %r135, label %Label_3713, label %Label_3714    
-Label_3713:
+    br i1 %r135, label %Label_3737, label %Label_3738    
+Label_3737:
     %r136 = load i64, ptr %p124    
     store i64 1, ptr %p124    
-    br label %Label_3715    
-Label_3714:
-    br label %Label_3715    
-Label_3715:
+    br label %Label_3739    
+Label_3738:
+    br label %Label_3739    
+Label_3739:
     %r137 = load i64, ptr %p24    
     %r138 = icmp eq i64 %r137, 125    
     %r139 = zext i1 %r138     to i64
     %r140 = icmp ne i64 %r139    , 0
-    br i1 %r140, label %Label_3716, label %Label_3717    
-Label_3716:
+    br i1 %r140, label %Label_3740, label %Label_3741    
+Label_3740:
     %r141 = load i64, ptr %p124    
     store i64 1, ptr %p124    
-    br label %Label_3718    
-Label_3717:
-    br label %Label_3718    
-Label_3718:
+    br label %Label_3742    
+Label_3741:
+    br label %Label_3742    
+Label_3742:
     %r142 = load i64, ptr %p24    
     %r143 = icmp eq i64 %r142, 32    
     %r144 = zext i1 %r143     to i64
     %r145 = icmp ne i64 %r144    , 0
-    br i1 %r145, label %Label_3719, label %Label_3720    
-Label_3719:
+    br i1 %r145, label %Label_3743, label %Label_3744    
+Label_3743:
     %r146 = load i64, ptr %p124    
     store i64 1, ptr %p124    
-    br label %Label_3721    
-Label_3720:
-    br label %Label_3721    
-Label_3721:
-    br label %Label_3709    
-Label_3709:
+    br label %Label_3745    
+Label_3744:
+    br label %Label_3745    
+Label_3745:
+    br label %Label_3733    
+Label_3733:
     %r147 = load i64, ptr %p124    
     %r148 = icmp ne i64 %r147    , 0
-    br i1 %r148, label %Label_3722, label %Label_3723    
-Label_3722:
+    br i1 %r148, label %Label_3746, label %Label_3747    
+Label_3746:
     %p149     = alloca i64
     store i64 0, ptr %p149    
     store i64 0, ptr %p149    
@@ -34638,23 +34754,23 @@ Label_3722:
     %p159     = alloca i64
     store i64 0, ptr %p159    
     store i64 0, ptr %p159    
-    br label %Label_3725    
-Label_3725:
+    br label %Label_3749    
+Label_3749:
     %r160 = load volatile i32, ptr @g_needs_yield
     %r161 = icmp ne i32 %r160, 0
-    br i1 %r161, label %Preywh_3728, label %Checkwh_3728    
-Preywh_3728:
+    br i1 %r161, label %Preywh_3752, label %Checkwh_3752    
+Preywh_3752:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3728    
-Checkwh_3728:
+    br label %Checkwh_3752    
+Checkwh_3752:
     %r162 = load i64, ptr %p159    
     %r163 = load i64, ptr %p149    
     %r164 = icmp slt i64 %r162, %r163    
     %r165 = zext i1 %r164     to i64
     %r166 = icmp ne i64 %r165    , 0
-    br i1 %r166, label %Label_3726, label %Label_3727    
-Label_3726:
+    br i1 %r166, label %Label_3750, label %Label_3751    
+Label_3750:
     %r167 = load i64, ptr %p154    
     %r168 = load i64, ptr %p159    
     %r169 = load i64, ptr %p3    
@@ -34672,8 +34788,8 @@ Label_3726:
     %r181 = add i64 %r180, 1    
     %r182 = load i64, ptr %p159    
     store i64 %r181, ptr %p159    
-    br label %Label_3725    
-Label_3727:
+    br label %Label_3749    
+Label_3751:
     %r183 = load i64, ptr %p154    
     %r184 = load i64, ptr %p149    
     %r186 = ptrtoint ptr @_eq_set_char     to i64
@@ -34685,28 +34801,28 @@ Label_3727:
     %r191 = call i64 @_eq_map_put(i64 %r188, i64 %r189, i64 %r190    )
     %r192 = load i64, ptr %p12    
     store i64 0, ptr %p12    
-    br label %Label_3724    
-Label_3723:
-    br label %Label_3724    
-Label_3724:
-    br label %Label_3706    
+    br label %Label_3748    
+Label_3747:
+    br label %Label_3748    
+Label_3748:
+    br label %Label_3730    
+Label_3729:
+    br label %Label_3730    
+Label_3730:
+    br label %Label_3721    
+Label_3721:
+    br label %Label_3715    
+Label_3715:
+    br label %Label_3705    
 Label_3705:
-    br label %Label_3706    
-Label_3706:
-    br label %Label_3697    
-Label_3697:
-    br label %Label_3691    
-Label_3691:
-    br label %Label_3681    
-Label_3681:
-    br label %Label_3675    
-Label_3675:
+    br label %Label_3699    
+Label_3699:
     %r193 = load i64, ptr %p11    
     %r194 = add i64 %r193, 1    
     %r195 = load i64, ptr %p11    
     store i64 %r194, ptr %p11    
-    br label %Label_3669    
-Label_3671:
+    br label %Label_3693    
+Label_3695:
     %r196 = load i64, ptr %p4    
     ret i64 %r196    
     ret i64 0
@@ -34743,13 +34859,13 @@ start_fn:
     %r11 = icmp eq i64 %r10, 0    
     %r12 = zext i1 %r11     to i64
     %r13 = icmp ne i64 %r12    , 0
-    br i1 %r13, label %Label_3729, label %Label_3730    
-Label_3729:
+    br i1 %r13, label %Label_3753, label %Label_3754    
+Label_3753:
     ret i64 0    
-    br label %Label_3731    
-Label_3730:
-    br label %Label_3731    
-Label_3731:
+    br label %Label_3755    
+Label_3754:
+    br label %Label_3755    
+Label_3755:
     %r14 = load i64, ptr %p5    
     %r15 = call i64 @_eq_str_to_int_internal(i64 %r14    )
     ret i64 %r15    
@@ -34802,13 +34918,13 @@ start_fn:
     %r5 = icmp eq i64 %r4, 0    
     %r6 = zext i1 %r5     to i64
     %r7 = icmp ne i64 %r6    , 0
-    br i1 %r7, label %Label_3732, label %Label_3733    
-Label_3732:
+    br i1 %r7, label %Label_3756, label %Label_3757    
+Label_3756:
     ret i64 0    
-    br label %Label_3734    
-Label_3733:
-    br label %Label_3734    
-Label_3734:
+    br label %Label_3758    
+Label_3757:
+    br label %Label_3758    
+Label_3758:
     %p8     = alloca i64
     store i64 0, ptr %p8    
     store i64 0, ptr %p8    
@@ -34826,27 +34942,27 @@ Label_3734:
     %r16 = icmp eq i64 %r12, 45    
     %r17 = zext i1 %r16     to i64
     %r18 = icmp ne i64 %r17    , 0
-    br i1 %r18, label %Label_3735, label %Label_3736    
-Label_3735:
+    br i1 %r18, label %Label_3759, label %Label_3760    
+Label_3759:
     %r19 = sub i64 0, 1    
     %r20 = load i64, ptr %p10    
     store i64 %r19, ptr %p10    
     %r21 = load i64, ptr %p9    
     store i64 1, ptr %p9    
-    br label %Label_3737    
-Label_3736:
-    br label %Label_3737    
-Label_3737:
-    br label %Label_3738    
-Label_3738:
+    br label %Label_3761    
+Label_3760:
+    br label %Label_3761    
+Label_3761:
+    br label %Label_3762    
+Label_3762:
     %r22 = load volatile i32, ptr @g_needs_yield
     %r23 = icmp ne i32 %r22, 0
-    br i1 %r23, label %Preywh_3741, label %Checkwh_3741    
-Preywh_3741:
+    br i1 %r23, label %Preywh_3765, label %Checkwh_3765    
+Preywh_3765:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3741    
-Checkwh_3741:
+    br label %Checkwh_3765    
+Checkwh_3765:
     %r24 = load i64, ptr %p3    
     %r25 = load i64, ptr %p9    
     %r27 = inttoptr i64 %r24     to ptr
@@ -34856,8 +34972,8 @@ Checkwh_3741:
     %r30 = icmp ne i64 %r26, 0    
     %r31 = zext i1 %r30     to i64
     %r32 = icmp ne i64 %r31    , 0
-    br i1 %r32, label %Label_3739, label %Label_3740    
-Label_3739:
+    br i1 %r32, label %Label_3763, label %Label_3764    
+Label_3763:
     %p33     = alloca i64
     store i64 0, ptr %p33    
     store i64 0, ptr %p33    
@@ -34873,14 +34989,14 @@ Label_3739:
     %r42 = icmp sge i64 %r41, 48    
     %r43 = zext i1 %r42     to i64
     %r44 = icmp ne i64 %r43    , 0
-    br i1 %r44, label %Label_3742, label %Label_3743    
-Label_3742:
+    br i1 %r44, label %Label_3766, label %Label_3767    
+Label_3766:
     %r45 = load i64, ptr %p33    
     %r46 = icmp sle i64 %r45, 57    
     %r47 = zext i1 %r46     to i64
     %r48 = icmp ne i64 %r47    , 0
-    br i1 %r48, label %Label_3745, label %Label_3746    
-Label_3745:
+    br i1 %r48, label %Label_3769, label %Label_3770    
+Label_3769:
     %r49 = load i64, ptr %p8    
     %r50 = mul i64 %r49, 10    
     %r51 = load i64, ptr %p33    
@@ -34888,20 +35004,20 @@ Label_3745:
     %r53 = add i64 %r50, %r52    
     %r54 = load i64, ptr %p8    
     store i64 %r53, ptr %p8    
-    br label %Label_3747    
-Label_3746:
-    br label %Label_3747    
-Label_3747:
-    br label %Label_3744    
-Label_3743:
-    br label %Label_3744    
-Label_3744:
+    br label %Label_3771    
+Label_3770:
+    br label %Label_3771    
+Label_3771:
+    br label %Label_3768    
+Label_3767:
+    br label %Label_3768    
+Label_3768:
     %r55 = load i64, ptr %p9    
     %r56 = add i64 %r55, 1    
     %r57 = load i64, ptr %p9    
     store i64 %r56, ptr %p9    
-    br label %Label_3738    
-Label_3740:
+    br label %Label_3762    
+Label_3764:
     %r58 = load i64, ptr %p8    
     %r59 = load i64, ptr %p10    
     %r60 = mul i64 %r58, %r59    
@@ -34937,13 +35053,13 @@ start_fn:
     store i64 %r9, ptr %p7    
     %p10     = alloca i64
     store i64 0, ptr %p10    
-    %r11 = ptrtoint ptr @str.482     to i64
+    %r11 = ptrtoint ptr @str.487     to i64
     %r12 = load i64, ptr %p7    
     %r13 = call i64 @_eq_str_from_int(i64 %r12    )
     %r14 = call i64 @_eq_str_concat(i64 %r11, i64 %r13    )
     store i64 %r14, ptr %p10    
     %r15 = load i64, ptr %p10    
-    %r16 = ptrtoint ptr @str.483     to i64
+    %r16 = ptrtoint ptr @str.488     to i64
     %r17 = call i64 @_eq_str_concat(i64 %r15, i64 %r16    )
     %r18 = load i64, ptr %p10    
     store i64 %r17, ptr %p10    
@@ -34980,19 +35096,19 @@ start_fn:
     %r7 = icmp eq i64 %r6, 0    
     %r8 = zext i1 %r7     to i64
     %r9 = icmp ne i64 %r8    , 0
-    br i1 %r9, label %Label_3748, label %Label_3749    
-Label_3748:
+    br i1 %r9, label %Label_3772, label %Label_3773    
+Label_3772:
     ret i64 0    
-    br label %Label_3750    
-Label_3749:
-    br label %Label_3750    
-Label_3750:
+    br label %Label_3774    
+Label_3773:
+    br label %Label_3774    
+Label_3774:
     %p10     = alloca i64
     store i64 0, ptr %p10    
     %r11 = load i64, ptr %p3    
     %r12 = icmp eq i64 %r11    , 0
-    br i1 %r12, label %Label_PanicNull, label %Label_3751    
-Label_3751:
+    br i1 %r12, label %Label_PanicNull, label %Label_3775    
+Label_3775:
     %r13 = inttoptr i64 %r11     to ptr
     %r14 = getelementptr i64, ptr %r13, i64 0    
     %r15 = load i64, ptr %r14    
@@ -35002,12 +35118,12 @@ Label_3751:
     %r18 = icmp eq i64 %r16, %r17    
     %r19 = zext i1 %r18     to i64
     %r20 = icmp ne i64 %r19    , 0
-    br i1 %r20, label %Label_3752, label %Label_3753    
-Label_3752:
+    br i1 %r20, label %Label_3776, label %Label_3777    
+Label_3776:
     %r21 = load i64, ptr %p3    
     %r22 = icmp eq i64 %r21    , 0
-    br i1 %r22, label %Label_PanicNull, label %Label_3755    
-Label_3755:
+    br i1 %r22, label %Label_PanicNull, label %Label_3779    
+Label_3779:
     %r23 = inttoptr i64 %r21     to ptr
     %r24 = getelementptr i64, ptr %r23, i64 2    
     %r25 = load i64, ptr %r24    
@@ -35015,33 +35131,33 @@ Label_3755:
     %r27 = icmp eq i64 %r25, %r26    
     %r28 = zext i1 %r27     to i64
     %r29 = icmp ne i64 %r28    , 0
-    br i1 %r29, label %Label_3756, label %Label_3757    
-Label_3756:
+    br i1 %r29, label %Label_3780, label %Label_3781    
+Label_3780:
     %r30 = load i64, ptr %p5    
     %r31 = load i64, ptr %p3    
     %r32 = icmp eq i64 %r31    , 0
-    br i1 %r32, label %Label_PanicNull, label %Label_3759    
-Label_3759:
+    br i1 %r32, label %Label_PanicNull, label %Label_3783    
+Label_3783:
     %r33 = inttoptr i64 %r31     to ptr
     %r34 = getelementptr i64, ptr %r33, i64 3    
     %r35 = load i64, ptr %r34    
     %r36 = icmp sge i64 %r30, %r35    
     %r37 = zext i1 %r36     to i64
     %r38 = icmp ne i64 %r37    , 0
-    br i1 %r38, label %Label_3760, label %Label_3761    
-Label_3760:
+    br i1 %r38, label %Label_3784, label %Label_3785    
+Label_3784:
     %r39 = load i64, ptr %p5    
     %r40 = load i64, ptr %p3    
     %r41 = icmp eq i64 %r40    , 0
-    br i1 %r41, label %Label_PanicNull, label %Label_3763    
-Label_3763:
+    br i1 %r41, label %Label_PanicNull, label %Label_3787    
+Label_3787:
     %r42 = inttoptr i64 %r40     to ptr
     %r43 = getelementptr i64, ptr %r42, i64 3    
     %r44 = load i64, ptr %r43    
     %r45 = load i64, ptr %p3    
     %r46 = icmp eq i64 %r45    , 0
-    br i1 %r46, label %Label_PanicNull, label %Label_3764    
-Label_3764:
+    br i1 %r46, label %Label_PanicNull, label %Label_3788    
+Label_3788:
     %r47 = inttoptr i64 %r45     to ptr
     %r48 = getelementptr i64, ptr %r47, i64 1    
     %r49 = load i64, ptr %r48    
@@ -35050,37 +35166,37 @@ Label_3764:
     %r52 = icmp sle i64 %r39, %r51    
     %r53 = zext i1 %r52     to i64
     %r54 = icmp ne i64 %r53    , 0
-    br i1 %r54, label %Label_3765, label %Label_3766    
-Label_3765:
+    br i1 %r54, label %Label_3789, label %Label_3790    
+Label_3789:
     %r55 = load i64, ptr %p3    
     ret i64 %r55    
-    br label %Label_3767    
-Label_3766:
-    br label %Label_3767    
-Label_3767:
-    br label %Label_3762    
-Label_3761:
-    br label %Label_3762    
-Label_3762:
-    br label %Label_3758    
-Label_3757:
-    br label %Label_3758    
-Label_3758:
-    br label %Label_3754    
-Label_3753:
+    br label %Label_3791    
+Label_3790:
+    br label %Label_3791    
+Label_3791:
+    br label %Label_3786    
+Label_3785:
+    br label %Label_3786    
+Label_3786:
+    br label %Label_3782    
+Label_3781:
+    br label %Label_3782    
+Label_3782:
+    br label %Label_3778    
+Label_3777:
     %r56 = load i64, ptr %p10    
     %r57 = load i64, ptr @Global_EXPR_CALL    
     %r58 = icmp eq i64 %r56, %r57    
     %r59 = zext i1 %r58     to i64
     %r60 = icmp ne i64 %r59    , 0
-    br i1 %r60, label %Label_3768, label %Label_3769    
-Label_3768:
+    br i1 %r60, label %Label_3792, label %Label_3793    
+Label_3792:
     %p61     = alloca i64
     store i64 0, ptr %p61    
     %r62 = load i64, ptr %p3    
     %r63 = icmp eq i64 %r62    , 0
-    br i1 %r63, label %Label_PanicNull, label %Label_3771    
-Label_3771:
+    br i1 %r63, label %Label_PanicNull, label %Label_3795    
+Label_3795:
     %r64 = inttoptr i64 %r62     to ptr
     %r65 = getelementptr i64, ptr %r64, i64 1    
     %r66 = load i64, ptr %r65    
@@ -35090,20 +35206,20 @@ Label_3771:
     store i64 %r69, ptr %p61    
     %r70 = load i64, ptr %p61    
     %r71 = icmp ne i64 %r70    , 0
-    br i1 %r71, label %Label_3772, label %Label_3773    
-Label_3772:
+    br i1 %r71, label %Label_3796, label %Label_3797    
+Label_3796:
     %r72 = load i64, ptr %p61    
     ret i64 %r72    
-    br label %Label_3774    
-Label_3773:
-    br label %Label_3774    
-Label_3774:
+    br label %Label_3798    
+Label_3797:
+    br label %Label_3798    
+Label_3798:
     %p73     = alloca i64
     store i64 0, ptr %p73    
     %r74 = load i64, ptr %p3    
     %r75 = icmp eq i64 %r74    , 0
-    br i1 %r75, label %Label_PanicNull, label %Label_3775    
-Label_3775:
+    br i1 %r75, label %Label_PanicNull, label %Label_3799    
+Label_3799:
     %r76 = inttoptr i64 %r74     to ptr
     %r77 = getelementptr i64, ptr %r76, i64 2    
     %r78 = load i64, ptr %r77    
@@ -35116,23 +35232,23 @@ Label_3775:
     %r81 = load i64, ptr %p73    
     %r82 = call i64 @_eq_vec_size(i64 %r81    )
     store i64 %r82, ptr %p80    
-    br label %Label_3776    
-Label_3776:
+    br label %Label_3800    
+Label_3800:
     %r83 = load volatile i32, ptr @g_needs_yield
     %r84 = icmp ne i32 %r83, 0
-    br i1 %r84, label %Preywh_3779, label %Checkwh_3779    
-Preywh_3779:
+    br i1 %r84, label %Preywh_3803, label %Checkwh_3803    
+Preywh_3803:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3779    
-Checkwh_3779:
+    br label %Checkwh_3803    
+Checkwh_3803:
     %r85 = load i64, ptr %p79    
     %r86 = load i64, ptr %p80    
     %r87 = icmp slt i64 %r85, %r86    
     %r88 = zext i1 %r87     to i64
     %r89 = icmp ne i64 %r88    , 0
-    br i1 %r89, label %Label_3777, label %Label_3778    
-Label_3777:
+    br i1 %r89, label %Label_3801, label %Label_3802    
+Label_3801:
     %r90 = load i64, ptr %p73    
     %r91 = load i64, ptr %p79    
     %r92 = call i64 @_eq_vec_get(i64 %r90, i64 %r91    )
@@ -35143,34 +35259,34 @@ Label_3777:
     store i64 %r95, ptr %p61    
     %r97 = load i64, ptr %p61    
     %r98 = icmp ne i64 %r97    , 0
-    br i1 %r98, label %Label_3780, label %Label_3781    
-Label_3780:
+    br i1 %r98, label %Label_3804, label %Label_3805    
+Label_3804:
     %r99 = load i64, ptr %p61    
     ret i64 %r99    
-    br label %Label_3782    
-Label_3781:
-    br label %Label_3782    
-Label_3782:
+    br label %Label_3806    
+Label_3805:
+    br label %Label_3806    
+Label_3806:
     %r100 = load i64, ptr %p79    
     %r101 = add i64 %r100, 1    
     %r102 = load i64, ptr %p79    
     store i64 %r101, ptr %p79    
-    br label %Label_3776    
-Label_3778:
-    br label %Label_3770    
-Label_3769:
+    br label %Label_3800    
+Label_3802:
+    br label %Label_3794    
+Label_3793:
     %r103 = load i64, ptr %p10    
     %r104 = load i64, ptr @Global_EXPR_BINARY    
     %r105 = icmp eq i64 %r103, %r104    
     %r106 = zext i1 %r105     to i64
     %r107 = icmp ne i64 %r106    , 0
-    br i1 %r107, label %Label_3783, label %Label_3784    
-Label_3783:
+    br i1 %r107, label %Label_3807, label %Label_3808    
+Label_3807:
     %r108 = load i64, ptr %p3    
     %r109 = load i64, ptr @Global_BINARY_LEFT    
     %r110 = icmp eq i64 %r108    , 0
-    br i1 %r110, label %Label_PanicNull, label %Label_3786    
-Label_3786:
+    br i1 %r110, label %Label_PanicNull, label %Label_3810    
+Label_3810:
     %r111 = inttoptr i64 %r108     to ptr
     %r112 = getelementptr i64, ptr %r111, i64 %r109    
     %r113 = load i64, ptr %r112    
@@ -35180,19 +35296,19 @@ Label_3786:
     store i64 %r116, ptr %p61    
     %r117 = load i64, ptr %p61    
     %r118 = icmp ne i64 %r117    , 0
-    br i1 %r118, label %Label_3787, label %Label_3788    
-Label_3787:
+    br i1 %r118, label %Label_3811, label %Label_3812    
+Label_3811:
     %r119 = load i64, ptr %p61    
     ret i64 %r119    
-    br label %Label_3789    
-Label_3788:
-    br label %Label_3789    
-Label_3789:
+    br label %Label_3813    
+Label_3812:
+    br label %Label_3813    
+Label_3813:
     %r120 = load i64, ptr %p3    
     %r121 = load i64, ptr @Global_BINARY_RIGHT    
     %r122 = icmp eq i64 %r120    , 0
-    br i1 %r122, label %Label_PanicNull, label %Label_3790    
-Label_3790:
+    br i1 %r122, label %Label_PanicNull, label %Label_3814    
+Label_3814:
     %r123 = inttoptr i64 %r120     to ptr
     %r124 = getelementptr i64, ptr %r123, i64 %r121    
     %r125 = load i64, ptr %r124    
@@ -35203,28 +35319,28 @@ Label_3790:
     store i64 %r128, ptr %p61    
     %r130 = load i64, ptr %p61    
     %r131 = icmp ne i64 %r130    , 0
-    br i1 %r131, label %Label_3791, label %Label_3792    
-Label_3791:
+    br i1 %r131, label %Label_3815, label %Label_3816    
+Label_3815:
     %r132 = load i64, ptr %p61    
     ret i64 %r132    
-    br label %Label_3793    
-Label_3792:
-    br label %Label_3793    
-Label_3793:
-    br label %Label_3785    
-Label_3784:
+    br label %Label_3817    
+Label_3816:
+    br label %Label_3817    
+Label_3817:
+    br label %Label_3809    
+Label_3808:
     %r133 = load i64, ptr %p10    
     %r134 = load i64, ptr @Global_EXPR_UNARY    
     %r135 = icmp eq i64 %r133, %r134    
     %r136 = zext i1 %r135     to i64
     %r137 = icmp ne i64 %r136    , 0
-    br i1 %r137, label %Label_3794, label %Label_3795    
-Label_3794:
+    br i1 %r137, label %Label_3818, label %Label_3819    
+Label_3818:
     %r138 = load i64, ptr %p3    
     %r139 = load i64, ptr @Global_UNARY_RIGHT    
     %r140 = icmp eq i64 %r138    , 0
-    br i1 %r140, label %Label_PanicNull, label %Label_3797    
-Label_3797:
+    br i1 %r140, label %Label_PanicNull, label %Label_3821    
+Label_3821:
     %r141 = inttoptr i64 %r138     to ptr
     %r142 = getelementptr i64, ptr %r141, i64 %r139    
     %r143 = load i64, ptr %r142    
@@ -35232,20 +35348,20 @@ Label_3797:
     %r145 = load i64, ptr %p5    
     %r146 = call i64 @_eq_lsp_find_node_at(i64 %r143, i64 %r144, i64 %r145    )
     ret i64 %r146    
-    br label %Label_3796    
-Label_3795:
+    br label %Label_3820    
+Label_3819:
     %r147 = load i64, ptr %p10    
     %r148 = load i64, ptr @Global_EXPR_INDEX    
     %r149 = icmp eq i64 %r147, %r148    
     %r150 = zext i1 %r149     to i64
     %r151 = icmp ne i64 %r150    , 0
-    br i1 %r151, label %Label_3798, label %Label_3799    
-Label_3798:
+    br i1 %r151, label %Label_3822, label %Label_3823    
+Label_3822:
     %r152 = load i64, ptr %p3    
     %r153 = load i64, ptr @Global_INDEX_OBJ    
     %r154 = icmp eq i64 %r152    , 0
-    br i1 %r154, label %Label_PanicNull, label %Label_3801    
-Label_3801:
+    br i1 %r154, label %Label_PanicNull, label %Label_3825    
+Label_3825:
     %r155 = inttoptr i64 %r152     to ptr
     %r156 = getelementptr i64, ptr %r155, i64 %r153    
     %r157 = load i64, ptr %r156    
@@ -35255,19 +35371,19 @@ Label_3801:
     store i64 %r160, ptr %p61    
     %r161 = load i64, ptr %p61    
     %r162 = icmp ne i64 %r161    , 0
-    br i1 %r162, label %Label_3802, label %Label_3803    
-Label_3802:
+    br i1 %r162, label %Label_3826, label %Label_3827    
+Label_3826:
     %r163 = load i64, ptr %p61    
     ret i64 %r163    
-    br label %Label_3804    
-Label_3803:
-    br label %Label_3804    
-Label_3804:
+    br label %Label_3828    
+Label_3827:
+    br label %Label_3828    
+Label_3828:
     %r164 = load i64, ptr %p3    
     %r165 = load i64, ptr @Global_INDEX_IDX    
     %r166 = icmp eq i64 %r164    , 0
-    br i1 %r166, label %Label_PanicNull, label %Label_3805    
-Label_3805:
+    br i1 %r166, label %Label_PanicNull, label %Label_3829    
+Label_3829:
     %r167 = inttoptr i64 %r164     to ptr
     %r168 = getelementptr i64, ptr %r167, i64 %r165    
     %r169 = load i64, ptr %r168    
@@ -35275,20 +35391,20 @@ Label_3805:
     %r171 = load i64, ptr %p5    
     %r172 = call i64 @_eq_lsp_find_node_at(i64 %r169, i64 %r170, i64 %r171    )
     ret i64 %r172    
-    br label %Label_3800    
-Label_3799:
+    br label %Label_3824    
+Label_3823:
     %r173 = load i64, ptr %p10    
     %r174 = load i64, ptr @Global_EXPR_GET    
     %r175 = icmp eq i64 %r173, %r174    
     %r176 = zext i1 %r175     to i64
     %r177 = icmp ne i64 %r176    , 0
-    br i1 %r177, label %Label_3806, label %Label_3807    
-Label_3806:
+    br i1 %r177, label %Label_3830, label %Label_3831    
+Label_3830:
     %r178 = load i64, ptr %p3    
     %r179 = load i64, ptr @Global_GET_OBJ    
     %r180 = icmp eq i64 %r178    , 0
-    br i1 %r180, label %Label_PanicNull, label %Label_3809    
-Label_3809:
+    br i1 %r180, label %Label_PanicNull, label %Label_3833    
+Label_3833:
     %r181 = inttoptr i64 %r178     to ptr
     %r182 = getelementptr i64, ptr %r181, i64 %r179    
     %r183 = load i64, ptr %r182    
@@ -35296,20 +35412,20 @@ Label_3809:
     %r185 = load i64, ptr %p5    
     %r186 = call i64 @_eq_lsp_find_node_at(i64 %r183, i64 %r184, i64 %r185    )
     ret i64 %r186    
-    br label %Label_3808    
-Label_3807:
-    br label %Label_3808    
-Label_3808:
-    br label %Label_3800    
-Label_3800:
-    br label %Label_3796    
-Label_3796:
-    br label %Label_3785    
-Label_3785:
-    br label %Label_3770    
-Label_3770:
-    br label %Label_3754    
-Label_3754:
+    br label %Label_3832    
+Label_3831:
+    br label %Label_3832    
+Label_3832:
+    br label %Label_3824    
+Label_3824:
+    br label %Label_3820    
+Label_3820:
+    br label %Label_3809    
+Label_3809:
+    br label %Label_3794    
+Label_3794:
+    br label %Label_3778    
+Label_3778:
     ret i64 0    
     ret i64 0
 Label_PanicNull:
@@ -35344,23 +35460,23 @@ start_fn:
     %r8 = load i64, ptr %p3    
     %r9 = call i64 @_eq_vec_size(i64 %r8    )
     store i64 %r9, ptr %p7    
-    br label %Label_3810    
-Label_3810:
+    br label %Label_3834    
+Label_3834:
     %r10 = load volatile i32, ptr @g_needs_yield
     %r11 = icmp ne i32 %r10, 0
-    br i1 %r11, label %Preywh_3813, label %Checkwh_3813    
-Preywh_3813:
+    br i1 %r11, label %Preywh_3837, label %Checkwh_3837    
+Preywh_3837:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3813    
-Checkwh_3813:
+    br label %Checkwh_3837    
+Checkwh_3837:
     %r12 = load i64, ptr %p6    
     %r13 = load i64, ptr %p7    
     %r14 = icmp slt i64 %r12, %r13    
     %r15 = zext i1 %r14     to i64
     %r16 = icmp ne i64 %r15    , 0
-    br i1 %r16, label %Label_3811, label %Label_3812    
-Label_3811:
+    br i1 %r16, label %Label_3835, label %Label_3836    
+Label_3835:
     %p17     = alloca i64
     store i64 0, ptr %p17    
     %r18 = load i64, ptr %p3    
@@ -35371,8 +35487,8 @@ Label_3811:
     store i64 0, ptr %p21    
     %r22 = load i64, ptr %p17    
     %r23 = icmp eq i64 %r22    , 0
-    br i1 %r23, label %Label_PanicNull, label %Label_3814    
-Label_3814:
+    br i1 %r23, label %Label_PanicNull, label %Label_3838    
+Label_3838:
     %r24 = inttoptr i64 %r22     to ptr
     %r25 = getelementptr i64, ptr %r24, i64 0    
     %r26 = load i64, ptr %r25    
@@ -35382,14 +35498,14 @@ Label_3814:
     %r29 = icmp eq i64 %r27, %r28    
     %r30 = zext i1 %r29     to i64
     %r31 = icmp ne i64 %r30    , 0
-    br i1 %r31, label %Label_3815, label %Label_3816    
-Label_3815:
+    br i1 %r31, label %Label_3839, label %Label_3840    
+Label_3839:
     %p32     = alloca i64
     store i64 0, ptr %p32    
     %r33 = load i64, ptr %p17    
     %r34 = icmp eq i64 %r33    , 0
-    br i1 %r34, label %Label_PanicNull, label %Label_3818    
-Label_3818:
+    br i1 %r34, label %Label_PanicNull, label %Label_3842    
+Label_3842:
     %r35 = inttoptr i64 %r33     to ptr
     %r36 = getelementptr i64, ptr %r35, i64 3    
     %r37 = load i64, ptr %r36    
@@ -35398,8 +35514,8 @@ Label_3818:
     store i64 0, ptr %p38    
     %r39 = load i64, ptr %p32    
     %r40 = icmp eq i64 %r39    , 0
-    br i1 %r40, label %Label_PanicNull, label %Label_3819    
-Label_3819:
+    br i1 %r40, label %Label_PanicNull, label %Label_3843    
+Label_3843:
     %r41 = inttoptr i64 %r39     to ptr
     %r42 = getelementptr i64, ptr %r41, i64 1    
     %r43 = load i64, ptr %r42    
@@ -35409,27 +35525,27 @@ Label_3819:
     store i64 %r46, ptr %p38    
     %r47 = load i64, ptr %p38    
     %r48 = icmp ne i64 %r47    , 0
-    br i1 %r48, label %Label_3820, label %Label_3821    
-Label_3820:
+    br i1 %r48, label %Label_3844, label %Label_3845    
+Label_3844:
     %r49 = load i64, ptr %p38    
     ret i64 %r49    
-    br label %Label_3822    
-Label_3821:
-    br label %Label_3822    
-Label_3822:
-    br label %Label_3817    
-Label_3816:
+    br label %Label_3846    
+Label_3845:
+    br label %Label_3846    
+Label_3846:
+    br label %Label_3841    
+Label_3840:
     %r50 = load i64, ptr %p21    
     %r51 = load i64, ptr @Global_STMT_BLOCK    
     %r52 = icmp eq i64 %r50, %r51    
     %r53 = zext i1 %r52     to i64
     %r54 = icmp ne i64 %r53    , 0
-    br i1 %r54, label %Label_3823, label %Label_3824    
-Label_3823:
+    br i1 %r54, label %Label_3847, label %Label_3848    
+Label_3847:
     %r55 = load i64, ptr %p17    
     %r56 = icmp eq i64 %r55    , 0
-    br i1 %r56, label %Label_PanicNull, label %Label_3826    
-Label_3826:
+    br i1 %r56, label %Label_PanicNull, label %Label_3850    
+Label_3850:
     %r57 = inttoptr i64 %r55     to ptr
     %r58 = getelementptr i64, ptr %r57, i64 1    
     %r59 = load i64, ptr %r58    
@@ -35439,27 +35555,27 @@ Label_3826:
     store i64 %r62, ptr %p38    
     %r63 = load i64, ptr %p38    
     %r64 = icmp ne i64 %r63    , 0
-    br i1 %r64, label %Label_3827, label %Label_3828    
-Label_3827:
+    br i1 %r64, label %Label_3851, label %Label_3852    
+Label_3851:
     %r65 = load i64, ptr %p38    
     ret i64 %r65    
-    br label %Label_3829    
-Label_3828:
-    br label %Label_3829    
-Label_3829:
-    br label %Label_3825    
-Label_3824:
+    br label %Label_3853    
+Label_3852:
+    br label %Label_3853    
+Label_3853:
+    br label %Label_3849    
+Label_3848:
     %r66 = load i64, ptr %p21    
     %r67 = load i64, ptr @Global_STMT_EXPRESSION    
     %r68 = icmp eq i64 %r66, %r67    
     %r69 = zext i1 %r68     to i64
     %r70 = icmp ne i64 %r69    , 0
-    br i1 %r70, label %Label_3830, label %Label_3831    
-Label_3830:
+    br i1 %r70, label %Label_3854, label %Label_3855    
+Label_3854:
     %r71 = load i64, ptr %p17    
     %r72 = icmp eq i64 %r71    , 0
-    br i1 %r72, label %Label_PanicNull, label %Label_3833    
-Label_3833:
+    br i1 %r72, label %Label_PanicNull, label %Label_3857    
+Label_3857:
     %r73 = inttoptr i64 %r71     to ptr
     %r74 = getelementptr i64, ptr %r73, i64 1    
     %r75 = load i64, ptr %r74    
@@ -35469,39 +35585,39 @@ Label_3833:
     store i64 %r78, ptr %p38    
     %r79 = load i64, ptr %p38    
     %r80 = icmp ne i64 %r79    , 0
-    br i1 %r80, label %Label_3834, label %Label_3835    
-Label_3834:
+    br i1 %r80, label %Label_3858, label %Label_3859    
+Label_3858:
     %r81 = load i64, ptr %p38    
     ret i64 %r81    
-    br label %Label_3836    
-Label_3835:
-    br label %Label_3836    
-Label_3836:
-    br label %Label_3832    
-Label_3831:
+    br label %Label_3860    
+Label_3859:
+    br label %Label_3860    
+Label_3860:
+    br label %Label_3856    
+Label_3855:
     %r82 = load i64, ptr %p21    
     %r83 = load i64, ptr @Global_STMT_LET    
     %r84 = icmp eq i64 %r82, %r83    
     %r85 = zext i1 %r84     to i64
     %r86 = icmp ne i64 %r85    , 0
-    br i1 %r86, label %Label_3837, label %Label_3838    
-Label_3837:
+    br i1 %r86, label %Label_3861, label %Label_3862    
+Label_3861:
     %r87 = load i64, ptr %p17    
     %r88 = load i64, ptr @Global_LET_VAL    
     %r89 = icmp eq i64 %r87    , 0
-    br i1 %r89, label %Label_PanicNull, label %Label_3840    
-Label_3840:
+    br i1 %r89, label %Label_PanicNull, label %Label_3864    
+Label_3864:
     %r90 = inttoptr i64 %r87     to ptr
     %r91 = getelementptr i64, ptr %r90, i64 %r88    
     %r92 = load i64, ptr %r91    
     %r93 = icmp ne i64 %r92    , 0
-    br i1 %r93, label %Label_3841, label %Label_3842    
-Label_3841:
+    br i1 %r93, label %Label_3865, label %Label_3866    
+Label_3865:
     %r94 = load i64, ptr %p17    
     %r95 = load i64, ptr @Global_LET_VAL    
     %r96 = icmp eq i64 %r94    , 0
-    br i1 %r96, label %Label_PanicNull, label %Label_3844    
-Label_3844:
+    br i1 %r96, label %Label_PanicNull, label %Label_3868    
+Label_3868:
     %r97 = inttoptr i64 %r94     to ptr
     %r98 = getelementptr i64, ptr %r97, i64 %r95    
     %r99 = load i64, ptr %r98    
@@ -35511,34 +35627,34 @@ Label_3844:
     store i64 %r102, ptr %p38    
     %r103 = load i64, ptr %p38    
     %r104 = icmp ne i64 %r103    , 0
-    br i1 %r104, label %Label_3845, label %Label_3846    
-Label_3845:
+    br i1 %r104, label %Label_3869, label %Label_3870    
+Label_3869:
     %r105 = load i64, ptr %p38    
     ret i64 %r105    
-    br label %Label_3847    
-Label_3846:
-    br label %Label_3847    
-Label_3847:
-    br label %Label_3843    
-Label_3842:
-    br label %Label_3843    
-Label_3843:
-    br label %Label_3839    
-Label_3838:
-    br label %Label_3839    
-Label_3839:
-    br label %Label_3832    
-Label_3832:
-    br label %Label_3825    
-Label_3825:
-    br label %Label_3817    
-Label_3817:
+    br label %Label_3871    
+Label_3870:
+    br label %Label_3871    
+Label_3871:
+    br label %Label_3867    
+Label_3866:
+    br label %Label_3867    
+Label_3867:
+    br label %Label_3863    
+Label_3862:
+    br label %Label_3863    
+Label_3863:
+    br label %Label_3856    
+Label_3856:
+    br label %Label_3849    
+Label_3849:
+    br label %Label_3841    
+Label_3841:
     %r106 = load i64, ptr %p6    
     %r107 = add i64 %r106, 1    
     %r108 = load i64, ptr %p6    
     store i64 %r107, ptr %p6    
-    br label %Label_3810    
-Label_3812:
+    br label %Label_3834    
+Label_3836:
     ret i64 0    
     ret i64 0
 Label_PanicNull:
@@ -35566,8 +35682,8 @@ start_fn:
     store i64 0, ptr %p5    
     %r6 = load i64, ptr %p4    
     %r7 = icmp eq i64 %r6    , 0
-    br i1 %r7, label %Label_PanicNull, label %Label_3848    
-Label_3848:
+    br i1 %r7, label %Label_PanicNull, label %Label_3872    
+Label_3872:
     %r8 = inttoptr i64 %r6     to ptr
     %r9 = getelementptr i64, ptr %r8, i64 4    
     %r10 = load i64, ptr %r9    
@@ -35577,15 +35693,15 @@ Label_3848:
     %r12 = call i64 @_eq_json_new(    )
     store i64 %r12, ptr %p11    
     %r13 = load i64, ptr %p11    
-    %r14 = ptrtoint ptr @str.484     to i64
-    %r15 = ptrtoint ptr @str.485     to i64
+    %r14 = ptrtoint ptr @str.489     to i64
+    %r15 = ptrtoint ptr @str.490     to i64
     %r16 = call i64 @_eq_json_put_str(i64 %r13, i64 %r14, i64 %r15    )
     %p17     = alloca i64
     store i64 0, ptr %p17    
     %r18 = call i64 @_eq_json_new(    )
     store i64 %r18, ptr %p17    
     %r19 = load i64, ptr %p17    
-    %r20 = ptrtoint ptr @str.486     to i64
+    %r20 = ptrtoint ptr @str.491     to i64
     %r21 = load i64, ptr %p3    
     %r22 = call i64 @_eq_json_put_str(i64 %r19, i64 %r20, i64 %r21    )
     %p23     = alloca i64
@@ -35600,23 +35716,23 @@ Label_3848:
     %r27 = load i64, ptr %p5    
     %r28 = call i64 @_eq_vec_size(i64 %r27    )
     store i64 %r28, ptr %p26    
-    br label %Label_3849    
-Label_3849:
+    br label %Label_3873    
+Label_3873:
     %r29 = load volatile i32, ptr @g_needs_yield
     %r30 = icmp ne i32 %r29, 0
-    br i1 %r30, label %Preywh_3852, label %Checkwh_3852    
-Preywh_3852:
+    br i1 %r30, label %Preywh_3876, label %Checkwh_3876    
+Preywh_3876:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3852    
-Checkwh_3852:
+    br label %Checkwh_3876    
+Checkwh_3876:
     %r31 = load i64, ptr %p25    
     %r32 = load i64, ptr %p26    
     %r33 = icmp slt i64 %r31, %r32    
     %r34 = zext i1 %r33     to i64
     %r35 = icmp ne i64 %r34    , 0
-    br i1 %r35, label %Label_3850, label %Label_3851    
-Label_3850:
+    br i1 %r35, label %Label_3874, label %Label_3875    
+Label_3874:
     %p36     = alloca i64
     store i64 0, ptr %p36    
     %r37 = load i64, ptr %p5    
@@ -35628,21 +35744,21 @@ Label_3850:
     %r41 = call i64 @_eq_json_new(    )
     store i64 %r41, ptr %p40    
     %r42 = load i64, ptr %p40    
-    %r43 = ptrtoint ptr @str.487     to i64
+    %r43 = ptrtoint ptr @str.492     to i64
     %r44 = load i64, ptr %p36    
     %r45 = icmp eq i64 %r44    , 0
-    br i1 %r45, label %Label_PanicNull, label %Label_3853    
-Label_3853:
+    br i1 %r45, label %Label_PanicNull, label %Label_3877    
+Label_3877:
     %r46 = inttoptr i64 %r44     to ptr
     %r47 = getelementptr i64, ptr %r46, i64 0    
     %r48 = load i64, ptr %r47    
     %r49 = call i64 @_eq_json_put_str(i64 %r42, i64 %r43, i64 %r48    )
     %r50 = load i64, ptr %p40    
-    %r51 = ptrtoint ptr @str.488     to i64
+    %r51 = ptrtoint ptr @str.493     to i64
     %r52 = load i64, ptr %p36    
     %r53 = icmp eq i64 %r52    , 0
-    br i1 %r53, label %Label_PanicNull, label %Label_3854    
-Label_3854:
+    br i1 %r53, label %Label_PanicNull, label %Label_3878    
+Label_3878:
     %r54 = inttoptr i64 %r52     to ptr
     %r55 = getelementptr i64, ptr %r54, i64 3    
     %r56 = load i64, ptr %r55    
@@ -35656,22 +35772,22 @@ Label_3854:
     %r61 = call i64 @_eq_json_new(    )
     store i64 %r61, ptr %p60    
     %r62 = load i64, ptr %p60    
-    %r63 = ptrtoint ptr @str.489     to i64
+    %r63 = ptrtoint ptr @str.494     to i64
     %r64 = load i64, ptr %p36    
     %r65 = icmp eq i64 %r64    , 0
-    br i1 %r65, label %Label_PanicNull, label %Label_3855    
-Label_3855:
+    br i1 %r65, label %Label_PanicNull, label %Label_3879    
+Label_3879:
     %r66 = inttoptr i64 %r64     to ptr
     %r67 = getelementptr i64, ptr %r66, i64 1    
     %r68 = load i64, ptr %r67    
     %r69 = sub i64 %r68, 1    
     %r70 = call i64 @_eq_json_put_int(i64 %r62, i64 %r63, i64 %r69    )
     %r71 = load i64, ptr %p60    
-    %r72 = ptrtoint ptr @str.490     to i64
+    %r72 = ptrtoint ptr @str.495     to i64
     %r73 = load i64, ptr %p36    
     %r74 = icmp eq i64 %r73    , 0
-    br i1 %r74, label %Label_PanicNull, label %Label_3856    
-Label_3856:
+    br i1 %r74, label %Label_PanicNull, label %Label_3880    
+Label_3880:
     %r75 = inttoptr i64 %r73     to ptr
     %r76 = getelementptr i64, ptr %r75, i64 2    
     %r77 = load i64, ptr %r76    
@@ -35682,36 +35798,36 @@ Label_3856:
     %r81 = call i64 @_eq_json_new(    )
     store i64 %r81, ptr %p80    
     %r82 = load i64, ptr %p80    
-    %r83 = ptrtoint ptr @str.489     to i64
+    %r83 = ptrtoint ptr @str.494     to i64
     %r84 = load i64, ptr %p36    
     %r85 = icmp eq i64 %r84    , 0
-    br i1 %r85, label %Label_PanicNull, label %Label_3857    
-Label_3857:
+    br i1 %r85, label %Label_PanicNull, label %Label_3881    
+Label_3881:
     %r86 = inttoptr i64 %r84     to ptr
     %r87 = getelementptr i64, ptr %r86, i64 1    
     %r88 = load i64, ptr %r87    
     %r89 = sub i64 %r88, 1    
     %r90 = call i64 @_eq_json_put_int(i64 %r82, i64 %r83, i64 %r89    )
     %r91 = load i64, ptr %p80    
-    %r92 = ptrtoint ptr @str.490     to i64
+    %r92 = ptrtoint ptr @str.495     to i64
     %r93 = load i64, ptr %p36    
     %r94 = icmp eq i64 %r93    , 0
-    br i1 %r94, label %Label_PanicNull, label %Label_3858    
-Label_3858:
+    br i1 %r94, label %Label_PanicNull, label %Label_3882    
+Label_3882:
     %r95 = inttoptr i64 %r93     to ptr
     %r96 = getelementptr i64, ptr %r95, i64 2    
     %r97 = load i64, ptr %r96    
     %r98 = call i64 @_eq_json_put_int(i64 %r91, i64 %r92, i64 %r97    )
     %r99 = load i64, ptr %p58    
-    %r100 = ptrtoint ptr @str.491     to i64
+    %r100 = ptrtoint ptr @str.496     to i64
     %r101 = load i64, ptr %p60    
     %r102 = call i64 @_eq_json_put_obj(i64 %r99, i64 %r100, i64 %r101    )
     %r103 = load i64, ptr %p58    
-    %r104 = ptrtoint ptr @str.492     to i64
+    %r104 = ptrtoint ptr @str.497     to i64
     %r105 = load i64, ptr %p80    
     %r106 = call i64 @_eq_json_put_obj(i64 %r103, i64 %r104, i64 %r105    )
     %r107 = load i64, ptr %p40    
-    %r108 = ptrtoint ptr @str.493     to i64
+    %r108 = ptrtoint ptr @str.498     to i64
     %r109 = load i64, ptr %p58    
     %r110 = call i64 @_eq_json_put_obj(i64 %r107, i64 %r108, i64 %r109    )
     %r111 = load i64, ptr %p23    
@@ -35724,14 +35840,14 @@ Label_3858:
     %r117 = add i64 %r116, 1    
     %r118 = load i64, ptr %p25    
     store i64 %r117, ptr %p25    
-    br label %Label_3849    
-Label_3851:
+    br label %Label_3873    
+Label_3875:
     %r119 = load i64, ptr %p17    
-    %r120 = ptrtoint ptr @str.494     to i64
+    %r120 = ptrtoint ptr @str.499     to i64
     %r121 = load i64, ptr %p23    
     %r122 = call i64 @_eq_json_put_array(i64 %r119, i64 %r120, i64 %r121    )
     %r123 = load i64, ptr %p11    
-    %r124 = ptrtoint ptr @str.495     to i64
+    %r124 = ptrtoint ptr @str.500     to i64
     %r125 = load i64, ptr %p17    
     %r126 = call i64 @_eq_json_put_obj(i64 %r123, i64 %r124, i64 %r125    )
     %r127 = load i64, ptr %p11    
@@ -35760,19 +35876,19 @@ start_fn:
     store i64 0, ptr %p5    
     %r6 = call i64 @sys_malloc(i64 8    )
     store i64 %r6, ptr %p5    
-    br label %Label_3859    
-Label_3859:
+    br label %Label_3883    
+Label_3883:
     %r7 = load volatile i32, ptr @g_needs_yield
     %r8 = icmp ne i32 %r7, 0
-    br i1 %r8, label %Preywh_3862, label %Checkwh_3862    
-Preywh_3862:
+    br i1 %r8, label %Preywh_3886, label %Checkwh_3886    
+Preywh_3886:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3862    
-Checkwh_3862:
+    br label %Checkwh_3886    
+Checkwh_3886:
     %r9 = icmp ne i64 1    , 0
-    br i1 %r9, label %Label_3860, label %Label_3861    
-Label_3860:
+    br i1 %r9, label %Label_3884, label %Label_3885    
+Label_3884:
     %p10     = alloca i64
     store i64 0, ptr %p10    
     store i64 0, ptr %p10    
@@ -35783,44 +35899,44 @@ Label_3860:
     %p13     = alloca i64
     store i64 0, ptr %p13    
     store i64 0, ptr %p13    
-    br label %Label_3863    
-Label_3863:
+    br label %Label_3887    
+Label_3887:
     %r14 = load volatile i32, ptr @g_needs_yield
     %r15 = icmp ne i32 %r14, 0
-    br i1 %r15, label %Preywh_3866, label %Checkwh_3866    
-Preywh_3866:
+    br i1 %r15, label %Preywh_3890, label %Checkwh_3890    
+Preywh_3890:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3866    
-Checkwh_3866:
+    br label %Checkwh_3890    
+Checkwh_3890:
     %r16 = load i64, ptr %p13    
     %r17 = icmp eq i64 %r16, 0    
     %r18 = zext i1 %r17     to i64
     %r19 = icmp ne i64 %r18    , 0
-    br i1 %r19, label %Label_3864, label %Label_3865    
-Label_3864:
+    br i1 %r19, label %Label_3888, label %Label_3889    
+Label_3888:
     %p20     = alloca i64
     store i64 0, ptr %p20    
     store i64 0, ptr %p20    
     %p21     = alloca i64
     store i64 0, ptr %p21    
     store i64 0, ptr %p21    
-    br label %Label_3867    
-Label_3867:
+    br label %Label_3891    
+Label_3891:
     %r22 = load volatile i32, ptr @g_needs_yield
     %r23 = icmp ne i32 %r22, 0
-    br i1 %r23, label %Preywh_3870, label %Checkwh_3870    
-Preywh_3870:
+    br i1 %r23, label %Preywh_3894, label %Checkwh_3894    
+Preywh_3894:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3870    
-Checkwh_3870:
+    br label %Checkwh_3894    
+Checkwh_3894:
     %r24 = load i64, ptr %p20    
     %r25 = icmp slt i64 %r24, 1023    
     %r26 = zext i1 %r25     to i64
     %r27 = icmp ne i64 %r26    , 0
-    br i1 %r27, label %Label_3868, label %Label_3869    
-Label_3868:
+    br i1 %r27, label %Label_3892, label %Label_3893    
+Label_3892:
     %r28 = load i64, ptr %p5    
     %r29 = call i64 @read(i64 0, i64 %r28, i64 1    )
     %r30 = load i64, ptr %p5    
@@ -35834,8 +35950,8 @@ Label_3868:
     %r37 = icmp eq i64 %r36, 10    
     %r38 = zext i1 %r37     to i64
     %r39 = icmp ne i64 %r38    , 0
-    br i1 %r39, label %Label_3871, label %Label_3872    
-Label_3871:
+    br i1 %r39, label %Label_3895, label %Label_3896    
+Label_3895:
     %r40 = load i64, ptr %p11    
     %r41 = load i64, ptr %p20    
     %r43 = ptrtoint ptr @_eq_set_char     to i64
@@ -35843,14 +35959,14 @@ Label_3871:
     %r42 = call i64 %r44(i64 %r40, i64 %r41, i64 0    )
     %r45 = load i64, ptr %p20    
     store i64 10000, ptr %p20    
-    br label %Label_3873    
-Label_3872:
+    br label %Label_3897    
+Label_3896:
     %r46 = load i64, ptr %p21    
     %r47 = icmp ne i64 %r46, 13    
     %r48 = zext i1 %r47     to i64
     %r49 = icmp ne i64 %r48    , 0
-    br i1 %r49, label %Label_3874, label %Label_3875    
-Label_3874:
+    br i1 %r49, label %Label_3898, label %Label_3899    
+Label_3898:
     %r50 = load i64, ptr %p11    
     %r51 = load i64, ptr %p20    
     %r52 = load i64, ptr %p21    
@@ -35861,69 +35977,69 @@ Label_3874:
     %r57 = add i64 %r56, 1    
     %r58 = load i64, ptr %p20    
     store i64 %r57, ptr %p20    
-    br label %Label_3876    
-Label_3875:
-    br label %Label_3876    
-Label_3876:
-    br label %Label_3873    
-Label_3873:
-    br label %Label_3867    
-Label_3869:
+    br label %Label_3900    
+Label_3899:
+    br label %Label_3900    
+Label_3900:
+    br label %Label_3897    
+Label_3897:
+    br label %Label_3891    
+Label_3893:
     %r59 = load i64, ptr %p20    
     %r60 = icmp eq i64 %r59, 0    
     %r61 = zext i1 %r60     to i64
     %r62 = icmp ne i64 %r61    , 0
-    br i1 %r62, label %Label_3877, label %Label_3878    
-Label_3877:
+    br i1 %r62, label %Label_3901, label %Label_3902    
+Label_3901:
     %r63 = load i64, ptr %p13    
     store i64 1, ptr %p13    
-    br label %Label_3879    
-Label_3878:
+    br label %Label_3903    
+Label_3902:
     %r64 = load i64, ptr %p11    
-    %r65 = ptrtoint ptr @str.482     to i64
+    %r65 = ptrtoint ptr @str.487     to i64
     %r66 = call i64 @_eq_str_substring_equal(i64 %r64, i64 0, i64 16, i64 %r65    )
     %r67 = icmp ne i64 %r66    , 0
-    br i1 %r67, label %Label_3880, label %Label_3881    
-Label_3880:
+    br i1 %r67, label %Label_3904, label %Label_3905    
+Label_3904:
     %r68 = load i64, ptr %p11    
     %r69 = call i64 @sys_ptr_add(i64 %r68, i64 16    )
     %r70 = call i64 @_eq_str_to_int(i64 %r69    )
     %r71 = load i64, ptr %p10    
     store i64 %r70, ptr %p10    
-    br label %Label_3882    
-Label_3881:
-    br label %Label_3882    
-Label_3882:
-    br label %Label_3879    
-Label_3879:
-    br label %Label_3863    
-Label_3865:
+    br label %Label_3906    
+Label_3905:
+    br label %Label_3906    
+Label_3906:
+    br label %Label_3903    
+Label_3903:
+    br label %Label_3887    
+Label_3889:
     %r72 = load i64, ptr %p10    
     %r73 = icmp sgt i64 %r72, 0    
     %r74 = zext i1 %r73     to i64
     %r75 = icmp ne i64 %r74    , 0
-    br i1 %r75, label %Label_3883, label %Label_3884    
-Label_3883:
+    br i1 %r75, label %Label_3907, label %Label_3908    
+Label_3907:
     %p76     = alloca i64
     store i64 0, ptr %p76    
     store i64 0, ptr %p76    
-    br label %Label_3886    
-Label_3886:
+    br label %Label_3910    
+Label_3910:
     %r77 = load volatile i32, ptr @g_needs_yield
     %r78 = icmp ne i32 %r77, 0
-    br i1 %r78, label %Preywh_3889, label %Checkwh_3889    
-Preywh_3889:
+    br i1 %r78, label %Preywh_3913, label %Checkwh_3913    
+Preywh_3913:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3889    
-Checkwh_3889:
+    br label %Checkwh_3913    
+Checkwh_3913:
     %r79 = load i64, ptr %p76    
     %r80 = load i64, ptr %p10    
     %r81 = icmp slt i64 %r79, %r80    
     %r82 = zext i1 %r81     to i64
     %r83 = icmp ne i64 %r82    , 0
-    br i1 %r83, label %Label_3887, label %Label_3888    
-Label_3887:
+    br i1 %r83, label %Label_3911, label %Label_3912    
+Label_3911:
     %p84     = alloca i64
     store i64 0, ptr %p84    
     %r85 = load i64, ptr %p3    
@@ -35938,20 +36054,20 @@ Label_3887:
     %r93 = icmp sle i64 %r92, 0    
     %r94 = zext i1 %r93     to i64
     %r95 = icmp ne i64 %r94    , 0
-    br i1 %r95, label %Label_3890, label %Label_3891    
-Label_3890:
+    br i1 %r95, label %Label_3914, label %Label_3915    
+Label_3914:
     %r96 = call i64 @exit(i64 0    )
-    br label %Label_3892    
-Label_3891:
-    br label %Label_3892    
-Label_3892:
+    br label %Label_3916    
+Label_3915:
+    br label %Label_3916    
+Label_3916:
     %r97 = load i64, ptr %p76    
     %r98 = load i64, ptr %p84    
     %r99 = add i64 %r97, %r98    
     %r100 = load i64, ptr %p76    
     store i64 %r99, ptr %p76    
-    br label %Label_3886    
-Label_3888:
+    br label %Label_3910    
+Label_3912:
     %r101 = load i64, ptr %p3    
     %r102 = load i64, ptr %p10    
     %r104 = ptrtoint ptr @_eq_set_char     to i64
@@ -35964,36 +36080,36 @@ Label_3888:
     store i64 %r108, ptr %p106    
     %r109 = load i64, ptr %p106    
     %r110 = icmp ne i64 %r109    , 0
-    br i1 %r110, label %Label_3893, label %Label_3894    
-Label_3893:
+    br i1 %r110, label %Label_3917, label %Label_3918    
+Label_3917:
     %p111     = alloca i64
     store i64 0, ptr %p111    
     %r112 = load i64, ptr %p106    
-    %r113 = ptrtoint ptr @str.496     to i64
+    %r113 = ptrtoint ptr @str.501     to i64
     %r114 = call i64 @_eq_json_get_int(i64 %r112, i64 %r113    )
     store i64 %r114, ptr %p111    
     %p115     = alloca i64
     store i64 0, ptr %p115    
     %r116 = load i64, ptr %p106    
-    %r117 = ptrtoint ptr @str.484     to i64
+    %r117 = ptrtoint ptr @str.489     to i64
     %r118 = call i64 @_eq_json_get_str(i64 %r116, i64 %r117    )
     store i64 %r118, ptr %p115    
     %r119 = load i64, ptr %p115    
     %r120 = icmp ne i64 %r119    , 0
-    br i1 %r120, label %Label_3896, label %Label_3897    
-Label_3896:
+    br i1 %r120, label %Label_3920, label %Label_3921    
+Label_3920:
     %r121 = load i64, ptr %p115    
-    %r122 = ptrtoint ptr @str.497     to i64
+    %r122 = ptrtoint ptr @str.502     to i64
     %r123 = call i64 @_eq_str_equal(i64 %r121, i64 %r122    )
     %r124 = icmp ne i64 %r123    , 0
-    br i1 %r124, label %Label_3899, label %Label_3900    
-Label_3899:
+    br i1 %r124, label %Label_3923, label %Label_3924    
+Label_3923:
     %p125     = alloca i64
     store i64 0, ptr %p125    
     %r126 = call i64 @_eq_json_new(    )
     store i64 %r126, ptr %p125    
     %r127 = load i64, ptr %p125    
-    %r128 = ptrtoint ptr @str.496     to i64
+    %r128 = ptrtoint ptr @str.501     to i64
     %r129 = load i64, ptr %p111    
     %r130 = call i64 @_eq_json_put_int(i64 %r127, i64 %r128, i64 %r129    )
     %p131     = alloca i64
@@ -36005,48 +36121,48 @@ Label_3899:
     %r134 = call i64 @_eq_json_new(    )
     store i64 %r134, ptr %p133    
     %r135 = load i64, ptr %p133    
-    %r136 = ptrtoint ptr @str.498     to i64
+    %r136 = ptrtoint ptr @str.503     to i64
     %r137 = call i64 @_eq_json_put_int(i64 %r135, i64 %r136, i64 1    )
     %r138 = load i64, ptr %p131    
-    %r139 = ptrtoint ptr @str.499     to i64
+    %r139 = ptrtoint ptr @str.504     to i64
     %r140 = load i64, ptr %p133    
     %r141 = call i64 @_eq_json_put_str(i64 %r138, i64 %r139, i64 %r140    )
     %r142 = load i64, ptr %p125    
-    %r143 = ptrtoint ptr @str.500     to i64
+    %r143 = ptrtoint ptr @str.505     to i64
     %r144 = load i64, ptr %p131    
     %r145 = call i64 @_eq_map_put(i64 %r142, i64 %r143, i64 %r144    )
     %r146 = load i64, ptr %p125    
     %r147 = call i64 @_eq_lsp_send(i64 %r146    )
-    br label %Label_3901    
-Label_3900:
+    br label %Label_3925    
+Label_3924:
     %r148 = load i64, ptr %p115    
-    %r149 = ptrtoint ptr @str.501     to i64
+    %r149 = ptrtoint ptr @str.506     to i64
     %r150 = call i64 @_eq_str_equal(i64 %r148, i64 %r149    )
     %r151 = icmp ne i64 %r150    , 0
-    br i1 %r151, label %Label_3902, label %Label_3903    
-Label_3902:
+    br i1 %r151, label %Label_3926, label %Label_3927    
+Label_3926:
     %p152     = alloca i64
     store i64 0, ptr %p152    
     %r153 = load i64, ptr %p106    
-    %r154 = ptrtoint ptr @str.495     to i64
+    %r154 = ptrtoint ptr @str.500     to i64
     %r155 = call i64 @_eq_map_get(i64 %r153, i64 %r154    )
     store i64 %r155, ptr %p152    
     %p156     = alloca i64
     store i64 0, ptr %p156    
     %r157 = load i64, ptr %p152    
-    %r158 = ptrtoint ptr @str.502     to i64
+    %r158 = ptrtoint ptr @str.507     to i64
     %r159 = call i64 @_eq_map_get(i64 %r157, i64 %r158    )
     store i64 %r159, ptr %p156    
     %p160     = alloca i64
     store i64 0, ptr %p160    
     %r161 = load i64, ptr %p156    
-    %r162 = ptrtoint ptr @str.486     to i64
+    %r162 = ptrtoint ptr @str.491     to i64
     %r163 = call i64 @_eq_map_get(i64 %r161, i64 %r162    )
     store i64 %r163, ptr %p160    
     %p164     = alloca i64
     store i64 0, ptr %p164    
     %r165 = load i64, ptr %p156    
-    %r166 = ptrtoint ptr @str.503     to i64
+    %r166 = ptrtoint ptr @str.508     to i64
     %r167 = call i64 @_eq_map_get(i64 %r165, i64 %r166    )
     store i64 %r167, ptr %p164    
     %p168     = alloca i64
@@ -36060,8 +36176,8 @@ Label_3902:
     store i64 0, ptr %p173    
     %r174 = load i64, ptr %p168    
     %r175 = icmp eq i64 %r174    , 0
-    br i1 %r175, label %Label_PanicNull, label %Label_3905    
-Label_3905:
+    br i1 %r175, label %Label_PanicNull, label %Label_3929    
+Label_3929:
     %r176 = inttoptr i64 %r174     to ptr
     %r177 = getelementptr i64, ptr %r176, i64 4    
     %r178 = load i64, ptr %r177    
@@ -36086,30 +36202,30 @@ Label_3905:
     %r190 = load i64, ptr %p160    
     %r191 = load i64, ptr %p185    
     %r192 = call i64 @_eq_lsp_publish_diagnostics(i64 %r190, i64 %r191    )
-    br label %Label_3904    
-Label_3903:
+    br label %Label_3928    
+Label_3927:
     %r193 = load i64, ptr %p115    
-    %r194 = ptrtoint ptr @str.504     to i64
+    %r194 = ptrtoint ptr @str.509     to i64
     %r195 = call i64 @_eq_str_equal(i64 %r193, i64 %r194    )
     %r196 = icmp ne i64 %r195    , 0
-    br i1 %r196, label %Label_3906, label %Label_3907    
-Label_3906:
+    br i1 %r196, label %Label_3930, label %Label_3931    
+Label_3930:
     %r197 = load i64, ptr %p106    
-    %r198 = ptrtoint ptr @str.495     to i64
+    %r198 = ptrtoint ptr @str.500     to i64
     %r199 = call i64 @_eq_map_get(i64 %r197, i64 %r198    )
     store i64 %r199, ptr %p152    
     %r200 = load i64, ptr %p152    
-    %r201 = ptrtoint ptr @str.502     to i64
+    %r201 = ptrtoint ptr @str.507     to i64
     %r202 = call i64 @_eq_map_get(i64 %r200, i64 %r201    )
     store i64 %r202, ptr %p156    
     %r203 = load i64, ptr %p156    
-    %r204 = ptrtoint ptr @str.486     to i64
+    %r204 = ptrtoint ptr @str.491     to i64
     %r205 = call i64 @_eq_map_get(i64 %r203, i64 %r204    )
     store i64 %r205, ptr %p160    
     %p206     = alloca i64
     store i64 0, ptr %p206    
     %r207 = load i64, ptr %p152    
-    %r208 = ptrtoint ptr @str.505     to i64
+    %r208 = ptrtoint ptr @str.510     to i64
     %r209 = call i64 @_eq_map_get(i64 %r207, i64 %r208    )
     store i64 %r209, ptr %p206    
     %p210     = alloca i64
@@ -36118,7 +36234,7 @@ Label_3906:
     %r212 = call i64 @_eq_vec_get(i64 %r211, i64 0    )
     store i64 %r212, ptr %p210    
     %r213 = load i64, ptr %p210    
-    %r214 = ptrtoint ptr @str.503     to i64
+    %r214 = ptrtoint ptr @str.508     to i64
     %r215 = call i64 @_eq_map_get(i64 %r213, i64 %r214    )
     store i64 %r215, ptr %p164    
     %r216 = load i64, ptr %p164    
@@ -36128,8 +36244,8 @@ Label_3906:
     %r219 = call i64 @_eq_lexer_scan_tokens(i64 %r218    )
     %r220 = load i64, ptr %p168    
     %r221 = icmp eq i64 %r220    , 0
-    br i1 %r221, label %Label_PanicNull, label %Label_3909    
-Label_3909:
+    br i1 %r221, label %Label_PanicNull, label %Label_3933    
+Label_3933:
     %r222 = inttoptr i64 %r220     to ptr
     %r223 = getelementptr i64, ptr %r222, i64 4    
     %r224 = load i64, ptr %r223    
@@ -36148,43 +36264,43 @@ Label_3909:
     %r233 = load i64, ptr %p160    
     %r234 = load i64, ptr %p185    
     %r235 = call i64 @_eq_lsp_publish_diagnostics(i64 %r233, i64 %r234    )
-    br label %Label_3908    
-Label_3907:
+    br label %Label_3932    
+Label_3931:
     %r236 = load i64, ptr %p115    
-    %r237 = ptrtoint ptr @str.506     to i64
+    %r237 = ptrtoint ptr @str.511     to i64
     %r238 = call i64 @_eq_str_equal(i64 %r236, i64 %r237    )
     %r239 = icmp ne i64 %r238    , 0
-    br i1 %r239, label %Label_3910, label %Label_3911    
-Label_3910:
+    br i1 %r239, label %Label_3934, label %Label_3935    
+Label_3934:
     %r240 = load i64, ptr %p106    
-    %r241 = ptrtoint ptr @str.495     to i64
+    %r241 = ptrtoint ptr @str.500     to i64
     %r242 = call i64 @_eq_map_get(i64 %r240, i64 %r241    )
     store i64 %r242, ptr %p152    
     %r243 = load i64, ptr %p152    
-    %r244 = ptrtoint ptr @str.502     to i64
+    %r244 = ptrtoint ptr @str.507     to i64
     %r245 = call i64 @_eq_map_get(i64 %r243, i64 %r244    )
     store i64 %r245, ptr %p156    
     %p246     = alloca i64
     store i64 0, ptr %p246    
     %r247 = load i64, ptr %p152    
-    %r248 = ptrtoint ptr @str.507     to i64
+    %r248 = ptrtoint ptr @str.512     to i64
     %r249 = call i64 @_eq_map_get(i64 %r247, i64 %r248    )
     store i64 %r249, ptr %p246    
     %r250 = load i64, ptr %p156    
-    %r251 = ptrtoint ptr @str.486     to i64
+    %r251 = ptrtoint ptr @str.491     to i64
     %r252 = call i64 @_eq_map_get(i64 %r250, i64 %r251    )
     store i64 %r252, ptr %p160    
     %p253     = alloca i64
     store i64 0, ptr %p253    
     %r254 = load i64, ptr %p246    
-    %r255 = ptrtoint ptr @str.489     to i64
+    %r255 = ptrtoint ptr @str.494     to i64
     %r256 = call i64 @_eq_json_get_int(i64 %r254, i64 %r255    )
     %r257 = add i64 %r256, 1    
     store i64 %r257, ptr %p253    
     %p258     = alloca i64
     store i64 0, ptr %p258    
     %r259 = load i64, ptr %p246    
-    %r260 = ptrtoint ptr @str.490     to i64
+    %r260 = ptrtoint ptr @str.495     to i64
     %r261 = call i64 @_eq_json_get_int(i64 %r259, i64 %r260    )
     store i64 %r261, ptr %p258    
     %p262     = alloca i64
@@ -36194,8 +36310,8 @@ Label_3910:
     store i64 %r264, ptr %p262    
     %r265 = load i64, ptr %p262    
     %r266 = icmp ne i64 %r265    , 0
-    br i1 %r266, label %Label_3913, label %Label_3914    
-Label_3913:
+    br i1 %r266, label %Label_3937, label %Label_3938    
+Label_3937:
     %r267 = load i64, ptr %p262    
     %r268 = call i64 @_eq_lexer_new(i64 %r267    )
     store i64 %r268, ptr %p168    
@@ -36203,8 +36319,8 @@ Label_3913:
     %r270 = call i64 @_eq_lexer_scan_tokens(i64 %r269    )
     %r271 = load i64, ptr %p168    
     %r272 = icmp eq i64 %r271    , 0
-    br i1 %r272, label %Label_PanicNull, label %Label_3916    
-Label_3916:
+    br i1 %r272, label %Label_PanicNull, label %Label_3940    
+Label_3940:
     %r273 = inttoptr i64 %r271     to ptr
     %r274 = getelementptr i64, ptr %r273, i64 4    
     %r275 = load i64, ptr %r274    
@@ -36227,12 +36343,12 @@ Label_3916:
     store i64 %r287, ptr %p283    
     %r288 = load i64, ptr %p283    
     %r289 = icmp ne i64 %r288    , 0
-    br i1 %r289, label %Label_3917, label %Label_3918    
-Label_3917:
+    br i1 %r289, label %Label_3941, label %Label_3942    
+Label_3941:
     %r290 = load i64, ptr %p283    
     %r291 = icmp eq i64 %r290    , 0
-    br i1 %r291, label %Label_PanicNull, label %Label_3920    
-Label_3920:
+    br i1 %r291, label %Label_PanicNull, label %Label_3944    
+Label_3944:
     %r292 = inttoptr i64 %r290     to ptr
     %r293 = getelementptr i64, ptr %r292, i64 0    
     %r294 = load i64, ptr %r293    
@@ -36240,15 +36356,15 @@ Label_3920:
     %r296 = icmp eq i64 %r294, %r295    
     %r297 = zext i1 %r296     to i64
     %r298 = icmp ne i64 %r297    , 0
-    br i1 %r298, label %Label_3921, label %Label_3922    
-Label_3921:
+    br i1 %r298, label %Label_3945, label %Label_3946    
+Label_3945:
     %p299     = alloca i64
     store i64 0, ptr %p299    
     %r300 = load i64, ptr %p185    
     %r301 = load i64, ptr %p283    
     %r302 = icmp eq i64 %r301    , 0
-    br i1 %r302, label %Label_PanicNull, label %Label_3924    
-Label_3924:
+    br i1 %r302, label %Label_PanicNull, label %Label_3948    
+Label_3948:
     %r303 = inttoptr i64 %r301     to ptr
     %r304 = getelementptr i64, ptr %r303, i64 1    
     %r305 = load i64, ptr %r304    
@@ -36256,26 +36372,26 @@ Label_3924:
     store i64 %r306, ptr %p299    
     %r307 = load i64, ptr %p299    
     %r308 = icmp ne i64 %r307    , 0
-    br i1 %r308, label %Label_3925, label %Label_3926    
-Label_3925:
+    br i1 %r308, label %Label_3949, label %Label_3950    
+Label_3949:
     %p309     = alloca i64
     store i64 0, ptr %p309    
     %r310 = load i64, ptr %p299    
     %r311 = icmp eq i64 %r310    , 0
-    br i1 %r311, label %Label_PanicNull, label %Label_3928    
-Label_3928:
+    br i1 %r311, label %Label_PanicNull, label %Label_3952    
+Label_3952:
     %r312 = inttoptr i64 %r310     to ptr
     %r313 = getelementptr i64, ptr %r312, i64 1    
     %r314 = load i64, ptr %r313    
     store i64 %r314, ptr %p309    
     %r315 = load i64, ptr %p309    
     %r316 = icmp ne i64 %r315    , 0
-    br i1 %r316, label %Label_3929, label %Label_3930    
-Label_3929:
+    br i1 %r316, label %Label_3953, label %Label_3954    
+Label_3953:
     %r317 = call i64 @_eq_json_new(    )
     store i64 %r317, ptr %p125    
     %r318 = load i64, ptr %p125    
-    %r319 = ptrtoint ptr @str.496     to i64
+    %r319 = ptrtoint ptr @str.501     to i64
     %r320 = load i64, ptr %p111    
     %r321 = call i64 @_eq_json_put_int(i64 %r318, i64 %r319, i64 %r320    )
     %p322     = alloca i64
@@ -36283,7 +36399,7 @@ Label_3929:
     %r323 = call i64 @_eq_json_new(    )
     store i64 %r323, ptr %p322    
     %r324 = load i64, ptr %p322    
-    %r325 = ptrtoint ptr @str.486     to i64
+    %r325 = ptrtoint ptr @str.491     to i64
     %r326 = load i64, ptr %p160    
     %r327 = call i64 @_eq_json_put_str(i64 %r324, i64 %r325, i64 %r326    )
     %p328     = alloca i64
@@ -36295,24 +36411,24 @@ Label_3929:
     %r331 = call i64 @_eq_json_new(    )
     store i64 %r331, ptr %p330    
     %r332 = load i64, ptr %p330    
-    %r333 = ptrtoint ptr @str.489     to i64
+    %r333 = ptrtoint ptr @str.494     to i64
     %r334 = load i64, ptr %p309    
     %r335 = load i64, ptr @Global_FUNC_LINE    
     %r336 = icmp eq i64 %r334    , 0
-    br i1 %r336, label %Label_PanicNull, label %Label_3932    
-Label_3932:
+    br i1 %r336, label %Label_PanicNull, label %Label_3956    
+Label_3956:
     %r337 = inttoptr i64 %r334     to ptr
     %r338 = getelementptr i64, ptr %r337, i64 %r335    
     %r339 = load i64, ptr %r338    
     %r340 = sub i64 %r339, 1    
     %r341 = call i64 @_eq_json_put_int(i64 %r332, i64 %r333, i64 %r340    )
     %r342 = load i64, ptr %p330    
-    %r343 = ptrtoint ptr @str.490     to i64
+    %r343 = ptrtoint ptr @str.495     to i64
     %r344 = load i64, ptr %p309    
     %r345 = load i64, ptr @Global_FUNC_COL    
     %r346 = icmp eq i64 %r344    , 0
-    br i1 %r346, label %Label_PanicNull, label %Label_3933    
-Label_3933:
+    br i1 %r346, label %Label_PanicNull, label %Label_3957    
+Label_3957:
     %r347 = inttoptr i64 %r344     to ptr
     %r348 = getelementptr i64, ptr %r347, i64 %r345    
     %r349 = load i64, ptr %r348    
@@ -36323,99 +36439,99 @@ Label_3933:
     %r353 = call i64 @_eq_json_new(    )
     store i64 %r353, ptr %p352    
     %r354 = load i64, ptr %p352    
-    %r355 = ptrtoint ptr @str.489     to i64
+    %r355 = ptrtoint ptr @str.494     to i64
     %r356 = load i64, ptr %p309    
     %r357 = load i64, ptr @Global_FUNC_LINE    
     %r358 = icmp eq i64 %r356    , 0
-    br i1 %r358, label %Label_PanicNull, label %Label_3934    
-Label_3934:
+    br i1 %r358, label %Label_PanicNull, label %Label_3958    
+Label_3958:
     %r359 = inttoptr i64 %r356     to ptr
     %r360 = getelementptr i64, ptr %r359, i64 %r357    
     %r361 = load i64, ptr %r360    
     %r362 = sub i64 %r361, 1    
     %r363 = call i64 @_eq_json_put_int(i64 %r354, i64 %r355, i64 %r362    )
     %r364 = load i64, ptr %p352    
-    %r365 = ptrtoint ptr @str.490     to i64
+    %r365 = ptrtoint ptr @str.495     to i64
     %r366 = load i64, ptr %p309    
     %r367 = load i64, ptr @Global_FUNC_COL    
     %r368 = icmp eq i64 %r366    , 0
-    br i1 %r368, label %Label_PanicNull, label %Label_3935    
-Label_3935:
+    br i1 %r368, label %Label_PanicNull, label %Label_3959    
+Label_3959:
     %r369 = inttoptr i64 %r366     to ptr
     %r370 = getelementptr i64, ptr %r369, i64 %r367    
     %r371 = load i64, ptr %r370    
     %r372 = add i64 %r371, 10    
     %r373 = call i64 @_eq_json_put_int(i64 %r364, i64 %r365, i64 %r372    )
     %r374 = load i64, ptr %p328    
-    %r375 = ptrtoint ptr @str.491     to i64
+    %r375 = ptrtoint ptr @str.496     to i64
     %r376 = load i64, ptr %p330    
     %r377 = call i64 @_eq_json_put_obj(i64 %r374, i64 %r375, i64 %r376    )
     %r378 = load i64, ptr %p328    
-    %r379 = ptrtoint ptr @str.492     to i64
+    %r379 = ptrtoint ptr @str.497     to i64
     %r380 = load i64, ptr %p352    
     %r381 = call i64 @_eq_json_put_obj(i64 %r378, i64 %r379, i64 %r380    )
     %r382 = load i64, ptr %p322    
-    %r383 = ptrtoint ptr @str.493     to i64
+    %r383 = ptrtoint ptr @str.498     to i64
     %r384 = load i64, ptr %p328    
     %r385 = call i64 @_eq_json_put_obj(i64 %r382, i64 %r383, i64 %r384    )
     %r386 = load i64, ptr %p125    
-    %r387 = ptrtoint ptr @str.500     to i64
+    %r387 = ptrtoint ptr @str.505     to i64
     %r388 = load i64, ptr %p322    
     %r389 = call i64 @_eq_json_item_obj(i64 %r388    )
     %r390 = call i64 @_eq_map_put(i64 %r386, i64 %r387, i64 %r389    )
     %r391 = load i64, ptr %p125    
     %r392 = call i64 @_eq_lsp_send(i64 %r391    )
-    br label %Label_3931    
-Label_3930:
-    br label %Label_3931    
-Label_3931:
-    br label %Label_3927    
-Label_3926:
-    br label %Label_3927    
-Label_3927:
-    br label %Label_3923    
-Label_3922:
-    br label %Label_3923    
-Label_3923:
-    br label %Label_3919    
-Label_3918:
-    br label %Label_3919    
-Label_3919:
-    br label %Label_3915    
-Label_3914:
-    br label %Label_3915    
-Label_3915:
-    br label %Label_3912    
-Label_3911:
+    br label %Label_3955    
+Label_3954:
+    br label %Label_3955    
+Label_3955:
+    br label %Label_3951    
+Label_3950:
+    br label %Label_3951    
+Label_3951:
+    br label %Label_3947    
+Label_3946:
+    br label %Label_3947    
+Label_3947:
+    br label %Label_3943    
+Label_3942:
+    br label %Label_3943    
+Label_3943:
+    br label %Label_3939    
+Label_3938:
+    br label %Label_3939    
+Label_3939:
+    br label %Label_3936    
+Label_3935:
     %r393 = load i64, ptr %p115    
-    %r394 = ptrtoint ptr @str.508     to i64
+    %r394 = ptrtoint ptr @str.513     to i64
     %r395 = call i64 @_eq_str_equal(i64 %r393, i64 %r394    )
     %r396 = icmp ne i64 %r395    , 0
-    br i1 %r396, label %Label_3936, label %Label_3937    
-Label_3936:
+    br i1 %r396, label %Label_3960, label %Label_3961    
+Label_3960:
     %r397 = load i64, ptr %p106    
-    %r398 = ptrtoint ptr @str.495     to i64
+    %r398 = ptrtoint ptr @str.500     to i64
     %r399 = call i64 @_eq_map_get(i64 %r397, i64 %r398    )
     store i64 %r399, ptr %p152    
     %r400 = load i64, ptr %p152    
-    %r401 = ptrtoint ptr @str.502     to i64
+    %r401 = ptrtoint ptr @str.507     to i64
     %r402 = call i64 @_eq_map_get(i64 %r400, i64 %r401    )
     store i64 %r402, ptr %p156    
     %r403 = load i64, ptr %p152    
-    %r404 = ptrtoint ptr @str.507     to i64
+    %r404 = ptrtoint ptr @str.512     to i64
     %r405 = call i64 @_eq_map_get(i64 %r403, i64 %r404    )
     store i64 %r405, ptr %p246    
     %r406 = load i64, ptr %p156    
-    %r407 = ptrtoint ptr @str.486     to i64
+    %r407 = ptrtoint ptr @str.491     to i64
     %r408 = call i64 @_eq_map_get(i64 %r406, i64 %r407    )
     store i64 %r408, ptr %p160    
     %r409 = load i64, ptr %p246    
-    %r410 = ptrtoint ptr @str.489     to i64
+    %r410 = ptrtoint ptr @str.494     to i64
     %r411 = call i64 @_eq_json_get_int(i64 %r409, i64 %r410    )
     %r412 = add i64 %r411, 1    
     store i64 %r412, ptr %p253    
     %r413 = load i64, ptr %p246    
-    %r414 = ptrtoint ptr @str.490     to i64
+    %r414 = ptrtoint ptr @str.495     to i64
     %r415 = call i64 @_eq_json_get_int(i64 %r413, i64 %r414    )
     store i64 %r415, ptr %p258    
     %r416 = load i64, ptr %p160    
@@ -36423,8 +36539,8 @@ Label_3936:
     store i64 %r417, ptr %p262    
     %r418 = load i64, ptr %p262    
     %r419 = icmp ne i64 %r418    , 0
-    br i1 %r419, label %Label_3939, label %Label_3940    
-Label_3939:
+    br i1 %r419, label %Label_3963, label %Label_3964    
+Label_3963:
     %r420 = load i64, ptr %p262    
     %r421 = call i64 @_eq_lexer_new(i64 %r420    )
     store i64 %r421, ptr %p168    
@@ -36432,8 +36548,8 @@ Label_3939:
     %r423 = call i64 @_eq_lexer_scan_tokens(i64 %r422    )
     %r424 = load i64, ptr %p168    
     %r425 = icmp eq i64 %r424    , 0
-    br i1 %r425, label %Label_PanicNull, label %Label_3942    
-Label_3942:
+    br i1 %r425, label %Label_PanicNull, label %Label_3966    
+Label_3966:
     %r426 = inttoptr i64 %r424     to ptr
     %r427 = getelementptr i64, ptr %r426, i64 4    
     %r428 = load i64, ptr %r427    
@@ -36454,12 +36570,12 @@ Label_3942:
     store i64 %r439, ptr %p283    
     %r440 = load i64, ptr %p283    
     %r441 = icmp ne i64 %r440    , 0
-    br i1 %r441, label %Label_3943, label %Label_3944    
-Label_3943:
+    br i1 %r441, label %Label_3967, label %Label_3968    
+Label_3967:
     %r442 = load i64, ptr %p283    
     %r443 = icmp eq i64 %r442    , 0
-    br i1 %r443, label %Label_PanicNull, label %Label_3946    
-Label_3946:
+    br i1 %r443, label %Label_PanicNull, label %Label_3970    
+Label_3970:
     %r444 = inttoptr i64 %r442     to ptr
     %r445 = getelementptr i64, ptr %r444, i64 0    
     %r446 = load i64, ptr %r445    
@@ -36467,13 +36583,13 @@ Label_3946:
     %r448 = icmp eq i64 %r446, %r447    
     %r449 = zext i1 %r448     to i64
     %r450 = icmp ne i64 %r449    , 0
-    br i1 %r450, label %Label_3947, label %Label_3948    
-Label_3947:
+    br i1 %r450, label %Label_3971, label %Label_3972    
+Label_3971:
     %r451 = load i64, ptr %p185    
     %r452 = load i64, ptr %p283    
     %r453 = icmp eq i64 %r452    , 0
-    br i1 %r453, label %Label_PanicNull, label %Label_3950    
-Label_3950:
+    br i1 %r453, label %Label_PanicNull, label %Label_3974    
+Label_3974:
     %r454 = inttoptr i64 %r452     to ptr
     %r455 = getelementptr i64, ptr %r454, i64 1    
     %r456 = load i64, ptr %r455    
@@ -36481,12 +36597,12 @@ Label_3950:
     store i64 %r457, ptr %p299    
     %r458 = load i64, ptr %p299    
     %r459 = icmp ne i64 %r458    , 0
-    br i1 %r459, label %Label_3951, label %Label_3952    
-Label_3951:
+    br i1 %r459, label %Label_3975, label %Label_3976    
+Label_3975:
     %r460 = call i64 @_eq_json_new(    )
     store i64 %r460, ptr %p125    
     %r461 = load i64, ptr %p125    
-    %r462 = ptrtoint ptr @str.496     to i64
+    %r462 = ptrtoint ptr @str.501     to i64
     %r463 = load i64, ptr %p111    
     %r464 = call i64 @_eq_json_put_int(i64 %r461, i64 %r462, i64 %r463    )
     %r465 = call i64 @_eq_json_new(    )
@@ -36496,17 +36612,17 @@ Label_3951:
     %r467 = call i64 @_eq_json_new(    )
     store i64 %r467, ptr %p466    
     %r468 = load i64, ptr %p466    
-    %r469 = ptrtoint ptr @str.509     to i64
-    %r470 = ptrtoint ptr @str.510     to i64
+    %r469 = ptrtoint ptr @str.514     to i64
+    %r470 = ptrtoint ptr @str.515     to i64
     %r471 = call i64 @_eq_json_put_str(i64 %r468, i64 %r469, i64 %r470    )
     %p472     = alloca i64
     store i64 0, ptr %p472    
-    %r473 = ptrtoint ptr @str.511     to i64
+    %r473 = ptrtoint ptr @str.516     to i64
     store i64 %r473, ptr %p472    
     %r474 = load i64, ptr %p299    
     %r475 = icmp eq i64 %r474    , 0
-    br i1 %r475, label %Label_PanicNull, label %Label_3954    
-Label_3954:
+    br i1 %r475, label %Label_PanicNull, label %Label_3978    
+Label_3978:
     %r476 = inttoptr i64 %r474     to ptr
     %r477 = getelementptr i64, ptr %r476, i64 2    
     %r478 = load i64, ptr %r477    
@@ -36514,19 +36630,19 @@ Label_3954:
     %r480 = icmp eq i64 %r478, %r479    
     %r481 = zext i1 %r480     to i64
     %r482 = icmp ne i64 %r481    , 0
-    br i1 %r482, label %Label_3955, label %Label_3956    
-Label_3955:
+    br i1 %r482, label %Label_3979, label %Label_3980    
+Label_3979:
     %r483 = ptrtoint ptr @str.53     to i64
     %r484 = load i64, ptr %p472    
     store i64 %r483, ptr %p472    
-    br label %Label_3957    
-Label_3956:
-    br label %Label_3957    
-Label_3957:
+    br label %Label_3981    
+Label_3980:
+    br label %Label_3981    
+Label_3981:
     %r485 = load i64, ptr %p299    
     %r486 = icmp eq i64 %r485    , 0
-    br i1 %r486, label %Label_PanicNull, label %Label_3958    
-Label_3958:
+    br i1 %r486, label %Label_PanicNull, label %Label_3982    
+Label_3982:
     %r487 = inttoptr i64 %r485     to ptr
     %r488 = getelementptr i64, ptr %r487, i64 2    
     %r489 = load i64, ptr %r488    
@@ -36534,125 +36650,125 @@ Label_3958:
     %r491 = icmp eq i64 %r489, %r490    
     %r492 = zext i1 %r491     to i64
     %r493 = icmp ne i64 %r492    , 0
-    br i1 %r493, label %Label_3959, label %Label_3960    
-Label_3959:
+    br i1 %r493, label %Label_3983, label %Label_3984    
+Label_3983:
     %r494 = ptrtoint ptr @str.54     to i64
     %r495 = load i64, ptr %p472    
     store i64 %r494, ptr %p472    
-    br label %Label_3961    
-Label_3960:
-    br label %Label_3961    
-Label_3961:
+    br label %Label_3985    
+Label_3984:
+    br label %Label_3985    
+Label_3985:
     %r496 = load i64, ptr %p299    
     %r497 = icmp eq i64 %r496    , 0
-    br i1 %r497, label %Label_PanicNull, label %Label_3962    
-Label_3962:
+    br i1 %r497, label %Label_PanicNull, label %Label_3986    
+Label_3986:
     %r498 = inttoptr i64 %r496     to ptr
     %r499 = getelementptr i64, ptr %r498, i64 2    
     %r500 = load i64, ptr %r499    
     %r501 = icmp eq i64 %r500, 0    
     %r502 = zext i1 %r501     to i64
     %r503 = icmp ne i64 %r502    , 0
-    br i1 %r503, label %Label_3963, label %Label_3964    
-Label_3963:
-    %r504 = ptrtoint ptr @str.512     to i64
+    br i1 %r503, label %Label_3987, label %Label_3988    
+Label_3987:
+    %r504 = ptrtoint ptr @str.517     to i64
     %r505 = load i64, ptr %p472    
     store i64 %r504, ptr %p472    
-    br label %Label_3965    
-Label_3964:
-    br label %Label_3965    
-Label_3965:
+    br label %Label_3989    
+Label_3988:
+    br label %Label_3989    
+Label_3989:
     %p506     = alloca i64
     store i64 0, ptr %p506    
-    %r507 = ptrtoint ptr @str.513     to i64
+    %r507 = ptrtoint ptr @str.518     to i64
     %r508 = load i64, ptr %p472    
     %r509 = call i64 @_eq_str_concat(i64 %r507, i64 %r508    )
     store i64 %r509, ptr %p506    
     %r510 = load i64, ptr %p506    
-    %r511 = ptrtoint ptr @str.514     to i64
+    %r511 = ptrtoint ptr @str.519     to i64
     %r512 = call i64 @_eq_str_concat(i64 %r510, i64 %r511    )
     %r513 = load i64, ptr %p506    
     store i64 %r512, ptr %p506    
     %r514 = load i64, ptr %p466    
-    %r515 = ptrtoint ptr @str.515     to i64
+    %r515 = ptrtoint ptr @str.520     to i64
     %r516 = load i64, ptr %p506    
     %r517 = call i64 @_eq_json_put_str(i64 %r514, i64 %r515, i64 %r516    )
     %r518 = load i64, ptr %p131    
-    %r519 = ptrtoint ptr @str.516     to i64
+    %r519 = ptrtoint ptr @str.521     to i64
     %r520 = load i64, ptr %p466    
     %r521 = call i64 @_eq_json_item_obj(i64 %r520    )
     %r522 = call i64 @_eq_map_put(i64 %r518, i64 %r519, i64 %r521    )
     %r523 = load i64, ptr %p125    
-    %r524 = ptrtoint ptr @str.500     to i64
+    %r524 = ptrtoint ptr @str.505     to i64
     %r525 = load i64, ptr %p131    
     %r526 = call i64 @_eq_json_item_obj(i64 %r525    )
     %r527 = call i64 @_eq_map_put(i64 %r523, i64 %r524, i64 %r526    )
     %r528 = load i64, ptr %p125    
     %r529 = call i64 @_eq_lsp_send(i64 %r528    )
-    br label %Label_3953    
-Label_3952:
-    br label %Label_3953    
-Label_3953:
-    br label %Label_3949    
-Label_3948:
-    br label %Label_3949    
-Label_3949:
-    br label %Label_3945    
-Label_3944:
-    br label %Label_3945    
-Label_3945:
-    br label %Label_3941    
-Label_3940:
-    br label %Label_3941    
-Label_3941:
-    br label %Label_3938    
-Label_3937:
+    br label %Label_3977    
+Label_3976:
+    br label %Label_3977    
+Label_3977:
+    br label %Label_3973    
+Label_3972:
+    br label %Label_3973    
+Label_3973:
+    br label %Label_3969    
+Label_3968:
+    br label %Label_3969    
+Label_3969:
+    br label %Label_3965    
+Label_3964:
+    br label %Label_3965    
+Label_3965:
+    br label %Label_3962    
+Label_3961:
     %r530 = load i64, ptr %p115    
-    %r531 = ptrtoint ptr @str.517     to i64
+    %r531 = ptrtoint ptr @str.522     to i64
     %r532 = call i64 @_eq_str_equal(i64 %r530, i64 %r531    )
     %r533 = icmp ne i64 %r532    , 0
-    br i1 %r533, label %Label_3966, label %Label_3967    
-Label_3966:
+    br i1 %r533, label %Label_3990, label %Label_3991    
+Label_3990:
     %r534 = call i64 @_eq_json_new(    )
     store i64 %r534, ptr %p125    
     %r535 = load i64, ptr %p125    
-    %r536 = ptrtoint ptr @str.496     to i64
+    %r536 = ptrtoint ptr @str.501     to i64
     %r537 = load i64, ptr %p111    
     %r538 = call i64 @_eq_json_put_int(i64 %r535, i64 %r536, i64 %r537    )
     %r539 = load i64, ptr %p125    
-    %r540 = ptrtoint ptr @str.500     to i64
+    %r540 = ptrtoint ptr @str.505     to i64
     %r541 = call i64 @_eq_map_put(i64 %r539, i64 %r540, i64 0    )
     %r542 = load i64, ptr %p125    
     %r543 = call i64 @_eq_lsp_send(i64 %r542    )
     %r544 = call i64 @exit(i64 0    )
-    br label %Label_3968    
-Label_3967:
-    br label %Label_3968    
-Label_3968:
-    br label %Label_3938    
-Label_3938:
-    br label %Label_3912    
-Label_3912:
-    br label %Label_3908    
+    br label %Label_3992    
+Label_3991:
+    br label %Label_3992    
+Label_3992:
+    br label %Label_3962    
+Label_3962:
+    br label %Label_3936    
+Label_3936:
+    br label %Label_3932    
+Label_3932:
+    br label %Label_3928    
+Label_3928:
+    br label %Label_3925    
+Label_3925:
+    br label %Label_3922    
+Label_3921:
+    br label %Label_3922    
+Label_3922:
+    br label %Label_3919    
+Label_3918:
+    br label %Label_3919    
+Label_3919:
+    br label %Label_3909    
 Label_3908:
-    br label %Label_3904    
-Label_3904:
-    br label %Label_3901    
-Label_3901:
-    br label %Label_3898    
-Label_3897:
-    br label %Label_3898    
-Label_3898:
-    br label %Label_3895    
-Label_3894:
-    br label %Label_3895    
-Label_3895:
-    br label %Label_3885    
-Label_3884:
-    br label %Label_3885    
+    br label %Label_3909    
+Label_3909:
+    br label %Label_3883    
 Label_3885:
-    br label %Label_3859    
-Label_3861:
     ret i64 0
 Label_PanicNull:
     call i64 @sys_panic_null()
@@ -36676,28 +36792,28 @@ start_fn:
     %r5 = icmp eq i64 %r4, 0    
     %r6 = zext i1 %r5     to i64
     %r7 = icmp ne i64 %r6    , 0
-    br i1 %r7, label %Label_3969, label %Label_3970    
-Label_3969:
+    br i1 %r7, label %Label_3993, label %Label_3994    
+Label_3993:
     ret i64 0    
-    br label %Label_3971    
-Label_3970:
-    br label %Label_3971    
-Label_3971:
+    br label %Label_3995    
+Label_3994:
+    br label %Label_3995    
+Label_3995:
     %r8 = load i64, ptr @Global_loaded_files    
     %r9 = load i64, ptr %p3    
     %r10 = call i64 @_eq_map_get(i64 %r8, i64 %r9    )
     %r11 = icmp ne i64 %r10    , 0
-    br i1 %r11, label %Label_3972, label %Label_3973    
-Label_3972:
+    br i1 %r11, label %Label_3996, label %Label_3997    
+Label_3996:
     ret i64 0    
-    br label %Label_3974    
-Label_3973:
-    br label %Label_3974    
-Label_3974:
+    br label %Label_3998    
+Label_3997:
+    br label %Label_3998    
+Label_3998:
     %r12 = load i64, ptr @Global_loaded_files    
     %r13 = load i64, ptr %p3    
     %r14 = call i64 @_eq_map_put(i64 %r12, i64 %r13, i64 1    )
-    %r15 = ptrtoint ptr @str.518     to i64
+    %r15 = ptrtoint ptr @str.523     to i64
     %r16 = call i64 @write(i64 2, i64 %r15, i64 11    )
     %r17 = load i64, ptr %p3    
     %r18 = load i64, ptr %p3    
@@ -36714,8 +36830,8 @@ Label_3974:
     %r27 = icmp eq i64 %r26, 0    
     %r28 = zext i1 %r27     to i64
     %r29 = icmp ne i64 %r28    , 0
-    br i1 %r29, label %Label_3975, label %Label_3976    
-Label_3975:
+    br i1 %r29, label %Label_3999, label %Label_4000    
+Label_3999:
     %p30     = alloca i64
     store i64 0, ptr %p30    
     store i64 0, ptr %p30    
@@ -36724,23 +36840,23 @@ Label_3975:
     %r32 = load i64, ptr @Global_include_paths    
     %r33 = call i64 @_eq_vec_size(i64 %r32    )
     store i64 %r33, ptr %p31    
-    br label %Label_3978    
-Label_3978:
+    br label %Label_4002    
+Label_4002:
     %r34 = load volatile i32, ptr @g_needs_yield
     %r35 = icmp ne i32 %r34, 0
-    br i1 %r35, label %Preywh_3981, label %Checkwh_3981    
-Preywh_3981:
+    br i1 %r35, label %Preywh_4005, label %Checkwh_4005    
+Preywh_4005:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3981    
-Checkwh_3981:
+    br label %Checkwh_4005    
+Checkwh_4005:
     %r36 = load i64, ptr %p30    
     %r37 = load i64, ptr %p31    
     %r38 = icmp slt i64 %r36, %r37    
     %r39 = zext i1 %r38     to i64
     %r40 = icmp ne i64 %r39    , 0
-    br i1 %r40, label %Label_3979, label %Label_3980    
-Label_3979:
+    br i1 %r40, label %Label_4003, label %Label_4004    
+Label_4003:
     %p41     = alloca i64
     store i64 0, ptr %p41    
     %r42 = load i64, ptr @Global_include_paths    
@@ -36759,32 +36875,32 @@ Label_3979:
     %r53 = icmp ne i64 %r52, 0    
     %r54 = zext i1 %r53     to i64
     %r55 = icmp ne i64 %r54    , 0
-    br i1 %r55, label %Label_3982, label %Label_3983    
-Label_3982:
+    br i1 %r55, label %Label_4006, label %Label_4007    
+Label_4006:
     %r56 = load i64, ptr %p31    
     %r57 = load i64, ptr %p30    
     store i64 %r56, ptr %p30    
-    br label %Label_3984    
-Label_3983:
-    br label %Label_3984    
-Label_3984:
+    br label %Label_4008    
+Label_4007:
+    br label %Label_4008    
+Label_4008:
     %r58 = load i64, ptr %p30    
     %r59 = add i64 %r58, 1    
     %r60 = load i64, ptr %p30    
     store i64 %r59, ptr %p30    
-    br label %Label_3978    
-Label_3980:
-    br label %Label_3977    
-Label_3976:
-    br label %Label_3977    
-Label_3977:
+    br label %Label_4002    
+Label_4004:
+    br label %Label_4001    
+Label_4000:
+    br label %Label_4001    
+Label_4001:
     %r61 = load i64, ptr %p23    
     %r62 = icmp eq i64 %r61, 0    
     %r63 = zext i1 %r62     to i64
     %r64 = icmp ne i64 %r63    , 0
-    br i1 %r64, label %Label_3985, label %Label_3986    
-Label_3985:
-    %r65 = ptrtoint ptr @str.519     to i64
+    br i1 %r64, label %Label_4009, label %Label_4010    
+Label_4009:
+    %r65 = ptrtoint ptr @str.524     to i64
     %r66 = call i64 @write(i64 2, i64 %r65, i64 28    )
     %r67 = load i64, ptr %p3    
     %r68 = load i64, ptr %p3    
@@ -36793,11 +36909,11 @@ Label_3985:
     %r71 = ptrtoint ptr @str.62     to i64
     %r72 = call i64 @write(i64 2, i64 %r71, i64 1    )
     %r73 = call i64 @exit(i64 1    )
-    br label %Label_3987    
-Label_3986:
-    br label %Label_3987    
-Label_3987:
-    %r74 = ptrtoint ptr @str.520     to i64
+    br label %Label_4011    
+Label_4010:
+    br label %Label_4011    
+Label_4011:
+    %r74 = ptrtoint ptr @str.525     to i64
     %r75 = call i64 @write(i64 2, i64 %r74, i64 12    )
     %p76     = alloca i64
     store i64 0, ptr %p76    
@@ -36806,14 +36922,14 @@ Label_3987:
     store i64 %r78, ptr %p76    
     %r79 = load i64, ptr %p76    
     %r80 = call i64 @_eq_lexer_scan_tokens(i64 %r79    )
-    %r81 = ptrtoint ptr @str.521     to i64
+    %r81 = ptrtoint ptr @str.526     to i64
     %r82 = call i64 @write(i64 2, i64 %r81, i64 13    )
     %p83     = alloca i64
     store i64 0, ptr %p83    
     %r84 = load i64, ptr %p76    
     %r85 = icmp eq i64 %r84    , 0
-    br i1 %r85, label %Label_PanicNull, label %Label_3988    
-Label_3988:
+    br i1 %r85, label %Label_PanicNull, label %Label_4012    
+Label_4012:
     %r86 = inttoptr i64 %r84     to ptr
     %r87 = getelementptr i64, ptr %r86, i64 4    
     %r88 = load i64, ptr %r87    
@@ -36828,15 +36944,15 @@ Label_3988:
     %r94 = icmp eq i64 %r93, 0    
     %r95 = zext i1 %r94     to i64
     %r96 = icmp ne i64 %r95    , 0
-    br i1 %r96, label %Label_3989, label %Label_3990    
-Label_3989:
-    %r97 = ptrtoint ptr @str.522     to i64
+    br i1 %r96, label %Label_4013, label %Label_4014    
+Label_4013:
+    %r97 = ptrtoint ptr @str.527     to i64
     %r98 = call i64 @write(i64 2, i64 %r97, i64 12    )
     ret i64 0    
-    br label %Label_3991    
-Label_3990:
-    br label %Label_3991    
-Label_3991:
+    br label %Label_4015    
+Label_4014:
+    br label %Label_4015    
+Label_4015:
     %p99     = alloca i64
     store i64 0, ptr %p99    
     store i64 0, ptr %p99    
@@ -36845,23 +36961,23 @@ Label_3991:
     %r101 = load i64, ptr %p90    
     %r102 = call i64 @_eq_vec_size(i64 %r101    )
     store i64 %r102, ptr %p100    
-    br label %Label_3992    
-Label_3992:
+    br label %Label_4016    
+Label_4016:
     %r103 = load volatile i32, ptr @g_needs_yield
     %r104 = icmp ne i32 %r103, 0
-    br i1 %r104, label %Preywh_3995, label %Checkwh_3995    
-Preywh_3995:
+    br i1 %r104, label %Preywh_4019, label %Checkwh_4019    
+Preywh_4019:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_3995    
-Checkwh_3995:
+    br label %Checkwh_4019    
+Checkwh_4019:
     %r105 = load i64, ptr %p99    
     %r106 = load i64, ptr %p100    
     %r107 = icmp slt i64 %r105, %r106    
     %r108 = zext i1 %r107     to i64
     %r109 = icmp ne i64 %r108    , 0
-    br i1 %r109, label %Label_3993, label %Label_3994    
-Label_3993:
+    br i1 %r109, label %Label_4017, label %Label_4018    
+Label_4017:
     %p110     = alloca i64
     store i64 0, ptr %p110    
     %r111 = load i64, ptr %p90    
@@ -36872,12 +36988,12 @@ Label_3993:
     %r115 = icmp ne i64 %r114, 0    
     %r116 = zext i1 %r115     to i64
     %r117 = icmp ne i64 %r116    , 0
-    br i1 %r117, label %Label_3996, label %Label_3997    
-Label_3996:
+    br i1 %r117, label %Label_4020, label %Label_4021    
+Label_4020:
     %r118 = load i64, ptr %p110    
     %r119 = icmp eq i64 %r118    , 0
-    br i1 %r119, label %Label_PanicNull, label %Label_3999    
-Label_3999:
+    br i1 %r119, label %Label_PanicNull, label %Label_4023    
+Label_4023:
     %r120 = inttoptr i64 %r118     to ptr
     %r121 = getelementptr i64, ptr %r120, i64 0    
     %r122 = load i64, ptr %r121    
@@ -36885,35 +37001,35 @@ Label_3999:
     %r124 = icmp eq i64 %r122, %r123    
     %r125 = zext i1 %r124     to i64
     %r126 = icmp ne i64 %r125    , 0
-    br i1 %r126, label %Label_4000, label %Label_4001    
-Label_4000:
+    br i1 %r126, label %Label_4024, label %Label_4025    
+Label_4024:
     %r127 = load i64, ptr %p110    
     %r128 = icmp eq i64 %r127    , 0
-    br i1 %r128, label %Label_PanicNull, label %Label_4003    
-Label_4003:
+    br i1 %r128, label %Label_PanicNull, label %Label_4027    
+Label_4027:
     %r129 = inttoptr i64 %r127     to ptr
     %r130 = getelementptr i64, ptr %r129, i64 1    
     %r131 = load i64, ptr %r130    
     %r132 = call i64 @_eq_compile_file(i64 %r131    )
-    br label %Label_4002    
-Label_4001:
-    br label %Label_4002    
-Label_4002:
+    br label %Label_4026    
+Label_4025:
+    br label %Label_4026    
+Label_4026:
     %r133 = load i64, ptr @Global_global_ast_buffer    
     %r134 = load i64, ptr %p110    
     %r135 = call i64 @_eq_vec_push(i64 %r133, i64 %r134    )
     %r136 = load i64, ptr @Global_global_ast_buffer    
     store i64 %r135, ptr @Global_global_ast_buffer    
-    br label %Label_3998    
-Label_3997:
-    br label %Label_3998    
-Label_3998:
+    br label %Label_4022    
+Label_4021:
+    br label %Label_4022    
+Label_4022:
     %r137 = load i64, ptr %p99    
     %r138 = add i64 %r137, 1    
     %r139 = load i64, ptr %p99    
     store i64 %r138, ptr %p99    
-    br label %Label_3992    
-Label_3994:
+    br label %Label_4016    
+Label_4018:
     ret i64 1    
     ret i64 0
 Label_PanicNull:
@@ -36931,7 +37047,7 @@ yield_preempt:
         call i64 @_eq_fiber_yield()
         br label %start_fn
 start_fn:
-    %r3 = ptrtoint ptr @str.523     to i64
+    %r3 = ptrtoint ptr @str.528     to i64
     %r4 = call i64 @write(i64 2, i64 %r3, i64 26    )
     %r5 = call i64 @_eq_vec_new(i64 4096    )
     %r6 = load i64, ptr @Global_global_ast_buffer    
@@ -36955,44 +37071,44 @@ start_fn:
     %p15     = alloca i64
     store i64 0, ptr %p15    
     store i64 0, ptr %p15    
-    br label %Label_4004    
-Label_4004:
+    br label %Label_4028    
+Label_4028:
     %r16 = load volatile i32, ptr @g_needs_yield
     %r17 = icmp ne i32 %r16, 0
-    br i1 %r17, label %Preywh_4007, label %Checkwh_4007    
-Preywh_4007:
+    br i1 %r17, label %Preywh_4031, label %Checkwh_4031    
+Preywh_4031:
         store i32 0, ptr @g_needs_yield
         call i64 @_eq_fiber_yield()
-    br label %Checkwh_4007    
-Checkwh_4007:
+    br label %Checkwh_4031    
+Checkwh_4031:
     %r18 = load i64, ptr %p14    
     %r19 = load i64, ptr %p11    
     %r20 = icmp slt i64 %r18, %r19    
     %r21 = zext i1 %r20     to i64
     %r22 = icmp ne i64 %r21    , 0
-    br i1 %r22, label %Label_4005, label %Label_4006    
-Label_4005:
+    br i1 %r22, label %Label_4029, label %Label_4030    
+Label_4029:
     %p23     = alloca i64
     store i64 0, ptr %p23    
     %r24 = load i64, ptr %p14    
     %r25 = call i64 @sys_get_argv(i64 %r24    )
     store i64 %r25, ptr %p23    
     %r26 = load i64, ptr %p23    
-    %r27 = ptrtoint ptr @str.524     to i64
+    %r27 = ptrtoint ptr @str.529     to i64
     %r28 = call i64 @_eq_str_equal(i64 %r26, i64 %r27    )
     %r29 = icmp ne i64 %r28    , 0
-    br i1 %r29, label %Label_4008, label %Label_4009    
-Label_4008:
+    br i1 %r29, label %Label_4032, label %Label_4033    
+Label_4032:
     %r30 = load i64, ptr %p15    
     store i64 1, ptr %p15    
-    br label %Label_4010    
-Label_4009:
+    br label %Label_4034    
+Label_4033:
     %r31 = load i64, ptr %p23    
-    %r32 = ptrtoint ptr @str.525     to i64
+    %r32 = ptrtoint ptr @str.530     to i64
     %r33 = call i64 @_eq_str_equal(i64 %r31, i64 %r32    )
     %r34 = icmp ne i64 %r33    , 0
-    br i1 %r34, label %Label_4011, label %Label_4012    
-Label_4011:
+    br i1 %r34, label %Label_4035, label %Label_4036    
+Label_4035:
     %r35 = load i64, ptr @Global_include_paths    
     %r36 = load i64, ptr %p14    
     %r37 = add i64 %r36, 1    
@@ -37004,57 +37120,57 @@ Label_4011:
     %r42 = add i64 %r41, 1    
     %r43 = load i64, ptr %p14    
     store i64 %r42, ptr %p14    
-    br label %Label_4013    
-Label_4012:
+    br label %Label_4037    
+Label_4036:
     %r44 = load i64, ptr %p13    
     %r45 = icmp eq i64 %r44, 0    
     %r46 = zext i1 %r45     to i64
     %r47 = icmp ne i64 %r46    , 0
-    br i1 %r47, label %Label_4014, label %Label_4015    
-Label_4014:
+    br i1 %r47, label %Label_4038, label %Label_4039    
+Label_4038:
     %r48 = load i64, ptr %p23    
     %r49 = load i64, ptr %p13    
     store i64 %r48, ptr %p13    
-    br label %Label_4016    
-Label_4015:
-    br label %Label_4016    
-Label_4016:
-    br label %Label_4013    
-Label_4013:
-    br label %Label_4010    
-Label_4010:
+    br label %Label_4040    
+Label_4039:
+    br label %Label_4040    
+Label_4040:
+    br label %Label_4037    
+Label_4037:
+    br label %Label_4034    
+Label_4034:
     %r50 = load i64, ptr %p14    
     %r51 = add i64 %r50, 1    
     %r52 = load i64, ptr %p14    
     store i64 %r51, ptr %p14    
-    br label %Label_4004    
-Label_4006:
+    br label %Label_4028    
+Label_4030:
     %r53 = load i64, ptr %p15    
     %r54 = icmp ne i64 %r53    , 0
-    br i1 %r54, label %Label_4017, label %Label_4018    
-Label_4017:
+    br i1 %r54, label %Label_4041, label %Label_4042    
+Label_4041:
     %r55 = call i64 @_eq_lsp_loop(    )
     ret i64 0    
-    br label %Label_4019    
-Label_4018:
-    br label %Label_4019    
-Label_4019:
+    br label %Label_4043    
+Label_4042:
+    br label %Label_4043    
+Label_4043:
     %r56 = load i64, ptr %p13    
     %r57 = icmp eq i64 %r56, 0    
     %r58 = zext i1 %r57     to i64
     %r59 = icmp ne i64 %r58    , 0
-    br i1 %r59, label %Label_4020, label %Label_4021    
-Label_4020:
-    %r60 = ptrtoint ptr @str.526     to i64
+    br i1 %r59, label %Label_4044, label %Label_4045    
+Label_4044:
+    %r60 = ptrtoint ptr @str.531     to i64
     %r61 = call i64 @write(i64 2, i64 %r60, i64 15    )
     %r62 = call i64 @exit(i64 1    )
-    br label %Label_4022    
-Label_4021:
-    br label %Label_4022    
-Label_4022:
+    br label %Label_4046    
+Label_4045:
+    br label %Label_4046    
+Label_4046:
     %r63 = load i64, ptr %p13    
     %r64 = call i64 @_eq_compile_file(i64 %r63    )
-    %r65 = ptrtoint ptr @str.527     to i64
+    %r65 = ptrtoint ptr @str.532     to i64
     %r66 = call i64 @write(i64 2, i64 %r65, i64 15    )
     %p67     = alloca i64
     store i64 0, ptr %p67    
@@ -37063,7 +37179,7 @@ Label_4022:
     %r69 = load i64, ptr %p67    
     %r70 = load i64, ptr @Global_global_ast_buffer    
     %r71 = call i64 @_eq_analyze_program(i64 %r69, i64 %r70    )
-    %r72 = ptrtoint ptr @str.528     to i64
+    %r72 = ptrtoint ptr @str.533     to i64
     %r73 = call i64 @write(i64 2, i64 %r72, i64 21    )
     %p74     = alloca i64
     store i64 0, ptr %p74    
@@ -37072,17 +37188,43 @@ Label_4022:
     %r76 = load i64, ptr %p74    
     %r77 = load i64, ptr @Global_global_ast_buffer    
     %r78 = call i64 @_eq_borrow_check_program(i64 %r76, i64 %r77    )
-    %r79 = ptrtoint ptr @str.529     to i64
+    %r79 = ptrtoint ptr @str.534     to i64
     %r80 = call i64 @write(i64 2, i64 %r79, i64 21    )
     %p81     = alloca i64
     store i64 0, ptr %p81    
     %r82 = call i64 @_eq_codegen_new(i64 0, i64 0    )
     store i64 %r82, ptr %p81    
     %r83 = load i64, ptr %p81    
-    %r84 = load i64, ptr @Global_global_ast_buffer    
-    %r85 = call i64 @_eq_gen_program(i64 %r83, i64 %r84    )
-    %r86 = ptrtoint ptr @str.530     to i64
-    %r87 = call i64 @write(i64 2, i64 %r86, i64 5    )
+    %r84 = icmp eq i64 %r83, 0    
+    %r85 = zext i1 %r84     to i64
+    %r86 = icmp ne i64 %r85    , 0
+    br i1 %r86, label %Label_4047, label %Label_4048    
+Label_4047:
+    %r87 = ptrtoint ptr @str.535     to i64
+    %r88 = call i64 @write(i64 2, i64 %r87, i64 40    )
+    %r89 = call i64 @exit(i64 1    )
+    br label %Label_4049    
+Label_4048:
+    br label %Label_4049    
+Label_4049:
+    %r90 = load i64, ptr @Global_global_ast_buffer    
+    %r91 = icmp eq i64 %r90, 0    
+    %r92 = zext i1 %r91     to i64
+    %r93 = icmp ne i64 %r92    , 0
+    br i1 %r93, label %Label_4050, label %Label_4051    
+Label_4050:
+    %r94 = ptrtoint ptr @str.536     to i64
+    %r95 = call i64 @write(i64 2, i64 %r94, i64 24    )
+    %r96 = call i64 @exit(i64 1    )
+    br label %Label_4052    
+Label_4051:
+    br label %Label_4052    
+Label_4052:
+    %r97 = load i64, ptr %p81    
+    %r98 = load i64, ptr @Global_global_ast_buffer    
+    %r99 = call i64 @_eq_gen_program(i64 %r97, i64 %r98    )
+    %r100 = ptrtoint ptr @str.537     to i64
+    %r101 = call i64 @write(i64 2, i64 %r100, i64 5    )
     ret i64 0
 Label_PanicNull:
     call i64 @sys_panic_null()
@@ -37782,134 +37924,141 @@ entry:
 @str.397 = private unnamed_addr constant [32 x i8] c"    ; REA: Exchange agreement: \00"
 @str.398 = private unnamed_addr constant [58 x i8] c"    call i64 @write(i64 2, ptr @str_assert_fail, i64 18)\0A\00"
 @str.399 = private unnamed_addr constant [27 x i8] c"    call void @exit(i64 1)\00"
-@str.400 = private unnamed_addr constant [39 x i8] c"target triple = \22x86_64-pc-win32-gnu\22\0A\00"
-@str.401 = private unnamed_addr constant [39 x i8] c"target triple = \22x86_64-pc-linux-gnu\22\0A\00"
-@str.402 = private unnamed_addr constant [66 x i8] c"@fmt_print = private unnamed_addr constant [6 x i8] c\22%lld\\0A\\00\22\00"
-@str.403 = private unnamed_addr constant [57 x i8] c"@fmt_s = private unnamed_addr constant [3 x i8] c\22%s\\00\22\00"
-@str.404 = private unnamed_addr constant [59 x i8] c"@fmt_d = private unnamed_addr constant [5 x i8] c\22%lld\\00\22\00"
-@str.405 = private unnamed_addr constant [37 x i8] c"@__equis_argc = external global i64\0A\00"
-@str.406 = private unnamed_addr constant [37 x i8] c"@__equis_argv = external global ptr\0A\00"
-@str.407 = private unnamed_addr constant [34 x i8] c"@__technical_clock = global i64 0\00"
-@str.408 = private unnamed_addr constant [86 x i8] c"@str_assert_fail = private unnamed_addr constant [19 x i8] c\22ASSERTION FAILED!\\0A\\00\22\00"
-@str.409 = private unnamed_addr constant [37 x i8] c"@g_needs_yield = external global i32\00"
-@str.410 = private unnamed_addr constant [14 x i8] c"declare i64 @\00"
-@str.411 = private unnamed_addr constant [9 x i8] c"@Global_\00"
-@str.412 = private unnamed_addr constant [16 x i8] c" = global i64 0\00"
-@str.413 = private unnamed_addr constant [35 x i8] c"declare i64 @write(i64, i64, i64)\0A\00"
-@str.414 = private unnamed_addr constant [25 x i8] c"declare void @exit(i64)\0A\00"
-@str.415 = private unnamed_addr constant [26 x i8] c"declare i64 @malloc(i64)\0A\00"
-@str.416 = private unnamed_addr constant [25 x i8] c"declare void @free(i64)\0A\00"
-@str.417 = private unnamed_addr constant [42 x i8] c"declare i64 @_eq_set_char(i64, i64, i64)\0A\00"
-@str.418 = private unnamed_addr constant [31 x i8] c"declare i64 @printf(i64, ...)\0A\00"
-@str.419 = private unnamed_addr constant [54 x i8] c"declare i64 @sys_audit_flow(i64, i64, ptr, ptr, ptr)\0A\00"
-@str.420 = private unnamed_addr constant [39 x i8] c"declare i64 @sys_verify_sig(ptr, ptr)\0A\00"
-@str.421 = private unnamed_addr constant [15 x i8] c"sys_panic_null\00"
-@str.422 = private unnamed_addr constant [31 x i8] c"declare i64 @sys_panic_null()\0A\00"
-@str.423 = private unnamed_addr constant [10 x i8] c"sys_panic\00"
-@str.424 = private unnamed_addr constant [30 x i8] c"declare void @sys_panic(ptr)\0A\00"
-@str.425 = private unnamed_addr constant [8 x i8] c"sys_pin\00"
-@str.426 = private unnamed_addr constant [27 x i8] c"declare i64 @sys_pin(i64)\0A\00"
-@str.427 = private unnamed_addr constant [11 x i8] c"sys_strlen\00"
-@str.428 = private unnamed_addr constant [30 x i8] c"declare i64 @sys_strlen(i64)\0A\00"
-@str.429 = private unnamed_addr constant [38 x i8] c"declare i64 @sys_str_equal(i64, i64)\0A\00"
-@str.430 = private unnamed_addr constant [34 x i8] c"declare i64 @read(i64, i64, i64)\0A\00"
-@str.431 = private unnamed_addr constant [34 x i8] c"declare i64 @open(i64, i64, i64)\0A\00"
-@str.432 = private unnamed_addr constant [25 x i8] c"declare i64 @close(i64)\0A\00"
-@str.433 = private unnamed_addr constant [6 x i8] c"lseek\00"
-@str.434 = private unnamed_addr constant [35 x i8] c"declare i64 @lseek(i64, i64, i64)\0A\00"
-@str.435 = private unnamed_addr constant [14 x i8] c"sys_write_raw\00"
-@str.436 = private unnamed_addr constant [43 x i8] c"declare i64 @sys_write_raw(i64, i64, i64)\0A\00"
-@str.437 = private unnamed_addr constant [21 x i8] c"sys_read_entire_file\00"
-@str.438 = private unnamed_addr constant [40 x i8] c"declare i64 @sys_read_entire_file(i64)\0A\00"
-@str.439 = private unnamed_addr constant [13 x i8] c"sys_get_argc\00"
-@str.440 = private unnamed_addr constant [29 x i8] c"declare i64 @sys_get_argc()\0A\00"
-@str.441 = private unnamed_addr constant [13 x i8] c"sys_get_argv\00"
-@str.442 = private unnamed_addr constant [32 x i8] c"declare i64 @sys_get_argv(i64)\0A\00"
-@str.443 = private unnamed_addr constant [25 x i8] c"declare i64 @sys_time()\0A\00"
-@str.444 = private unnamed_addr constant [18 x i8] c"sys_reverse_event\00"
-@str.445 = private unnamed_addr constant [38 x i8] c"declare void @sys_reverse_event(ptr)\0A\00"
-@str.446 = private unnamed_addr constant [7 x i8] c"sys_os\00"
-@str.447 = private unnamed_addr constant [23 x i8] c"declare i64 @sys_os()\0A\00"
-@str.448 = private unnamed_addr constant [10 x i8] c"sys_mkdir\00"
-@str.449 = private unnamed_addr constant [29 x i8] c"declare i64 @sys_mkdir(i64)\0A\00"
-@str.450 = private unnamed_addr constant [12 x i8] c"sys_realloc\00"
-@str.451 = private unnamed_addr constant [36 x i8] c"declare i64 @sys_realloc(i64, i64)\0A\00"
-@str.452 = private unnamed_addr constant [16 x i8] c"_eq_fiber_yield\00"
-@str.453 = private unnamed_addr constant [32 x i8] c"declare i64 @_eq_fiber_yield()\0A\00"
-@str.454 = private unnamed_addr constant [17 x i8] c"define i64 @_eq_\00"
-@str.455 = private unnamed_addr constant [10 x i8] c"i64 %Arg_\00"
-@str.456 = private unnamed_addr constant [12 x i8] c") {\0Aentry:\0A\00"
-@str.457 = private unnamed_addr constant [41 x i8] c", label %yield_preempt, label %start_fn\0A\00"
-@str.458 = private unnamed_addr constant [16 x i8] c"yield_preempt:\0A\00"
-@str.459 = private unnamed_addr constant [23 x i8] c"    br label %start_fn\00"
-@str.460 = private unnamed_addr constant [11 x i8] c"start_fn:\0A\00"
-@str.461 = private unnamed_addr constant [35 x i8] c"    call i64 @sys_retain(i64 %Arg_\00"
-@str.462 = private unnamed_addr constant [20 x i8] c"    store i64 %Arg_\00"
-@str.463 = private unnamed_addr constant [82 x i8] c"    ret i64 0\0ALabel_PanicNull:\0A    call i64 @sys_panic_null()\0A    unreachable\0A}\0A\0A\00"
-@str.464 = private unnamed_addr constant [19 x i8] c"__equis_pre_intern\00"
-@str.465 = private unnamed_addr constant [64 x i8] c"define i64 @_eq___equis_pre_intern() {\0Aentry:\0A    ret i64 0\0A}\0A\0A\00"
-@str.466 = private unnamed_addr constant [50 x i8] c"define void @_eq___equis_init_globals() {\0Aentry:\0A\00"
-@str.467 = private unnamed_addr constant [59 x i8] c"    %_pre_intern_res = call i64 @_eq___equis_pre_intern()\0A\00"
-@str.468 = private unnamed_addr constant [81 x i8] c"    ret void\0ALabel_PanicNull:\0A    call i64 @sys_panic_null()\0A    unreachable\0A}\0A\0A\00"
-@str.469 = private unnamed_addr constant [13 x i8] c"main_routine\00"
-@str.470 = private unnamed_addr constant [58 x i8] c"define i64 @_eq_main_routine() {\0Aentry:\0A    ret i64 0\0A}\0A\0A\00"
-@str.471 = private unnamed_addr constant [69 x i8] c"define void @_eq___equis_cleanup_globals() {\0Aentry:\0A    ret void\0A}\0A\0A\00"
-@str.472 = private unnamed_addr constant [6 x i8] c"@str.\00"
-@str.473 = private unnamed_addr constant [35 x i8] c" = private unnamed_addr constant [\00"
-@str.474 = private unnamed_addr constant [10 x i8] c" x i8] c\22\00"
-@str.475 = private unnamed_addr constant [6 x i8] c"\\00\22\0A\00"
-@str.476 = private unnamed_addr constant [6 x i8] c"__eq_\00"
-@str.477 = private unnamed_addr constant [33 x i8] c"Use-after-move Error: Resource '\00"
-@str.478 = private unnamed_addr constant [29 x i8] c"' has already been consumed.\00"
-@str.479 = private unnamed_addr constant [5 x i8] c"null\00"
-@str.480 = private unnamed_addr constant [2 x i8] c"\22\00"
-@str.481 = private unnamed_addr constant [3 x i8] c"\22:\00"
-@str.482 = private unnamed_addr constant [17 x i8] c"Content-Length: \00"
-@str.483 = private unnamed_addr constant [5 x i8] c"\0D\0A\0D\0A\00"
-@str.484 = private unnamed_addr constant [7 x i8] c"method\00"
-@str.485 = private unnamed_addr constant [32 x i8] c"textDocument/publishDiagnostics\00"
-@str.486 = private unnamed_addr constant [4 x i8] c"uri\00"
-@str.487 = private unnamed_addr constant [8 x i8] c"message\00"
-@str.488 = private unnamed_addr constant [9 x i8] c"severity\00"
-@str.489 = private unnamed_addr constant [5 x i8] c"line\00"
-@str.490 = private unnamed_addr constant [10 x i8] c"character\00"
-@str.491 = private unnamed_addr constant [6 x i8] c"start\00"
-@str.492 = private unnamed_addr constant [4 x i8] c"end\00"
-@str.493 = private unnamed_addr constant [6 x i8] c"range\00"
-@str.494 = private unnamed_addr constant [12 x i8] c"diagnostics\00"
-@str.495 = private unnamed_addr constant [7 x i8] c"params\00"
-@str.496 = private unnamed_addr constant [3 x i8] c"id\00"
-@str.497 = private unnamed_addr constant [11 x i8] c"initialize\00"
-@str.498 = private unnamed_addr constant [17 x i8] c"textDocumentSync\00"
-@str.499 = private unnamed_addr constant [13 x i8] c"capabilities\00"
-@str.500 = private unnamed_addr constant [7 x i8] c"result\00"
-@str.501 = private unnamed_addr constant [21 x i8] c"textDocument/didOpen\00"
-@str.502 = private unnamed_addr constant [13 x i8] c"textDocument\00"
-@str.503 = private unnamed_addr constant [5 x i8] c"text\00"
-@str.504 = private unnamed_addr constant [23 x i8] c"textDocument/didChange\00"
-@str.505 = private unnamed_addr constant [15 x i8] c"contentChanges\00"
-@str.506 = private unnamed_addr constant [24 x i8] c"textDocument/definition\00"
-@str.507 = private unnamed_addr constant [9 x i8] c"position\00"
-@str.508 = private unnamed_addr constant [19 x i8] c"textDocument/hover\00"
-@str.509 = private unnamed_addr constant [5 x i8] c"kind\00"
-@str.510 = private unnamed_addr constant [9 x i8] c"markdown\00"
-@str.511 = private unnamed_addr constant [13 x i8] c"Unknown Type\00"
-@str.512 = private unnamed_addr constant [13 x i8] c"any/inferred\00"
-@str.513 = private unnamed_addr constant [12 x i8] c"**Type**: `\00"
-@str.514 = private unnamed_addr constant [2 x i8] c"`\00"
-@str.515 = private unnamed_addr constant [6 x i8] c"value\00"
-@str.516 = private unnamed_addr constant [9 x i8] c"contents\00"
-@str.517 = private unnamed_addr constant [9 x i8] c"shutdown\00"
-@str.518 = private unnamed_addr constant [12 x i8] c"  Loading: \00"
-@str.519 = private unnamed_addr constant [29 x i8] c"error: could not read file: \00"
-@str.520 = private unnamed_addr constant [13 x i8] c"  Lexing...\0A\00"
-@str.521 = private unnamed_addr constant [14 x i8] c"  Parsing...\0A\00"
-@str.522 = private unnamed_addr constant [13 x i8] c"  AST NULL!\0A\00"
-@str.523 = private unnamed_addr constant [27 x i8] c"STARTING STAGE-2 COMPILER\0A\00"
-@str.524 = private unnamed_addr constant [6 x i8] c"--lsp\00"
-@str.525 = private unnamed_addr constant [3 x i8] c"-I\00"
-@str.526 = private unnamed_addr constant [16 x i8] c"No input file.\0A\00"
-@str.527 = private unnamed_addr constant [16 x i8] c"  Analyzing...\0A\00"
-@str.528 = private unnamed_addr constant [22 x i8] c"  Borrow Checking...\0A\00"
-@str.529 = private unnamed_addr constant [22 x i8] c"  Generating Code...\0A\00"
-@str.530 = private unnamed_addr constant [6 x i8] c"DONE\0A\00"
+@str.400 = private unnamed_addr constant [43 x i8] c"error: failed to allocate codegen context\0A\00"
+@str.401 = private unnamed_addr constant [43 x i8] c"error: failed to allocate codegen vectors\0A\00"
+@str.402 = private unnamed_addr constant [47 x i8] c"error: invalid codegen context in gen_program\0A\00"
+@str.403 = private unnamed_addr constant [40 x i8] c"error: empty AST buffer in gen_program\0A\00"
+@str.404 = private unnamed_addr constant [39 x i8] c"target triple = \22x86_64-pc-win32-gnu\22\0A\00"
+@str.405 = private unnamed_addr constant [39 x i8] c"target triple = \22x86_64-pc-linux-gnu\22\0A\00"
+@str.406 = private unnamed_addr constant [66 x i8] c"@fmt_print = private unnamed_addr constant [6 x i8] c\22%lld\\0A\\00\22\00"
+@str.407 = private unnamed_addr constant [57 x i8] c"@fmt_s = private unnamed_addr constant [3 x i8] c\22%s\\00\22\00"
+@str.408 = private unnamed_addr constant [59 x i8] c"@fmt_d = private unnamed_addr constant [5 x i8] c\22%lld\\00\22\00"
+@str.409 = private unnamed_addr constant [37 x i8] c"@__equis_argc = external global i64\0A\00"
+@str.410 = private unnamed_addr constant [37 x i8] c"@__equis_argv = external global ptr\0A\00"
+@str.411 = private unnamed_addr constant [34 x i8] c"@__technical_clock = global i64 0\00"
+@str.412 = private unnamed_addr constant [86 x i8] c"@str_assert_fail = private unnamed_addr constant [19 x i8] c\22ASSERTION FAILED!\\0A\\00\22\00"
+@str.413 = private unnamed_addr constant [37 x i8] c"@g_needs_yield = external global i32\00"
+@str.414 = private unnamed_addr constant [14 x i8] c"declare i64 @\00"
+@str.415 = private unnamed_addr constant [9 x i8] c"@Global_\00"
+@str.416 = private unnamed_addr constant [16 x i8] c" = global i64 0\00"
+@str.417 = private unnamed_addr constant [35 x i8] c"declare i64 @write(i64, i64, i64)\0A\00"
+@str.418 = private unnamed_addr constant [25 x i8] c"declare void @exit(i64)\0A\00"
+@str.419 = private unnamed_addr constant [26 x i8] c"declare i64 @malloc(i64)\0A\00"
+@str.420 = private unnamed_addr constant [25 x i8] c"declare void @free(i64)\0A\00"
+@str.421 = private unnamed_addr constant [42 x i8] c"declare i64 @_eq_set_char(i64, i64, i64)\0A\00"
+@str.422 = private unnamed_addr constant [31 x i8] c"declare i64 @printf(i64, ...)\0A\00"
+@str.423 = private unnamed_addr constant [54 x i8] c"declare i64 @sys_audit_flow(i64, i64, ptr, ptr, ptr)\0A\00"
+@str.424 = private unnamed_addr constant [39 x i8] c"declare i64 @sys_verify_sig(ptr, ptr)\0A\00"
+@str.425 = private unnamed_addr constant [15 x i8] c"sys_panic_null\00"
+@str.426 = private unnamed_addr constant [31 x i8] c"declare i64 @sys_panic_null()\0A\00"
+@str.427 = private unnamed_addr constant [10 x i8] c"sys_panic\00"
+@str.428 = private unnamed_addr constant [30 x i8] c"declare void @sys_panic(ptr)\0A\00"
+@str.429 = private unnamed_addr constant [8 x i8] c"sys_pin\00"
+@str.430 = private unnamed_addr constant [27 x i8] c"declare i64 @sys_pin(i64)\0A\00"
+@str.431 = private unnamed_addr constant [11 x i8] c"sys_strlen\00"
+@str.432 = private unnamed_addr constant [30 x i8] c"declare i64 @sys_strlen(i64)\0A\00"
+@str.433 = private unnamed_addr constant [38 x i8] c"declare i64 @sys_str_equal(i64, i64)\0A\00"
+@str.434 = private unnamed_addr constant [34 x i8] c"declare i64 @read(i64, i64, i64)\0A\00"
+@str.435 = private unnamed_addr constant [34 x i8] c"declare i64 @open(i64, i64, i64)\0A\00"
+@str.436 = private unnamed_addr constant [25 x i8] c"declare i64 @close(i64)\0A\00"
+@str.437 = private unnamed_addr constant [6 x i8] c"lseek\00"
+@str.438 = private unnamed_addr constant [35 x i8] c"declare i64 @lseek(i64, i64, i64)\0A\00"
+@str.439 = private unnamed_addr constant [14 x i8] c"sys_write_raw\00"
+@str.440 = private unnamed_addr constant [43 x i8] c"declare i64 @sys_write_raw(i64, i64, i64)\0A\00"
+@str.441 = private unnamed_addr constant [21 x i8] c"sys_read_entire_file\00"
+@str.442 = private unnamed_addr constant [40 x i8] c"declare i64 @sys_read_entire_file(i64)\0A\00"
+@str.443 = private unnamed_addr constant [13 x i8] c"sys_get_argc\00"
+@str.444 = private unnamed_addr constant [29 x i8] c"declare i64 @sys_get_argc()\0A\00"
+@str.445 = private unnamed_addr constant [13 x i8] c"sys_get_argv\00"
+@str.446 = private unnamed_addr constant [32 x i8] c"declare i64 @sys_get_argv(i64)\0A\00"
+@str.447 = private unnamed_addr constant [25 x i8] c"declare i64 @sys_time()\0A\00"
+@str.448 = private unnamed_addr constant [18 x i8] c"sys_reverse_event\00"
+@str.449 = private unnamed_addr constant [38 x i8] c"declare void @sys_reverse_event(ptr)\0A\00"
+@str.450 = private unnamed_addr constant [7 x i8] c"sys_os\00"
+@str.451 = private unnamed_addr constant [23 x i8] c"declare i64 @sys_os()\0A\00"
+@str.452 = private unnamed_addr constant [10 x i8] c"sys_mkdir\00"
+@str.453 = private unnamed_addr constant [29 x i8] c"declare i64 @sys_mkdir(i64)\0A\00"
+@str.454 = private unnamed_addr constant [12 x i8] c"sys_realloc\00"
+@str.455 = private unnamed_addr constant [36 x i8] c"declare i64 @sys_realloc(i64, i64)\0A\00"
+@str.456 = private unnamed_addr constant [16 x i8] c"_eq_fiber_yield\00"
+@str.457 = private unnamed_addr constant [32 x i8] c"declare i64 @_eq_fiber_yield()\0A\00"
+@str.458 = private unnamed_addr constant [13 x i8] c"      Func: \00"
+@str.459 = private unnamed_addr constant [17 x i8] c"define i64 @_eq_\00"
+@str.460 = private unnamed_addr constant [10 x i8] c"i64 %Arg_\00"
+@str.461 = private unnamed_addr constant [12 x i8] c") {\0Aentry:\0A\00"
+@str.462 = private unnamed_addr constant [41 x i8] c", label %yield_preempt, label %start_fn\0A\00"
+@str.463 = private unnamed_addr constant [16 x i8] c"yield_preempt:\0A\00"
+@str.464 = private unnamed_addr constant [23 x i8] c"    br label %start_fn\00"
+@str.465 = private unnamed_addr constant [11 x i8] c"start_fn:\0A\00"
+@str.466 = private unnamed_addr constant [35 x i8] c"    call i64 @sys_retain(i64 %Arg_\00"
+@str.467 = private unnamed_addr constant [20 x i8] c"    store i64 %Arg_\00"
+@str.468 = private unnamed_addr constant [82 x i8] c"    ret i64 0\0ALabel_PanicNull:\0A    call i64 @sys_panic_null()\0A    unreachable\0A}\0A\0A\00"
+@str.469 = private unnamed_addr constant [19 x i8] c"__equis_pre_intern\00"
+@str.470 = private unnamed_addr constant [64 x i8] c"define i64 @_eq___equis_pre_intern() {\0Aentry:\0A    ret i64 0\0A}\0A\0A\00"
+@str.471 = private unnamed_addr constant [50 x i8] c"define void @_eq___equis_init_globals() {\0Aentry:\0A\00"
+@str.472 = private unnamed_addr constant [59 x i8] c"    %_pre_intern_res = call i64 @_eq___equis_pre_intern()\0A\00"
+@str.473 = private unnamed_addr constant [81 x i8] c"    ret void\0ALabel_PanicNull:\0A    call i64 @sys_panic_null()\0A    unreachable\0A}\0A\0A\00"
+@str.474 = private unnamed_addr constant [13 x i8] c"main_routine\00"
+@str.475 = private unnamed_addr constant [58 x i8] c"define i64 @_eq_main_routine() {\0Aentry:\0A    ret i64 0\0A}\0A\0A\00"
+@str.476 = private unnamed_addr constant [69 x i8] c"define void @_eq___equis_cleanup_globals() {\0Aentry:\0A    ret void\0A}\0A\0A\00"
+@str.477 = private unnamed_addr constant [6 x i8] c"@str.\00"
+@str.478 = private unnamed_addr constant [35 x i8] c" = private unnamed_addr constant [\00"
+@str.479 = private unnamed_addr constant [10 x i8] c" x i8] c\22\00"
+@str.480 = private unnamed_addr constant [6 x i8] c"\\00\22\0A\00"
+@str.481 = private unnamed_addr constant [6 x i8] c"__eq_\00"
+@str.482 = private unnamed_addr constant [33 x i8] c"Use-after-move Error: Resource '\00"
+@str.483 = private unnamed_addr constant [29 x i8] c"' has already been consumed.\00"
+@str.484 = private unnamed_addr constant [5 x i8] c"null\00"
+@str.485 = private unnamed_addr constant [2 x i8] c"\22\00"
+@str.486 = private unnamed_addr constant [3 x i8] c"\22:\00"
+@str.487 = private unnamed_addr constant [17 x i8] c"Content-Length: \00"
+@str.488 = private unnamed_addr constant [5 x i8] c"\0D\0A\0D\0A\00"
+@str.489 = private unnamed_addr constant [7 x i8] c"method\00"
+@str.490 = private unnamed_addr constant [32 x i8] c"textDocument/publishDiagnostics\00"
+@str.491 = private unnamed_addr constant [4 x i8] c"uri\00"
+@str.492 = private unnamed_addr constant [8 x i8] c"message\00"
+@str.493 = private unnamed_addr constant [9 x i8] c"severity\00"
+@str.494 = private unnamed_addr constant [5 x i8] c"line\00"
+@str.495 = private unnamed_addr constant [10 x i8] c"character\00"
+@str.496 = private unnamed_addr constant [6 x i8] c"start\00"
+@str.497 = private unnamed_addr constant [4 x i8] c"end\00"
+@str.498 = private unnamed_addr constant [6 x i8] c"range\00"
+@str.499 = private unnamed_addr constant [12 x i8] c"diagnostics\00"
+@str.500 = private unnamed_addr constant [7 x i8] c"params\00"
+@str.501 = private unnamed_addr constant [3 x i8] c"id\00"
+@str.502 = private unnamed_addr constant [11 x i8] c"initialize\00"
+@str.503 = private unnamed_addr constant [17 x i8] c"textDocumentSync\00"
+@str.504 = private unnamed_addr constant [13 x i8] c"capabilities\00"
+@str.505 = private unnamed_addr constant [7 x i8] c"result\00"
+@str.506 = private unnamed_addr constant [21 x i8] c"textDocument/didOpen\00"
+@str.507 = private unnamed_addr constant [13 x i8] c"textDocument\00"
+@str.508 = private unnamed_addr constant [5 x i8] c"text\00"
+@str.509 = private unnamed_addr constant [23 x i8] c"textDocument/didChange\00"
+@str.510 = private unnamed_addr constant [15 x i8] c"contentChanges\00"
+@str.511 = private unnamed_addr constant [24 x i8] c"textDocument/definition\00"
+@str.512 = private unnamed_addr constant [9 x i8] c"position\00"
+@str.513 = private unnamed_addr constant [19 x i8] c"textDocument/hover\00"
+@str.514 = private unnamed_addr constant [5 x i8] c"kind\00"
+@str.515 = private unnamed_addr constant [9 x i8] c"markdown\00"
+@str.516 = private unnamed_addr constant [13 x i8] c"Unknown Type\00"
+@str.517 = private unnamed_addr constant [13 x i8] c"any/inferred\00"
+@str.518 = private unnamed_addr constant [12 x i8] c"**Type**: `\00"
+@str.519 = private unnamed_addr constant [2 x i8] c"`\00"
+@str.520 = private unnamed_addr constant [6 x i8] c"value\00"
+@str.521 = private unnamed_addr constant [9 x i8] c"contents\00"
+@str.522 = private unnamed_addr constant [9 x i8] c"shutdown\00"
+@str.523 = private unnamed_addr constant [12 x i8] c"  Loading: \00"
+@str.524 = private unnamed_addr constant [29 x i8] c"error: could not read file: \00"
+@str.525 = private unnamed_addr constant [13 x i8] c"  Lexing...\0A\00"
+@str.526 = private unnamed_addr constant [14 x i8] c"  Parsing...\0A\00"
+@str.527 = private unnamed_addr constant [13 x i8] c"  AST NULL!\0A\00"
+@str.528 = private unnamed_addr constant [27 x i8] c"STARTING STAGE-2 COMPILER\0A\00"
+@str.529 = private unnamed_addr constant [6 x i8] c"--lsp\00"
+@str.530 = private unnamed_addr constant [3 x i8] c"-I\00"
+@str.531 = private unnamed_addr constant [16 x i8] c"No input file.\0A\00"
+@str.532 = private unnamed_addr constant [16 x i8] c"  Analyzing...\0A\00"
+@str.533 = private unnamed_addr constant [22 x i8] c"  Borrow Checking...\0A\00"
+@str.534 = private unnamed_addr constant [22 x i8] c"  Generating Code...\0A\00"
+@str.535 = private unnamed_addr constant [41 x i8] c"error: failed to create codegen context\0A\00"
+@str.536 = private unnamed_addr constant [25 x i8] c"error: empty AST buffer\0A\00"
+@str.537 = private unnamed_addr constant [6 x i8] c"DONE\0A\00"

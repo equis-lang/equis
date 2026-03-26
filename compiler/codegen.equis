@@ -836,8 +836,19 @@ fn gen_stmt(c, stmt) {
 
 fn codegen_new(trace_enabled, incremental) {
     let c = sys_malloc(10 * 8);
-    c[0] = 1; c[1] = 1; c[2] = vec_new(4096); c[3] = vec_new(1024); c[4] = 0;
+    if (c == 0) {
+        write(2, "error: failed to allocate codegen context\n", 42);
+        exit(1);
+    }
+    c[0] = 1; c[1] = 1; 
+    c[2] = vec_new(4096); 
+    c[3] = vec_new(1024); 
+    c[4] = 0;
     c[5] = vec_new(1024); 
+    if (c[2] == 0 || c[3] == 0 || c[5] == 0) {
+        write(2, "error: failed to allocate codegen vectors\n", 42);
+        exit(1);
+    }
     c[6] = 1 - incremental;
     if (incremental == 1) { c[6] = 0; } else { c[6] = 1; }
     if (Global_Field_Map == 0) { Global_Field_Map = map_new(2000); }
@@ -855,6 +866,14 @@ fn gen_program(c, ast) {
     let body = 0; let g_stmt = 0; let s_type = 0; let strings = 0; let s_size = 0;
     let i_str = 0; let s_val = 0;
 
+    if (c == 0) {
+        write(2, "error: invalid codegen context in gen_program\n", 46);
+        exit(1);
+    }
+    if (ast == 0) {
+        write(2, "error: empty AST buffer in gen_program\n", 39);
+        exit(1);
+    }
     let os = sys_os();
     if (os == 2) {
         print_raw_str("target triple = \"x86_64-pc-win32-gnu\"\n");
@@ -931,46 +950,52 @@ fn gen_program(c, ast) {
     while (i < size) {
         stmt = vec_get(ast, i);
         if (stmt) {
-            if (stmt[0] == STMT_FUNCTION) {
-                name = stmt[1]; params = stmt[2]; body = stmt[3]; p_size = vec_size(params);
-                print_raw_str("define i64 @_eq_"); print_raw_str(name); print_raw_str("(");
-                j = 0;
-                while (j < p_size) {
-                    print_raw_str("i64 %Arg_"); print_raw_str(vec_get(params, j));
-                    if (j < p_size - 1) { print_raw_str(", "); } j = j + 1;
-                }
-                print_raw_str(") {\nentry:\n");
-                c[0] = 1; c[4] = vec_new(1024);
+            if (stmt >= 4096) {
+                if (stmt[0] == STMT_FUNCTION) {
+                    name = stmt[1]; params = stmt[2]; body = stmt[3]; p_size = vec_size(params);
+                    if (name >= 4096) {
+                        write(2, "      Func: ", 12); write(2, name, sys_strlen(name)); write(2, "\n", 1);
+                    }
+                    print_raw_str("define i64 @_eq_"); print_raw_str(name); print_raw_str("(");
+                    j = 0;
+                    while (j < p_size) {
+                        print_raw_str("i64 %Arg_"); print_raw_str(vec_get(params, j));
+                        if (j < p_size - 1) { print_raw_str(", "); } j = j + 1;
+                    }
+                    print_raw_str(") {\nentry:\n");
+                    c[0] = 1; c[4] = vec_new(1024);
 
-                // Preemption Check Hook
-                let r_pre = freshen_reg(c);
-                print_raw_str("    %r"); print_raw(r_pre); print_raw_str(" = load volatile i32, ptr @g_needs_yield\n");
-                let r_check = freshen_reg(c);
-                print_raw_str("    %r"); print_raw(r_check); print_raw_str(" = icmp ne i32 %r"); print_raw(r_pre); print_raw_str(", 0\n");
-                print_raw_str("    br i1 %r"); print_raw(r_check); print_raw_str(", label %yield_preempt, label %start_fn\n");
-                print_raw_str("yield_preempt:\n");
-                emit_ln("    store i32 0, ptr @g_needs_yield");
-                emit_ln("    call i64 @_eq_fiber_yield()");
-                emit_ln("    br label %start_fn");
-                print_raw_str("start_fn:\n");
+                    // Preemption Check Hook
+                    let r_pre = freshen_reg(c);
+                    print_raw_str("    %r"); print_raw(r_pre); print_raw_str(" = load volatile i32, ptr @g_needs_yield\n");
+                    let r_check = freshen_reg(c);
+                    print_raw_str("    %r"); print_raw(r_check); print_raw_str(" = icmp ne i32 %r"); print_raw(r_pre); print_raw_str(", 0\n");
+                    print_raw_str("    br i1 %r"); print_raw(r_check); print_raw_str(", label %yield_preempt, label %start_fn\n");
+                    print_raw_str("yield_preempt:\n");
+                    emit_ln("    store i32 0, ptr @g_needs_yield");
+                    emit_ln("    call i64 @_eq_fiber_yield()");
+                    emit_ln("    br label %start_fn");
+                    print_raw_str("start_fn:\n");
 
-                k = 0;
-                p_name = 0; l_ptr = 0; k_entry = 0;
-                while (k < p_size) {
-                    p_name = vec_get(params, k); l_ptr = freshen_ptr(c);
-                    print_raw_str("    %p"); print_raw(l_ptr); emit_ln(" = alloca i64");
-                    print_raw_str("    call i64 @sys_retain(i64 %Arg_"); print_raw_str(p_name); emit_ln(")");
-                    print_raw_str("    store i64 %Arg_"); print_raw_str(p_name); print_raw_str(", ptr %p"); print_raw(l_ptr); emit_ln("");
-                    k_entry = sys_malloc(2 * 8); k_entry[0] = p_name; k_entry[1] = l_ptr;
-                    c[4] = vec_push(c[4], k_entry);
-                    k = k + 1;
+                    k = 0;
+                    p_name = 0; l_ptr = 0; k_entry = 0;
+                    while (k < p_size) {
+                        p_name = vec_get(params, k); l_ptr = freshen_ptr(c);
+                        print_raw_str("    %p"); print_raw(l_ptr); emit_ln(" = alloca i64");
+                        print_raw_str("    call i64 @sys_retain(i64 %Arg_"); print_raw_str(p_name); emit_ln(")");
+                        print_raw_str("    store i64 %Arg_"); print_raw_str(p_name); print_raw_str(", ptr %p"); print_raw(l_ptr); emit_ln("");
+                        k_entry = sys_malloc(2 * 8); k_entry[0] = p_name; k_entry[1] = l_ptr;
+                        c[4] = vec_push(c[4], k_entry);
+                        k = k + 1;
+                    }
+
+                    gen_stmt(c, body);
+                    gen_release_locals(c, c[4]);
+                    print_raw_str("    ret i64 0\nLabel_PanicNull:\n    call i64 @sys_panic_null()\n    unreachable\n}\n\n");
                 }
-                gen_stmt(c, body);
-                gen_release_locals(c, c[4]);
-                print_raw_str("    ret i64 0\nLabel_PanicNull:\n    call i64 @sys_panic_null()\n    unreachable\n}\n\n");
-            }
-            if (stmt[0] == STMT_EVENT) {
-                gen_stmt(c, stmt);
+                if (stmt[0] == STMT_EVENT) {
+                    gen_stmt(c, stmt);
+                }
             }
         }
         i = i + 1;
@@ -987,8 +1012,10 @@ fn gen_program(c, ast) {
         g_stmt = 0; s_type = 0;
         while (i < size) {
             g_stmt = vec_get(ast, i);
-            s_type = g_stmt[0];
-            if (s_type == STMT_LET || s_type == STMT_EXPRESSION || s_type == STMT_EXECUTE || s_type == STMT_ASSERT || s_type == STMT_PRINT || s_type == STMT_REVERSE || s_type == STMT_STRUCT || s_type == STMT_AGENT || s_type == STMT_RESOURCE) { gen_stmt(c, g_stmt); }
+            if (g_stmt >= 4096) {
+                s_type = g_stmt[0];
+                if (s_type == STMT_LET || s_type == STMT_EXPRESSION || s_type == STMT_EXECUTE || s_type == STMT_ASSERT || s_type == STMT_PRINT || s_type == STMT_REVERSE || s_type == STMT_STRUCT || s_type == STMT_AGENT || s_type == STMT_RESOURCE) { gen_stmt(c, g_stmt); }
+            }
             i = i + 1;
         }
         print_raw_str("    ret void\nLabel_PanicNull:\n    call i64 @sys_panic_null()\n    unreachable\n}\n\n");

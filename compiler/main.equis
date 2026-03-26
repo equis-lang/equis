@@ -120,6 +120,14 @@ fn main() {
     
     write(2, "  Generating Code...\n", 21);
     let ctx = codegen_new(0, 0);
+    if (ctx == 0) {
+        write(2, "error: failed to create codegen context\n", 40);
+        exit(1);
+    }
+    if (global_ast_buffer == 0) {
+        write(2, "error: empty AST buffer\n", 24);
+        exit(1);
+    }
     gen_program(ctx, global_ast_buffer);
     write(2, "DONE\n", 5);
 }
