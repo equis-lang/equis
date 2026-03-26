@@ -42,6 +42,34 @@ Equis is a self-hosted, domain-specific systems language for economic and accoun
 | **LLVM Backend** | Compiles to optimized native machine code |
 | **ARC Memory Model** | Hybrid automatic reference counting with deterministic arena allocation |
 
+## Project Structure
+
+### Equis (Core Compiler)
+```text
+equis/
+├── compiler/         # Core compiler (lexer, parser, analyzer, codegen)
+├── std/              # Standard library (sys, collections, accounting, etc.)
+├── docs/             # Formal specifications and technical guides
+├── examples/         # Sample programs and REA models
+├── tests/            # Regression, E2E, and integration tests
+├── bootstrap.c       # ANSI C bootstrap compiler
+├── Makefile          # Linux/macOS build system
+├── README.md         # Main repository documentation
+└── EQUIS.md          # Programmer's language reference
+```
+
+### VS Code Extension
+```text
+vscode-equis/
+├── src/
+│   └── extension.ts  # Language Client / LSP entry point
+├── equis.tmLanguage.json      # Syntax highlighting grammar
+├── language-configuration.json # Bracket matching & comments
+├── equis-icons.json           # File icon theme association
+├── package.json               # Extension manifest & contributions
+└── README.md                  # Extension usage guide
+```
+
 ## Language Primitives
 
 Equis incorporates accounting semantics directly into the language design:
