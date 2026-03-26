@@ -28,6 +28,7 @@ eq-production
 eq-core-boot
 eq-stage1
 eq-stage2
+eq-core-test
 
 *_test
 simple_test

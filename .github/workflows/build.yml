@@ -95,7 +95,9 @@ jobs:
           eq.ps1
           install.sh
           install.ps1
-          eq-core-*
+          eq-core-linux
+          eq-core-macos
+          eq-core-windows.exe
 
   release:
     name: Create GitHub Release
@@ -115,7 +117,7 @@ jobs:
         run: |
           mkdir -p release_assets
           # Collect unique platform-specific binaries
-          find artifacts -type f -name "eq-core-*" -exec cp {} release_assets/ \;
+          find artifacts -type f \( -name "eq-core-linux" -o -name "eq-core-macos" -o -name "eq-core-windows.exe" \) -exec cp {} release_assets/ \;
           
           # Collect common scripts (only once from any artifact folder)
           find artifacts -type f -name "eq" -o -name "eq.ps1" -o -name "install.*" | head -n 4 | xargs -I{} cp {} release_assets/
