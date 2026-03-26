@@ -86,12 +86,14 @@ jobs:
     - name: Publish to GitHub Releases
       if: startsWith(github.ref, 'refs/tags/')
       run: |
+        FILES=()
         for f in eq eq.ps1 install.sh install.ps1 compiler/main compiler/main.exe; do
-          if [ -f "$f" ]; then
-            echo "Uploading $f..."
-            gh release upload ${{ github.ref_name }} "$f" --clobber
-          fi
+          if [ -f "$f" ]; then FILES+=("$f"); fi
         done
+        if [ ${#FILES[@]} -gt 0 ]; then
+          gh release upload ${{ github.ref_name }} "${FILES[@]}" --clobber || \
+          gh release create ${{ github.ref_name }} "${FILES[@]}" --title "Equis ${{ github.ref_name }}" --generate-notes
+        fi
       shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
