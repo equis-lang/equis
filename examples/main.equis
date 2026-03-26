@@ -75,8 +75,8 @@ fn run_demos() {
     print_raw_str("--------------------------------------\n\n");
 
     // Variable and arithmetic operations
-    let mut balance: i64 = 1000;
-    let cost: i64 = 500;
+    let mut balance = 1000;
+    let cost = 500;
     balance = balance - cost;
     
     print_raw_str("System Balance: ");

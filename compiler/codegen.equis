@@ -470,9 +470,9 @@ fn gen_expr_get(c, expr) {
     print_raw_str("Label_"); print_raw(l_ok); print_raw_str(":\n");
     let offset_entry = map_get(Global_Field_Map, field_name);
     if (offset_entry == 0) {
-        write(2, "Codegen Error: Unknown field: ", 29);
+        write(2, "\x1b[1;31msemantic error\x1b[0m\x1b[1m: Reference to undefined field '", 55);
         write(2, field_name, sys_strlen(field_name));
-        write(2, "\n", 1);
+        write(2, "'\x1b[0m\n", 6);
         exit(1);
     }
     let offset = offset_entry[0]; let obj_ptr = freshen_reg(c);

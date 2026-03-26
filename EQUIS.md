@@ -52,7 +52,7 @@ while (i < 10) {
 ### Functions
 Functions are declared using `fn` and return values using `return`. They can include optional type annotations.
 ```equis
-fn calculate_tax(amount: i64) -> i64 {
+fn calculate_tax(amount) {
     return (amount * 10) / 100;
 }
 ```
@@ -253,8 +253,8 @@ use "std/string.equis";
 // =========================================================================
 
 // 1. DATA TYPES AND ABSTRACTION
-struct Inventory { item_id: i64; qty: i64; }
-interface DigitalAgent { fn ping(timestamp: i64); }
+struct Inventory { item_id; qty; }
+interface DigitalAgent { fn ping(timestamp); }
 
 // 2. RESOURCE-EVENT-AGENT (REA) MODELING
 // Agents can have specific roles and metadata fields
@@ -321,8 +321,8 @@ fn run_demos() {
     print_raw_str("--------------------------------------\n\n");
 
     // Static Typing & Math
-    let mut balance: i64 = 1000;
-    let cost: i64 = 500;
+    let mut balance = 1000;
+    let cost = 500;
     balance = balance - cost;
     
     print_raw_str("System Balance: ");
