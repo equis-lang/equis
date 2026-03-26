@@ -152,7 +152,7 @@ switch ($Command) {
         Write-Host "Equis Compiler Interface (v0.1.0)" -ForegroundColor Cyan
         Write-Host "`nUsage: eq <command> [arguments]"
         Write-Host "`nCommands:"
-        Write-Host "  compile <file.equis>  - Genereate optimized native binary"
+        Write-Host "  compile <file.equis>  - Generate optimized native binary"
         Write-Host "  run <file.equis>      - Compile and execute immediately"
         Write-Host "  check <file.equis>    - Perform semantic analysis only"
         Write-Host "  lsp                   - Launch Language Server Protocol"

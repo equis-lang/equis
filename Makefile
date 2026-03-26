@@ -19,7 +19,6 @@ endif
 eq-core:
 	gcc $(CFLAGS) bootstrap.c $(LIBS) -o eq-core
 	./eq-core -I std compiler/main.equis > compiler/main.ll
-	@# Bootstrap artifact cleanup
 	clang $(CFLAGS) -Wno-override-module compiler/main.ll compiler/runtime.c $(LIBS) -o eq-core
 
 bootstrap: eq-core

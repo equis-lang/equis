@@ -220,10 +220,10 @@ eq run examples/main.equis
 | [VS Code Extension](https://github.com/equis-lang/vscode-equis) | Syntax highlighting, LSP, and file icons |
 | [Package Manager (`epm`)](epm) | Dependency management for Equis projects |
 
-## Notes (v0.1.0)
-
-- **Platform**: Primary target is Linux/x64. macOS and Windows support is experimental.
-- **PostgreSQL**: Automatically detected via `pg_config`. Install `libpq-dev` to enable database features.
+## Platform Support
+- **Linux**: Primary production environment.
+- **Windows**: Fully supported via PowerShell and Batch shims.
+- **macOS**: Native support for ARM64 and x86_64.
 
 ## License
 Copyright (c) 2026 [mlintangmz](https://github.com/equis-lang)  

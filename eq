@@ -7,9 +7,7 @@
 
 set -euo pipefail
 
-# --- Path Resolution ---
-
-get_real_path() {
+function get_real_path() {
     local target="$1"
     if command -v readlink >/dev/null 2>&1; then
         local res=$(readlink -f "$target" 2>/dev/null)
@@ -52,9 +50,7 @@ if [ ! -d "$EQUIS_STD/std" ] && [ -d "$EQUIS_HOME/std" ]; then
     EQUIS_STD="$EQUIS_HOME"
 fi
 
-# --- Helper Functions ---
-
-show_help() {
+function show_help() {
     cat << EOF
 Equis CLI v0.1.0 - Systems programming for verifiable accounting.
 
@@ -138,7 +134,6 @@ case $CMD in
             OUTPUT=$(basename "$FILE" .equis)
         fi
 
-        # Use /tmp for safe IR generation to avoid workspace pollution
         TLL=$(mktemp /tmp/eq_XXXXXX.ll)
         
         INCLUDE_ARGS="-I $EQUIS_STD"
@@ -160,7 +155,6 @@ case $CMD in
         ;;
 
     run)
-        # Identify the source file in arguments
         FILE=""
         for arg in "$@"; do
             if [[ "$arg" == *.equis ]]; then
@@ -174,7 +168,6 @@ case $CMD in
             exit 1
         fi
 
-        # Generate a temporary binary name
         TEMP_EXE=$(mktemp /tmp/eq_bin_XXXXXX)
         echo "[eq] Compiling temporary binary..."
         
@@ -207,7 +200,6 @@ case $CMD in
 
     clean)
         rm -f *.ll *.o core 2>/dev/null || true
-        # Remove binaries (no extension on Linux, but we can look for common names or use find)
         find . -maxdepth 1 -type f -executable -not -name "eq" -not -name "epm" -exec rm -f {} +
         echo "[eq] Workspace cleaned."
         ;;

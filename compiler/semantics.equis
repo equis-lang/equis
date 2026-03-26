@@ -631,6 +631,19 @@ fn analyzer_specialize(a, gen_func_name, types) {
     let func_node = entry[1];
     let generics = func_node[FUNC_GENERICS];
     if (generics == 0) { return gen_func_name; }
-    // Generic specialization name mangling placeholder
-    return gen_func_name;
+
+    let mut mangled = str_concat(gen_func_name, "_");
+    let mut i = 0; let size = vec_size(types);
+    while (i < size) {
+        let t = vec_get(types, i);
+        if (t > 1000) { mangled = str_concat(mangled, t); }
+        else { mangled = str_concat(mangled, str_from_int(t)); }
+        if (i < size - 1) { mangled = str_concat(mangled, "_"); }
+        i = i + 1;
+    }
+    mangled = intern_string(mangled);
+    
+    # Internal symbol registration for specialized variant
+    analyzer_define(a, mangled, func_node, func_node[FUNC_RETURN_TYPE], 0, 0);
+    return mangled;
 }

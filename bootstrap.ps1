@@ -50,7 +50,7 @@ foreach ($line in $ll) {
         $output.Add($line)
     }
 }
-$final = $output -replace 'x86_64-pc-linux-gnu', 'x86_128-pc-win32-gnu' # Ensuring Windows target
+$final = $output -replace 'x86_64-pc-linux-gnu', 'x86_64-pc-win32-gnu'
 $final | Set-Content compiler\main.ll -Encoding Ascii
 
 Write-Host "[4/4] Building production-grade stage-2 compiler (Clang)..." -ForegroundColor White
