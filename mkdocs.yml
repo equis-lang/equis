@@ -10,6 +10,7 @@ theme:
     - navigation.tabs
     - navigation.sections
     - search.highlight
+  logo: assets/logo.png
 
 nav:
   - Home: index.md
