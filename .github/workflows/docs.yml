@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -21,6 +23,9 @@ jobs:
           mkdir -p docs
           cp README.md docs/index.md
           cp EQUIS.md docs/EQUIS.md
+          # Perbaiki link docs/ di index.md (karena sekarang ada di dalam docs/)
+          sed -i 's|docs/||g' docs/index.md
+          sed -i 's|docs/||g' docs/EQUIS.md
           # Salin file legal lainnya
           cp CONTRIBUTING.md docs/CONTRIBUTING.md
           cp CODE_OF_CONDUCT.md docs/CODE_OF_CONDUCT.md
