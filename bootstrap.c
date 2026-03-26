@@ -4596,6 +4596,7 @@ long long _eq_gen_release_locals(long long c, long long vars) {
     }
 }
 long long _eq_freshen_reg(long long c) {
+    if (c < 4096) return 0;
     volatile long long id = 0;
 
      id = ((long long*)(c))[0];
@@ -4603,6 +4604,7 @@ long long _eq_freshen_reg(long long c) {
     return id;
 }
 long long _eq_freshen_ptr(long long c) {
+    if (c < 4096) return 0;
     volatile long long id = 0;
 
      id = ((long long*)(c))[0];
@@ -4610,6 +4612,7 @@ long long _eq_freshen_ptr(long long c) {
     return id;
 }
 long long _eq_freshen_label(long long c) {
+    if (c < 4096) return 0;
     volatile long long l = 0;
 
      l = ((long long*)(c))[1];
@@ -4745,7 +4748,7 @@ long long _eq_gen_expr(long long c, long long expr) {
     volatile long long val_reg = 0;
     volatile long long value = 0;
 
-    if (expr == 0) { return 0; }
+    if (expr < 4096) { return 0; }
      type = ((long long*)(expr))[0];
      res = 0;  l_res = 0;  r_res = 0;  op = 0;  reg = 0;
      lv = 0;  rv = 0;  folded = 0;  handled = 0;
@@ -5159,7 +5162,7 @@ long long _eq_gen_stmt(long long c, long long stmt) {
     volatile long long value = 0;
     volatile long long vars = 0;
 
-    if (stmt == 0) { return 0; }
+    if (stmt < 4096) { return 0; }
      type = ((long long*)(stmt))[0];
      name = 0;  value = 0;  l_ptr = 0;  existing = 0;
      vars = 0;  j = 0;  v_sz = 0;  v_entry = 0;
