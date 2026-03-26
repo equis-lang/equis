@@ -107,13 +107,14 @@ equis/
 ├── bootstrap.ps1               # Windows bootstrap script
 ├── eq                          # Linux/macOS runner script
 ├── eq.ps1                      # PowerShell runner script
-├── eq.bat                      # Windows batch runner script
+├── eq.bat                      # Windows batch runner shim
 ├── epm                         # Package manager (Linux/macOS)
 ├── epm.ps1                     # PowerShell package manager
+├── epm.bat                     # Windows package manager shim
 ├── install.sh                  # Linux/macOS installer
 ├── install.ps1                 # Windows installer
 ├── EQUIS.md                    # Programmer's language reference
-├── CHANGELOG.md
+├── CHANGELOG.md                # Release history
 ├── LICENSE                     # Apache 2.0
 └── NOTICE
 ```
@@ -219,11 +220,6 @@ eq run examples/main.equis
 |---|---|
 | [VS Code Extension](https://github.com/equis-lang/vscode-equis) | Syntax highlighting, LSP, and file icons |
 | [Package Manager (`epm`)](epm) | Dependency management for Equis projects |
-
-## Platform Support
-- **Linux**: Primary production environment.
-- **Windows**: Fully supported via PowerShell and Batch shims.
-- **macOS**: Native support for ARM64 and x86_64.
 
 ## License
 Copyright (c) 2026 [mlintangmz](https://github.com/equis-lang)  
