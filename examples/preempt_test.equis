@@ -1,0 +1,38 @@
+use "std/sys.equis";
+use "std/fiber.equis";
+
+fn watcher() {
+    let mut i = 0;
+    while (true) {
+        print_raw("[Watcher] Heartbeat: ");
+        print_raw_int(i);
+        print_raw("\n");
+        i = i + 1;
+        fiber_yield(); // Voluntarily yield to show cooperation
+    }
+}
+
+fn busy_worker() {
+    print_raw("[Worker] Starting infinite busy loop...\n");
+    let mut x = 0;
+    while (true) {
+        x = x + 1;
+        // NO YIELD HERE. 
+        // This loop would block the system if preemption didn't work.
+    }
+}
+
+fn main() {
+    print_raw("--- Equis Preemption Test ---\n");
+    
+    // Set preemption frequency to 50ms (0.05s)
+    sys_preempt_config(50); 
+    
+    spawn(watcher);
+    spawn(busy_worker);
+    
+    // Wait and observe preemption
+    sys_sleep(2000); // Sleep for 2s
+    print_raw("--- Test Complete: Preemption Verified ---\n");
+    return 0;
+}
