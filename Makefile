@@ -17,7 +17,7 @@ ifeq ($(HAS_LIBPQ),1)
 endif
 
 eq-core:
-	gcc $(CFLAGS) bootstrap.c compiler/runtime.c $(LIBS) -o eq-core
+	gcc $(CFLAGS) bootstrap.c $(LIBS) -o eq-core
 	./eq-core -I std compiler/main.equis > compiler/main.ll
 	@# Remove duplicate _eq___equis_pre_intern (bootstrap artifact)
 	clang $(CFLAGS) -Wno-override-module compiler/main.ll compiler/runtime.c $(LIBS) -o eq-core

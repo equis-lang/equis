@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 Write-Host "Bootstrapping Equis Core on Windows..." -ForegroundColor Cyan
 
 Write-Host "Compiling eq-core.exe using gcc..."
-& gcc -O3 bootstrap.c compiler/runtime.c -o eq-core.exe -lws2_32
+& gcc -O3 bootstrap.c -o eq-core.exe -lws2_32
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Failed to compile eq-core.exe" -ForegroundColor Red
     exit 1

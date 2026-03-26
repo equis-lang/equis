@@ -63,7 +63,7 @@ echo -e "${YELLOW}${BOLD}[2/3]${NC} bootstrapping Equis compiler..."
 mkdir -p compiler
 
 echo -e "${BLUE}${BOLD}info${NC}: lowering compiler core from LLVM IR..."
-clang -O3 -o compiler/main compiler/main.ll -Wno-override-tunit || clang -O3 -o compiler/main compiler/main.ll
+clang -O3 -o compiler/main compiler/main.ll compiler/runtime.c -lpthread -Wno-override-tunit || clang -O3 -o compiler/main compiler/main.ll compiler/runtime.c -lpthread
 
 if [ ! -f "compiler/main" ]; then
     echo -e "${RED}${BOLD}error${NC}: bootstrap failed. verify clang/llvm installation."
