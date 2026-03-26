@@ -920,6 +920,9 @@ fn gen_program(c, ast) {
     if (is_extern(c, "sys_get_argv") == 0) { print_raw_str("declare i64 @sys_get_argv(i64)\n"); c[3] = vec_push(c[3], "sys_get_argv"); }
     if (is_extern(c, "sys_time") == 0) { print_raw_str("declare i64 @sys_time()\n"); c[3] = vec_push(c[3], "sys_time"); }
     if (is_extern(c, "sys_reverse_event") == 0) { print_raw_str("declare void @sys_reverse_event(ptr)\n"); c[3] = vec_push(c[3], "sys_reverse_event"); }
+    if (is_extern(c, "sys_os") == 0) { print_raw_str("declare i64 @sys_os()\n"); c[3] = vec_push(c[3], "sys_os"); }
+    if (is_extern(c, "sys_mkdir") == 0) { print_raw_str("declare i64 @sys_mkdir(i64)\n"); c[3] = vec_push(c[3], "sys_mkdir"); }
+    if (is_extern(c, "sys_realloc") == 0) { print_raw_str("declare i64 @sys_realloc(i64, i64)\n"); c[3] = vec_push(c[3], "sys_realloc"); }
     if (is_extern(c, "_eq_fiber_yield") == 0) { print_raw_str("declare i64 @_eq_fiber_yield()\n"); c[3] = vec_push(c[3], "_eq_fiber_yield"); }
 
 
