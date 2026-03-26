@@ -74,6 +74,17 @@ jobs:
         make check
       shell: bash
         
+    - name: Rename Binaries for Platform
+      run: |
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          cp compiler/main.exe eq-core-windows.exe
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+          cp compiler/main eq-core-macos
+        else
+          cp compiler/main eq-core-linux
+        fi
+      shell: bash
+
     - name: Upload Native Compiler System Artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -83,8 +94,7 @@ jobs:
           eq.ps1
           install.sh
           install.ps1
-          compiler/main
-          compiler/main.exe
+          eq-core-*
 
   release:
     name: Create GitHub Release
@@ -103,14 +113,13 @@ jobs:
       - name: Prepare and Publish Release
         run: |
           mkdir -p release_assets
-          # Move files from matrix-specific folders to a flat structure
-          find artifacts -type f -exec cp {} release_assets/ \;
+          # Collect unique platform-specific binaries
+          find artifacts -type f -name "eq-core-*" -exec cp {} release_assets/ \;
           
-          # Add root level install scripts
-          cp install.sh install.ps1 eq eq.ps1 release_assets/ 2>/dev/null || true
+          # Collect common scripts (only once from any artifact folder)
+          find artifacts -type f -name "eq" -o -name "eq.ps1" -o -name "install.*" | head -n 4 | xargs -I{} cp {} release_assets/
           
           cd release_assets
-          # Upload all found assets
           FILES=(*)
           if [ ${#FILES[@]} -gt 0 ]; then
             gh release create ${{ github.ref_name }} "${FILES[@]}" \
