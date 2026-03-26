@@ -1,10 +1,5 @@
-
-
-extern fn sys_socket_create();
-extern fn sys_socket_connect(s, host, port);
-extern fn sys_socket_send(s, buf, len);
-extern fn sys_socket_recv(s, buf, len);
-extern fn sys_socket_close(s);
+use "std/sys.equis";
+use "std/string.equis";
 
 fn net_connect(host, port) {
     let s = sys_socket_create();
@@ -28,3 +23,8 @@ fn net_recv(s, len) {
     set_char(buf, n, 0);
     return buf;
 }
+
+fn net_close(s) {
+    sys_socket_close(s);
+}
+

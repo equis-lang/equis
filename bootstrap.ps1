@@ -1,23 +1,23 @@
 $ErrorActionPreference = "Stop"
 
-Write-Host "Bootstrapping Equis Core on Windows..." -ForegroundColor Cyan
+Write-Host "--- Equis Toolchain Bootstrap (Windows) ---" -ForegroundColor Cyan
 
-Write-Host "Compiling eq-core.exe using gcc..."
+Write-Host "`n[1/4] Compiling bootstrap core (GCC/MinGW)..." -ForegroundColor White
 & gcc -O3 bootstrap.c -o eq-core.exe -lws2_32
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Failed to compile eq-core.exe" -ForegroundColor Red
+    Write-Error "Bootstrap Phase 1 failed: GCC compilation error."
     exit 1
 }
 
-Write-Host "Generating compiler/main.ll from Main source..."
-cmd /c ".\eq-core.exe -I std compiler/main.equis > compiler/main.ll"
+Write-Host "[2/4] Generating stage-2 LLVM IR..." -ForegroundColor White
+cmd /c ".\eq-core.exe -I std compiler\main.equis > compiler\main.ll"
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Failed to generate main.ll" -ForegroundColor Red
+    Write-Error "Bootstrap Phase 2 failed: Compiler IR generation error."
     exit 1
 }
 
-Write-Host "Patching main.ll IR structure (Domination Fix)..."
-$ll = Get-Content compiler/main.ll
+Write-Host "[3/4] Applying IR structural patching (Domination Fix)..." -ForegroundColor White
+$ll = Get-Content compiler\main.ll
 $output = New-Object System.Collections.Generic.List[string]
 $funcBuffer = New-Object System.Collections.Generic.List[string]
 $inFunc = $false
@@ -43,10 +43,6 @@ foreach ($line in $ll) {
                 $foundEntry = $true
             }
         }
-        if (-not $foundEntry -and $fAllocas.Count -gt 0) {
-             # Fallback if no entry label found (shouldn't happen in Equis)
-             Write-Host "Warning: No entry label in function, prepending allocas" -ForegroundColor Yellow
-        }
         $inFunc = $false
     } elseif ($inFunc) {
         $funcBuffer.Add($line)
@@ -54,18 +50,18 @@ foreach ($line in $ll) {
         $output.Add($line)
     }
 }
-$final = $output -replace 'x86_64-pc-linux-gnu', 'x86_64-pc-win32-gnu'
-$final | Set-Content compiler/main.ll -Encoding Ascii
+$final = $output -replace 'x86_64-pc-linux-gnu', 'x86_128-pc-win32-gnu' # Ensuring Windows target
+$final | Set-Content compiler\main.ll -Encoding Ascii
 
-Write-Host "Compiling compiler/main.exe from LLVM IR (targeting GNU/MinGW)..."
-& clang -O3 -target x86_64-pc-windows-gnu -o compiler/main.exe compiler/main.ll compiler/runtime.c -lws2_32 -Wno-override-module
+Write-Host "[4/4] Building production-grade stage-2 compiler (Clang)..." -ForegroundColor White
+& clang -O3 -target x86_64-pc-windows-gnu -o compiler\main.exe compiler\main.ll compiler\runtime.c -lws2_32 -Wno-override-module
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Failed to compile main.exe" -ForegroundColor Red
+    Write-Error "Bootstrap Phase 4 failed: Clang compilation error."
     exit 1
 }
 
-Write-Host "Installing Stage-2 compiler as eq-core.exe..."
+Write-Host "`n[eq] Finalizing self-hosted executable..." -ForegroundColor Gray
+if (Test-Path "eq-core.exe") { Remove-Item "eq-core.exe" -Force }
 Move-Item compiler\main.exe eq-core.exe -Force
 
 Write-Host "Bootstrap completed successfully." -ForegroundColor Green
-exit 0

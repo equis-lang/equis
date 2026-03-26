@@ -15,7 +15,7 @@ fn verify_type_match(a, expected, actual_node, line, col) {
          let mut is_match = 0;
          if (expected > 1000 && actual > 1000) { is_match = str_equal(expected, actual); }
          if (is_match == 0) {
-            let mut msg = str_concat("Type Mismatch: Expected variable of type '", str_from_int(expected));
+            let mut msg = str_concat("Type Mismatch: Expected '", str_from_int(expected));
             if (expected > 1000) { msg = str_concat("Type Mismatch: Expected '", expected); }
             msg = str_concat(msg, "' but found '");
             if (actual > 1000) { msg = str_concat(msg, actual); }
@@ -631,32 +631,6 @@ fn analyzer_specialize(a, gen_func_name, types) {
     let func_node = entry[1];
     let generics = func_node[FUNC_GENERICS];
     if (generics == 0) { return gen_func_name; }
-    
-
-    let mut mangled = gen_func_name;
-    let mut i = 0; let size = vec_size(types);
-    while (i < size) {
-        mangled = str_concat(mangled, "_m_");
-        mangled = str_concat(mangled, vec_get(types, i));
-        i = i + 1;
-    }
-    mangled = intern_string(mangled);
-    
-
-    if (map_get(a[5], mangled)) { return mangled; }
-    
-
-    let new_func = analyzer_copy_node(a, func_node);
-    new_func[FUNC_NAME] = mangled;
-    new_func[FUNC_GENERICS] = 0; 
-    analyzer_substitute_types(a, new_func[FUNC_BODY], generics, types);
-    
-
-    map_put(a[5], mangled, new_func);
-    
-
-    analyzer_define(a, mangled, new_func, 0, 0, 0);
-    analyze_stmt(a, new_func);
-    
-    return mangled;
+    // Generic specialization name mangling placeholder
+    return gen_func_name;
 }

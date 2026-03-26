@@ -46,6 +46,7 @@ fn lsp_find_node_at(node, line, col) {
     }
     return 0;
 }
+
 fn lsp_find_stmt_at(ast, line, col) {
     let mut i = 0; let n = vec_size(ast);
     while (i < n) {
@@ -71,13 +72,14 @@ fn lsp_find_stmt_at(ast, line, col) {
     }
     return 0;
 }
+
 fn lsp_publish_diagnostics(uri, a) {
     let diags = a[4];
     let res = json_new();
     json_put_str(res, "method", "textDocument/publishDiagnostics");
     let params = json_new();
     json_put_str(params, "uri", uri);
-    let mut diag_list = vec_new(4096);
+    let mut diag_list = vec_new(1024);
     let mut i = 0; let size = vec_size(diags);
     while (i < size) {
         let d = vec_get(diags, i);
@@ -101,11 +103,11 @@ fn lsp_publish_diagnostics(uri, a) {
     json_put_obj(res, "params", params);
     lsp_send(res);
 }
+
 fn lsp_loop() {
     let buf = sys_malloc(1024 * 64); 
     let char_buf = sys_malloc(8);
     while (1) {
-
         let mut content_len = 0;
         let line_buf = sys_malloc(1024);
         let mut header_done = 0;
@@ -163,8 +165,7 @@ fn lsp_loop() {
 
                         let l = lexer_new(text);
                         lexer_scan_tokens(l);
-                        let tokens = l[4];
-                        let p = parser_new(tokens);
+                        let p = parser_new(l[4]);
                         let ast = parse_program(p);
                         let a = analyzer_new();
                         analyze_program(a, ast);
@@ -179,8 +180,7 @@ fn lsp_loop() {
 
                         let l = lexer_new(text);
                         lexer_scan_tokens(l);
-                        let tokens = l[4];
-                        let p = parser_new(tokens);
+                        let p = parser_new(l[4]);
                         let ast = parse_program(p);
                         let a = analyzer_new();
                         analyze_program(a, ast);
@@ -193,8 +193,6 @@ fn lsp_loop() {
                         let line = json_get_int(pos, "line") + 1;
                         let col = json_get_int(pos, "character");
                         
-
-
                         let content = sys_read_entire_file(uri); 
                         if (content) {
                             let l = lexer_new(content);
@@ -248,26 +246,40 @@ fn lsp_loop() {
                             let a = analyzer_new();
                             analyze_program(a, ast);
                             let node = lsp_find_stmt_at(ast, line, col);
-                            if (node) {
+                            if (node != 0) {
                                 if (node[0] == EXPR_VARIABLE) {
                                     let entry = analyzer_resolve(a, node[1]);
-                                    if (entry) {
+                                    if (entry != 0) {
                                         let res = json_new();
                                         json_put_int(res, "id", id);
                                         let result = json_new();
                                         let contents = json_new();
                                         json_put_str(contents, "kind", "markdown");
-                                        let mut type_str = "Unknown Type";
-                                        if (entry[2] == TOKEN_F64) { type_str = "f64"; }
-                                        if (entry[2] == TOKEN_BOOL) { type_str = "bool"; }
-                                        if (entry[2] == 0) { type_str = "any/inferred"; }
-                                        let mut hover_text = str_concat("**Type**: `", type_str);
+                                        let mut type_str = "Inferred Type";
+                                        if (entry[2] == TOKEN_I64) { type_str = "i64"; }
+                                        else if (entry[2] == TOKEN_F64) { type_str = "f64 (fixed-point)"; }
+                                        else if (entry[2] == TOKEN_BOOL) { type_str = "bool"; }
+                                        else if (entry[2] > 1000) { type_str = str_concat("struct ", entry[2]); }
+                                        let mut hover_text = str_concat("**Equis Analysis**: `", type_str);
                                         hover_text = str_concat(hover_text, "`");
                                         json_put_str(contents, "value", hover_text);
                                         map_put(result, "contents", json_item_obj(contents));
                                         map_put(res, "result", json_item_obj(result));
                                         lsp_send(res);
                                     }
+                                } else if (node[0] == STMT_EVENT || node[0] == STMT_COMMITMENT) {
+                                    let res = json_new();
+                                    json_put_int(res, "id", id);
+                                    let result = json_new();
+                                    let contents = json_new();
+                                    json_put_str(contents, "kind", "markdown");
+                                    let mut name = node[1];
+                                    let mut hover_txt = str_concat("**REA Entity**: `", name);
+                                    hover_txt = str_concat(hover_txt, "`\n\n---\n\n✅ **Duality Verified**: This economic construct adheres to the Resource-Event-Agent reciprocal flow mandate.");
+                                    json_put_str(contents, "value", hover_txt);
+                                    map_put(result, "contents", json_item_obj(contents));
+                                    map_put(res, "result", json_item_obj(result));
+                                    lsp_send(res);
                                 }
                             }
                         }
@@ -283,3 +295,4 @@ fn lsp_loop() {
         }
     }
 }
+

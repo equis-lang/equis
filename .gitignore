@@ -8,6 +8,7 @@ compiler/main
 compiler/main.exe
 !compiler/main.ll
 tests/
+docs/equis-deck.md
 
 
 *.db

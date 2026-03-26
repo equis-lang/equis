@@ -176,7 +176,6 @@ fn gen_expr(c, expr) {
     if (expr == 0) { return 0; }
     if (expr < 4096) { return 0; }
     let type = expr[0];
-    // Skip expression tracing in release build
     if (type == EXPR_VARIABLE) { return gen_expr_variable(c, expr); }
     if (type == EXPR_LITERAL) { return gen_expr_literal(c, expr); }
     if (type == EXPR_BINARY) { return gen_expr_binary(c, expr); }
@@ -736,7 +735,6 @@ fn gen_stmt(c, stmt) {
         if (f_init) { gen_stmt(c, f_init); }
         print_raw_str("    br label %Label_"); print_raw(l_start); emit_ln("");
         print_raw_str("Label_"); print_raw(l_start); print_raw_str(":\n");
-        // Preemption Check Hook
         let r_f_pre = freshen_reg(c);
         print_raw_str("    %r"); print_raw(r_f_pre); print_raw_str(" = load volatile i32, ptr @g_needs_yield\n");
         let r_f_check = freshen_reg(c);

@@ -1,20 +1,19 @@
-
-
 use "std/sys.equis";
+use "std/string.equis";
 
 fn io_read_lines(path) {
     let content = sys_read_entire_file(path);
-    if (content == 0) return 0;
-
+    if (content == 0) { return 0; }
     return content;
 }
 
 fn io_write_atomic(path, content) {
     let tmp = str_concat(path, ".tmp");
-    let fd = open(tmp, 577, 420); // O_WRONLY | O_CREAT | O_TRUNC
-    if (fd < 0) return 0;
+    let fd = open(tmp, 577, 420);
+    if (fd < 0) { return 0; }
     write(fd, content, str_len(content));
     close(fd);
     sys_rename(tmp, path);
     return 1;
 }
+

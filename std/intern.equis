@@ -17,7 +17,6 @@ fn intern_string(s) {
         return existing;
     }
     
-
     let len = sys_strlen(s);
     let clone = sys_malloc(len + 1);
     let mut i = 0;
@@ -27,8 +26,6 @@ fn intern_string(s) {
     }
     set_char(clone, len, 0);
     sys_pin(clone);
-    
-
     map_put(__intern_map, clone, clone);
     return clone;
 }

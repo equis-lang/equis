@@ -1,6 +1,13 @@
 #!/bin/bash
 
+# =============================================================================
+# Equis Package Manager (epm) v0.1.0
+# Dependency management and project scaffolding for Equis.
+# =============================================================================
 
+set -euo pipefail
+
+# --- Path Resolution ---
 
 abspath() {
     local target=$1
@@ -15,39 +22,143 @@ abspath() {
 SCRIPT_PATH=$(abspath "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
 
+# --- Helper Functions ---
+
+show_help() {
+    cat << EOF
+Equis Package Manager (epm) v0.1.0
+
+USAGE:
+    epm <COMMAND> [ARGS]
+
+COMMANDS:
+    init        Scaffolds a new Equis project
+    get <url>   Installs and tracks a remote package
+    install     Restores all dependencies from equis.json
+    run <file>  Convenience wrapper for 'eq run'
+    help        Show this help message
+
+EXAMPLES:
+    epm init
+    epm get https://github.com/equis-lang/std-extra
+    epm install
+EOF
+}
+
+# --- Action Handlers ---
+
+if [ $# -lt 1 ]; then
+    show_help
+    exit 0
+fi
+
 CMD=$1
 shift
 
 case $CMD in
     init)
-        echo -e "{\n  \"name\": \"$(basename $(pwd))\",\n  \"version\": \"0.1.0\",\n  \"dependencies\": {}\n}" > equis.json
-        echo "Initialized equis.json"
+        if [ -f "equis.json" ]; then
+            echo "Error: equis.json already exists in this directory."
+            exit 1
+        fi
+        NAME=$(basename "$(pwd)")
+        cat << EOF > equis.json
+{
+  "name": "$NAME",
+  "version": "0.1.0",
+  "dependencies": {}
+}
+EOF
+        mkdir -p src
+        if [ ! -f "src/main.equis" ]; then
+            cat << EOF > src/main.equis
+use "std/sys.equis";
+
+fn main() {
+    print_raw_str("Hello from Equis project: $NAME\n");
+}
+
+main();
+EOF
+        fi
+        if [ ! -f ".gitignore" ]; then
+            cat << EOF > .gitignore
+*.ll
+*.o
+.equis/
+EOF
+        fi
+        echo "[epm] Initialized Equis project: $NAME"
         ;;
+
     get)
-        if [ -z "$1" ]; then
+        if [ -z "${1:-}" ]; then
             echo "Usage: epm get <repo_url>"
             exit 1
         fi
-        REPO=$1
-        NAME=$(basename $REPO .git)
-        mkdir -p .equis/packages
-        cd .equis/packages
-        if [ -d "$NAME" ]; then
-            cd "$NAME" && git pull
-        else
-            git clone "$REPO" "$NAME"
+        if [ ! -f "equis.json" ]; then
+            echo "Error: No equis.json found. Run 'epm init' first."
+            exit 1
         fi
-        echo "Package $NAME installed to .equis/packages/$NAME"
+        
+        REPO=$1
+        PKG_NAME=$(basename "$REPO" .git)
+        
+        echo "[epm] Fetching $PKG_NAME..."
+        mkdir -p .equis/packages
+        if [ -d ".equis/packages/$PKG_NAME" ]; then
+            (cd ".equis/packages/$PKG_NAME" && git pull)
+        else
+            git clone "$REPO" ".equis/packages/$PKG_NAME"
+        fi
+
+        # Update equis.json (robust string manipulation for flat JSON)
+        if ! grep -q "\"$PKG_NAME\"" equis.json; then
+            # Handle empty dependencies: {} -> { "pkg": "url" }
+            if grep -q "  \"dependencies\": {}" equis.json; then
+                sed -i 's|  "dependencies": {}|  "dependencies": {\n    "'"$PKG_NAME"'": "'"$REPO"'"\n  }|' equis.json
+            else
+                # Handle non-empty: { "a": "b" } -> { "a": "b", "pkg": "url" }
+                sed -i '/"dependencies": {/,/}/ s|}|    "'"$PKG_NAME"'": "'"$REPO"'"\n  }|' equis.json
+                # Now add the missing comma to the previous line
+                sed -i '/"'"$PKG_NAME"'":/! s|\(    ".*": ".*"\)$|\1,|' equis.json
+            fi
+            echo "[epm] Added $PKG_NAME to equis.json"
+        fi
         ;;
+
+    install)
+        if [ ! -f "equis.json" ]; then
+            echo "Error: equis.json not found."
+            exit 1
+        fi
+        echo "[epm] Installing dependencies..."
+        # Extract URLs from equis.json dependencies block
+        grep "\": \"http" equis.json | sed -E 's/.*": "(.*)".*/\1/' | while read -r url; do
+            epm get "$url"
+        done
+        ;;
+
     run)
+        if [ $# -lt 1 ]; then
+            echo "[epm] Usage: epm run <file.equis>"
+            exit 1
+        fi
+        # Try local eq first, then global
         if [ -f "$SCRIPT_DIR/eq" ]; then
             "$SCRIPT_DIR/eq" run "$@"
         else
             eq run "$@"
         fi
         ;;
+
+    help|--help|-h)
+        show_help
+        ;;
+
     *)
-        echo "Usage: epm [init|get|run]"
+        echo "[epm] Error: Unknown command '$CMD'. See 'epm help'."
         exit 1
         ;;
 esac
+

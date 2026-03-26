@@ -1,31 +1,46 @@
-
-
+use "std/sys.equis";
+use "std/string.equis";
 use "std/net.equis";
 use "std/json.equis";
-use "std/chan.equis";
+use "std/http.equis";
 
 fn rpc_serve(port, handler) {
-    let s = sys_socket_create();
-
+    let fd = http_server_new(port);
+    if (fd < 0) { return -1; }
+    let mut running = 1;
+    while (running) {
+        let client = http_accept(fd);
+        if (client > 0) {
+            let req = http_parse_request(client);
+            if (req != 0) {
+                let body = http_get_body(req);
+                let parsed = json_parse(body);
+                let result = handler(parsed);
+                let response = json_serialize(result);
+                http_send_response(client, 200, response);
+                http_request_sys_free(req);
+            } else {
+                close(client);
+            }
+        }
+    }
     return 0;
 }
 
 fn rpc_call(host, port, method, params) {
     let s = net_connect(host, port);
-    if (s == 0) return 0;
-    
-    let id = sys_time();
+    if (s == 0) { return 0; }
+
     let mut req = str_concat("{\"jsonrpc\":\"2.0\",\"method\":\"", method);
     req = str_concat(req, "\",\"params\":");
-    req = str_concat(req, json_encode(params));
-    req = str_concat(req, ",\"id\":");
-    req = str_concat(req, str_from_int(id));
-    req = str_concat(req, "}");
-    
+    req = str_concat(req, json_serialize(params));
+    req = str_concat(req, ",\"id\":1}");
+
     net_send(s, req);
     let res_raw = net_recv(s, 4096);
     sys_socket_close(s);
-    
-    if (res_raw == 0) return 0;
-    return json_decode(res_raw);
+
+    if (res_raw == 0) { return 0; }
+    return json_parse(res_raw);
 }
+

@@ -19,7 +19,7 @@ endif
 eq-core:
 	gcc $(CFLAGS) bootstrap.c $(LIBS) -o eq-core
 	./eq-core -I std compiler/main.equis > compiler/main.ll
-	@# Remove duplicate _eq___equis_pre_intern (bootstrap artifact)
+	@# Bootstrap artifact cleanup
 	clang $(CFLAGS) -Wno-override-module compiler/main.ll compiler/runtime.c $(LIBS) -o eq-core
 
 bootstrap: eq-core
@@ -39,6 +39,8 @@ install: bootstrap
 	install -m 755 epm $(PREFIX)/bin/epm
 	install -m 644 eq.ps1 $(PREFIX)/bin/eq.ps1
 	install -m 644 eq.bat $(PREFIX)/bin/eq.bat
+	install -m 644 epm.ps1 $(PREFIX)/bin/epm.ps1
+	install -m 644 epm.bat $(PREFIX)/bin/epm.bat
 	install -m 755 eq-core $(PREFIX)/lib/eq-core
 	install -m 644 compiler/runtime.c $(PREFIX)/lib/runtime.c
 	cp -r std $(PREFIX)/lib/

@@ -1,34 +1,61 @@
 use "std/sys.equis";
 use "std/string.equis";
 use "std/collections.equis";
+use "std/fixed.equis";
+
 fn i18n_format_currency(amount, iso_code) {
+    if (iso_code == 0) { sys_panic("ISO code required"); }
     print_str(iso_code);
     print_str(" ");
     print_fixed(amount);
 }
-use "std/fixed.equis";
+
 fn compliance_calculate_vat(amount, rate_fixed) {
     return fixed_mul(amount, rate_fixed);
 }
+
 fn policy_enforce_spending_limit(current_balance, tx_amount, limit_amount) {
+    let res = sys_malloc(24);
     if (current_balance + tx_amount > limit_amount) {
-        print_str("[ERROR] Spending limit exceeded!");
-        exit(1);
+        res[0] = 0;
+        res[1] = "ERR_LIMIT_EXCEEDED";
+        return res;
     }
+    res[0] = 1;
+    res[2] = current_balance + tx_amount;
+    return res;
 }
-fn policy_ifrs_revenue_recognition(contract, event) {
-    return 1;
-}
-fn policy_gaap_matching_principle(ledger, expense_event) {
-    return 1;
-}
-fn policy_esg_carbon_footprint(flw) {
-    let resource = flw[3];
-    if (str_equal(resource, "CO2_EMISSION")) {
+
+fn policy_ifrs_revenue_recognition(contract_status, event_type) {
+    if (event_type == 0) { return 0; }
+    if (str_equal(event_type, "PERFORMANCE_OBLIGATION_SATISFIED")) { return 1; }
+    if (str_equal(event_type, "DELIVERY") || str_equal(event_type, "COMPLETION")) {
         return 1;
     }
+    return 0;
+}
+
+fn policy_gaap_matching_principle(revenue_period, expense_period) {
+    if (revenue_period == 0 || expense_period == 0) { return 0; }
+    return revenue_period == expense_period;
+}
+
+fn policy_esg_carbon_footprint(flw) {
+    if (flw == 0) { return 1; }
+    let res_name = flw[3]; 
+    if (str_equal(res_name, "CO2_EMISSION")) {
+        print_str("[ESG] Carbon footprint logged.\n");
+    }
     return 1;
 }
-fn policy_gov_public_fund_audit(agent, event) {
-    return 1;
+
+fn policy_gov_public_fund_audit(agnt, ev) {
+    if (sys_verify_role("GOVERNMENT") || sys_verify_role("AUDITOR")) {
+        return 1;
+    }
+    
+    print_err("[SECURITY] Unauthorized access to public fund audit trail\n");
+    sys_reverse_event(ev);
+    exit(1);
+    return 0;
 }

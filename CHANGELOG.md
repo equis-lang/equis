@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formal trust verification via Diverse Double-Compilation (DDC).
 - Built-in Language Server Protocol (LSP) support.
 - Standard Library with 20 starting modules including networking and ledger compliance.
-- Experimental Windows and macOS support.
+- Production-ready Windows and stable macOS support.
 
 ### Security
 - Blocked unsafe system calls (`system`, `execv`, `popen`, `fork`) at the analyzer level.

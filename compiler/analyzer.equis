@@ -24,7 +24,7 @@ fn analyzer_new() {
     a[3] = arena;
     a[4] = diagnostics;
     a[5] = monomorphizer;
-    a[6] = 0; 
+    a[6] = 0;
     a[7] = map_new(1000);
     analyzer_add_builtins(a);
     return a;
@@ -100,8 +100,7 @@ fn analyzer_resolve(a, name) {
     let mut i = 0;
     let mut scope_map = 0;
     let mut entry = 0;
-    if (resolve_stat == 0) { resolve_stat = sys_malloc(16); resolve_stat[0] = 0; }
-    resolve_stat[0] = resolve_stat[0] + 1;
+    if (resolve_stat == 0) { resolve_stat = sys_malloc(16); }
     i = a[1];
     while (i >= 0) {
         scope_map = vec_get(a[0], i);

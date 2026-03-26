@@ -8,7 +8,7 @@ Agent Node roles { "REMOTE" } {
 struct CommitmentInfo {
     id;
     flow_hash;
-    status; 
+    status;
 }
 
 fn verify_dual(peer_addr, event_id) {
@@ -30,12 +30,9 @@ fn verify_dual(peer_addr, event_id) {
 }
 
 fn commit_event(mut id, hash) {
-    let c = sys_malloc(3 * 8); 
+    let c = sys_malloc(3 * 8);
     c.id = id;
     c.flow_hash = hash;
     c.status = 1;
-
-    print_raw_str("Local commitment prepared: ");
-    print_raw_str(c.id);
-    print_raw_str("\n");
+    return c;
 }

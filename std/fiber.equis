@@ -65,13 +65,6 @@ fn fiber_scheduler_run() {
         if (active == 0) { loop = 0; }
     }
 }
-fn fiber_new(stack_size) {
-    return fiber_spawn(0); 
-}
-fn fiber_switch(old, new) {
-    fiber_yield(); 
-}
-
 fn fiber_preempt_enable(ms) {
     sys_fiber_preempt_setup(ms);
 }
