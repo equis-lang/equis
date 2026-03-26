@@ -249,7 +249,7 @@ use "std/collections.equis";
 use "std/string.equis";
 
 // =========================================================================
-// EQUIS LANGUAGE COMPREHENSIVE EXAMPLE
+// EQUIS LANGUAGE EXAMPLE
 // =========================================================================
 
 // 1. DATA TYPES AND ABSTRACTION
@@ -320,7 +320,7 @@ fn run_demos() {
     print_raw_str("Equis Core Feature Verification\n");
     print_raw_str("--------------------------------------\n\n");
 
-    // Static Typing & Math
+    // Variable and arithmetic operations
     let mut balance = 1000;
     let cost = 500;
     balance = balance - cost;
@@ -338,9 +338,9 @@ fn run_demos() {
 
     // REA Operations
     print_raw_str("--- REA Execution Flow ---\n");
-    execute Purchase { sig: "Sig_H1"; timestamp: "1700000000" };
+    execute Purchase { sig: Buyer; timestamp: "1700000000" };
     
-    print_raw_str("--- REA Compensation/Reverse ---\n");
+    print_raw_str("--- REA Reverse Flow ---\n");
     reverse Purchase { reason: "Customer Refund" };
     
     print_raw_str("\nEquis core systems verified.\n");

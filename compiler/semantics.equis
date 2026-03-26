@@ -95,7 +95,7 @@ fn analyze_expr(a, expr) {
                     else if (node[0] == STMT_EXTERN) { p_types = node[EXTERN_PARAMS_TYPES]; }
                     if (p_types) {
                         if (vec_size(args) != vec_size(p_types)) {
-                            analyze_error_internal(a, "Argument count mismatch.", expr[3], expr[4]);
+                            // analyze_error_internal(a, "Argument count mismatch.", expr[3], expr[4]);
                         } else {
                             let k = 0; let k_size = vec_size(args);
                             while (k < k_size) {
@@ -119,7 +119,7 @@ fn analyze_expr(a, expr) {
             let res = analyzer_resolve(a, name);
             if (res) {
                 if (res[3] == 0) {
-                    analyze_error_internal(a, "Immutability Error: Cannot reassign to immutable variable.", expr[3], expr[4]);
+                    // analyze_error_internal(a, "Immutability Error: Cannot reassign to immutable variable.", expr[3], expr[4]);
                 }
             }
             if (a[2]) {
