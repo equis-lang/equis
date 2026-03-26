@@ -41,9 +41,9 @@ jobs:
     - name: Bootstrap Compiler
       run: |
         if [ "$RUNNER_OS" == "Windows" ]; then
-          clang -O3 -o compiler/main.exe compiler/main.ll compiler/runtime.c -lws2_32 -Wno-override-tunit
+          clang -O3 -o eq-core.exe compiler/main.ll compiler/runtime.c -lws2_32 -Wno-override-tunit
         else
-          clang -O3 -o compiler/main compiler/main.ll compiler/runtime.c -Wno-override-tunit -lm -lpthread -ldl || clang -O3 -o compiler/main compiler/main.ll compiler/runtime.c -lm -lpthread -ldl
+          clang -O3 -o eq-core compiler/main.ll compiler/runtime.c -Wno-override-tunit -lm -lpthread -ldl || clang -O3 -o eq-core compiler/main.ll compiler/runtime.c -lm -lpthread -ldl
           chmod +x eq
         fi
       shell: bash
@@ -51,13 +51,14 @@ jobs:
     - name: Self-Hosting Verification
       run: |
         if [ "$RUNNER_OS" == "Windows" ]; then
-          ./compiler/main.exe compiler/main.equis > compiler/stage2.ll 2> compiler/main.log
+          ./eq-core.exe compiler/main.equis > compiler/stage2.ll 2> compiler/main.log
           if [ $? -ne 0 ]; then cat compiler/main.log; exit 1; fi
           if [ ! -s compiler/stage2.ll ]; then echo "Generated IR is empty"; exit 1; fi
-          clang -O3 -o compiler/main.exe compiler/stage2.ll compiler/runtime.c -lws2_32 -Wno-override-tunit
-          ./compiler/main.exe --version || echo "Equis Native Compiler v0.1.0"
+          clang -O3 -o eq-core.exe compiler/stage2.ll compiler/runtime.c -lws2_32 -Wno-override-tunit
+          ./eq-core.exe --version || echo "Equis Native Compiler v0.1.0"
         else
-          ./eq build
+          ./eq-core -I std compiler/main.equis > compiler/stage2.ll
+          clang -O3 -o eq-core compiler/stage2.ll compiler/runtime.c -Wno-override-tunit -lm -lpthread -ldl
           ./eq version
         fi
       shell: bash
@@ -77,11 +78,11 @@ jobs:
     - name: Rename Binaries for Platform
       run: |
         if [ "$RUNNER_OS" == "Windows" ]; then
-          cp compiler/main.exe eq-core-windows.exe
+          cp eq-core.exe eq-core-windows.exe
         elif [ "$RUNNER_OS" == "macOS" ]; then
-          cp compiler/main eq-core-macos
+          cp eq-core eq-core-macos
         else
-          cp compiler/main eq-core-linux
+          cp eq-core eq-core-linux
         fi
       shell: bash
 
