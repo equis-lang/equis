@@ -1,0 +1,7 @@
+use "std/sys.equis";
+
+fn main() {
+    print_raw_str("Hello from Equis project: equis\n");
+}
+
+main();
