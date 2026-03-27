@@ -24,7 +24,7 @@ fn lexer_is_at_end(lex) { return lex[2] >= lex[5]; }
 
 fn lexer_add_token(lex, type, text) {
     let tok = sys_malloc(4 * 8);
-    tok[0] = type; tok[1] = text; tok[2] = lex[3]; tok[3] = lex[1];
+    tok[0] = type; tok[1] = str_concat(text, ""); tok[2] = lex[3]; tok[3] = lex[1];
     lex[4] = vec_push(lex[4], tok);
 }
 

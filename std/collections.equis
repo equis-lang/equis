@@ -71,8 +71,10 @@ fn map_put(mut m, key, val) {
     let __map_cap = m[0];
     let h = map_hash(key);
     let mut rem = 0;
+    
     let quot = h / __map_cap;
     rem = h - (quot * __map_cap);
+    
     if (rem < 0) { rem = 0 - rem; }
     let m_off = rem + 1;
     
@@ -114,8 +116,10 @@ fn map_get(m, key) {
     let __map_cap = m[0];
     let h = map_hash(key);
     let mut rem = 0;
+    
     let quot = h / __map_cap;
     rem = h - (quot * __map_cap);
+    
     if (rem < 0) { rem = 0 - rem; }
     let m_off = rem + 1;
     let mut entry = m[m_off];
@@ -132,8 +136,10 @@ fn map_has(m, key) {
     let __map_cap = m[0];
     let h = map_hash(key);
     let mut rem = 0;
+    
     let quot = h / __map_cap;
     rem = h - (quot * __map_cap);
+    
     if (rem < 0) { rem = 0 - rem; }
     let m_off = rem + 1;
     let mut entry = m[m_off];

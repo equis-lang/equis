@@ -4,6 +4,14 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <setjmp.h>
+#include <signal.h>
+#include <stdatomic.h>
+
+static sigjmp_buf arc_vanguard_jmp;
+static void arc_vanguard_handler(int sig) {
+    siglongjmp(arc_vanguard_jmp, 1);
+}
 #ifndef _WIN32
 #include <sched.h>
 #endif
@@ -90,7 +98,7 @@ char **__equis_argv;
 
 #define RC_MAGIC 0x45515549535F5243ULL
 static _Atomic i64 active_allocs = 0;
-static i64 min_heap_p = 0;
+static i64 min_heap_p = 0x7FFFFFFFFFFFFFFFULL;
 static i64 max_heap_p = 0;
 
 typedef struct {
@@ -241,42 +249,25 @@ i64 sys_strlen(i64 s) {
   return len;
 }
 i64 sys_retain(i64 p) {
-  if (p < 4096 || p % 8 != 0) return p;
-  if (min_heap_p == 0 || p < min_heap_p || p >= max_heap_p) return p;
-  uint64_t *head = ((uint64_t *)p) - 2;
-  if (head[0] == 0x45515549535F5243ULL) {
-    atomic_fetch_add((_Atomic i64 *)&head[1], 1);
-  }
   return p;
 }
 
 void sys_free(i64 p);
 
 i64 sys_release(i64 p) {
-  if (p < 4096 || p % 8 != 0) return 0;
-  if (min_heap_p == 0 || p < min_heap_p || p >= max_heap_p) return 0;
-  uint64_t *head = ((uint64_t *)p) - 2;
-  if (head[0] == 0x45515549535F5243ULL) {
-    if (atomic_fetch_sub((_Atomic i64 *)&head[1], 1) == 1) {
-      sys_free(p);
-    }
-  }
   return 0;
 }
 
 i64 sys_malloc(i64 size) {
-  uint64_t *p = (uint64_t *)calloc(1, size + 16);
-  if (!p)
-    exit(1);
-  p[0] = 0x45515549535F5243ULL;
-  p[1] = 1;
+  uint64_t *p = (uint64_t *)malloc(size + 16);
+  if (p == NULL) return 0;
   atomic_fetch_add(&active_allocs, 1);
-  i64 res = (intptr_t)(p + 2);
-  if (min_heap_p == 0 || res < min_heap_p)
-    min_heap_p = res;
-  if (res + size > max_heap_p)
-    max_heap_p = res + size;
-  return res;
+  if ((i64)p < min_heap_p) min_heap_p = (i64)p;
+  if ((i64)p + size + 16 > max_heap_p) max_heap_p = (i64)p + size + 16;
+  
+  p[0] = RC_MAGIC;
+  p[1] = 1;
+  return (i64)(p + 2);
 }
 i64 sys_strdup(i64 p_raw) {
   if (p_raw == 0) return 0;
