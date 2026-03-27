@@ -86,13 +86,47 @@ i64 _eq_preempt_yield() {
     }
     return 0;
 }
+#define ARC_SET_SIZE 1048576
+#define ARC_SET_MASK (ARC_SET_SIZE - 1)
+static i64 arc_valid_ptrs[ARC_SET_SIZE];
+
+static void arc_set_add(i64 p) {
+    u64 h = (u64)p & ARC_SET_MASK;
+    while (arc_valid_ptrs[h] != 0 && arc_valid_ptrs[h] != p && arc_valid_ptrs[h] != -1) {
+        h = (h + 1) & ARC_SET_MASK;
+    }
+    arc_valid_ptrs[h] = p;
+}
+
+static void arc_set_remove(i64 p) {
+    if (p == 0) return;
+    u64 h = (u64)p & ARC_SET_MASK;
+    while (arc_valid_ptrs[h] != 0) {
+        if (arc_valid_ptrs[h] == p) {
+            arc_valid_ptrs[h] = -1; // Tombstone
+            return;
+        }
+        h = (h + 1) & ARC_SET_MASK;
+    }
+}
+
+static int arc_set_has(i64 p) {
+    if (p < 4096 || p % 8 != 0) return 0;
+    u64 h = (u64)p & ARC_SET_MASK;
+    while (arc_valid_ptrs[h] != 0) {
+        if (arc_valid_ptrs[h] == p) return 1;
+        h = (h + 1) & ARC_SET_MASK;
+    }
+    return 0;
+}
+
 i64 __equis_argc;
 char **__equis_argv;
+static i64 min_heap_p = 0x7FFFFFFFFFFFFFFFULL;
+static i64 max_heap_p = 0;
 
 #define RC_MAGIC 0x45515549535F5243ULL
 static _Atomic i64 active_allocs = 0;
-static i64 min_heap_p = 0x7FFFFFFFFFFFFFFFULL;
-static i64 max_heap_p = 0;
 
 typedef struct {
   uint64_t magic;
@@ -255,6 +289,7 @@ i64 sys_malloc(i64 size) {
   uint64_t *p = (uint64_t *)malloc(size + 16);
   if (p == NULL) return 0;
   atomic_fetch_add(&active_allocs, 1);
+  arc_set_add((i64)(p + 2));
   if ((i64)p < min_heap_p) min_heap_p = (i64)p;
   if ((i64)p + size + 16 > max_heap_p) max_heap_p = (i64)p + size + 16;
   
@@ -275,6 +310,7 @@ void sys_check_canary(i64 p_raw) { (void)p_raw; }
 void sys_free(i64 p) {
   if (p < 4096 || p % 8 != 0) return;
   if (min_heap_p == 0 || p < min_heap_p || p >= max_heap_p) return;
+  arc_set_remove(p);
   uint64_t *head = ((uint64_t *)p) - 2;
   if (head[0] == 0x45515549535F5243ULL) {
     head[0] = 0;
