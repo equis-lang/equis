@@ -1,6 +1,6 @@
 use "std/sys.equis";
 use "std/string.equis";
-use "json.equis";
+use "std/json.equis";
 use "std/collections.equis";
 
 fn lsp_send(msg_map) {

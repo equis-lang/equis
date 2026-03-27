@@ -1,6 +1,6 @@
 use "std/sys.equis";
 use "std/collections.equis";
-use "constants.equis";
+use "compiler/constants.equis";
 
 fn borrow_checker_new() {
     let b = sys_malloc(10 * 8);

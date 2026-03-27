@@ -1,6 +1,6 @@
 use "std/sys.equis";
 use "std/intern.equis";
-use "constants.equis";
+use "compiler/constants.equis";
 
 
 fn lexer_is_digit(c) { return c >= 48 && c <= 57; }
