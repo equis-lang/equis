@@ -4,14 +4,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <time.h>
-#include <setjmp.h>
-#include <signal.h>
 #include <stdatomic.h>
-
-static sigjmp_buf arc_vanguard_jmp;
-static void arc_vanguard_handler(int sig) {
-    siglongjmp(arc_vanguard_jmp, 1);
-}
 #ifndef _WIN32
 #include <sched.h>
 #endif
