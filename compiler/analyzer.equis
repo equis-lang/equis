@@ -3,7 +3,7 @@ use "std/string.equis";
 use "std/collections.equis";
 use "std/intern.equis";
 use "std/arena.equis";
-use "compiler/constants.equis";
+use "constants.equis";
 fn analyzer_new() {
     let mut a = 0;
     let mut arena = 0;

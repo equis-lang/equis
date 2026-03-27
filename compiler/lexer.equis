@@ -1,5 +1,6 @@
 use "std/sys.equis";
 use "std/intern.equis";
+use "constants.equis";
 
 
 fn lexer_is_digit(c) { return c >= 48 && c <= 57; }
@@ -7,11 +8,11 @@ fn lexer_is_alpha(c) { return (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || c
 fn lexer_is_alphanumeric(c) { return lexer_is_alpha(c) || lexer_is_digit(c); }
 
 fn lexer_peek(lex) {
-    if (lex[2] >= sys_strlen(lex[0])) { return 0; }
+    if (lex[2] >= lex[5]) { return 0; }
     return get_char(lex[0], lex[2]);
 }
 fn lexer_peek_next(lex) {
-    if (lex[2] + 1 >= sys_strlen(lex[0])) { return 0; }
+    if (lex[2] + 1 >= lex[5]) { return 0; }
     return get_char(lex[0], lex[2] + 1);
 }
 fn lexer_advance(lex) {
@@ -19,7 +20,7 @@ fn lexer_advance(lex) {
     lex[2] = lex[2] + 1;
     return c;
 }
-fn lexer_is_at_end(lex) { return lex[2] >= sys_strlen(lex[0]); }
+fn lexer_is_at_end(lex) { return lex[2] >= lex[5]; }
 
 fn lexer_add_token(lex, type, text) {
     let tok = sys_malloc(4 * 8);
@@ -127,8 +128,7 @@ fn lexer_string(lex) {
         i = i + 1;
     }
     set_char(res, len, 0);
-    let text = intern_string(res);
-    lexer_add_token(lex, TOKEN_STRING, text);
+    lexer_add_token(lex, TOKEN_STRING, res);
 }
 
 fn lexer_scan_token(lex) {
@@ -207,12 +207,13 @@ fn lexer_scan_token(lex) {
 }
 
 fn lexer_new(source) {
-    let lex = sys_malloc(5 * 8);
+    let lex = sys_malloc(6 * 8);
     lex[0] = source;
-    lex[1] = 0;
-    lex[2] = 0;
-    lex[3] = 1;
-    lex[4] = vec_new(1000);
+    lex[1] = 0; // START
+    lex[2] = 0; // CURRENT
+    lex[3] = 1; // LINE
+    lex[4] = vec_new(1024); // TOKENS
+    lex[5] = sys_strlen(source); // SOURCE_LEN
     return lex;
 }
 

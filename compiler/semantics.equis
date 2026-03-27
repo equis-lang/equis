@@ -2,8 +2,8 @@ use "std/sys.equis";
 use "std/string.equis";
 use "std/collections.equis";
 use "std/intern.equis";
-use "compiler/constants.equis";
-use "compiler/analyzer.equis";
+use "constants.equis";
+use "analyzer.equis";
 fn get_expr_type(a, expr) {
     return 0;
 }

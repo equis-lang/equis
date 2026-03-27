@@ -1,7 +1,7 @@
 use "std/sys.equis";
 use "std/string.equis";
 use "std/collections.equis";
-use "compiler/constants.equis";
+use "constants.equis";
 fn parser_new(tokens) {
     let mut p = 0;
     p = sys_malloc(8 * 8);

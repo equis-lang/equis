@@ -228,22 +228,21 @@ i64 sys_get_argv(i64 i) {
 }
 i64 sys_ptr_add(i64 p, i64 o) { return p + o; }
 i64 sys_strlen(i64 s) {
-  if (s == 0)
-    return 0;
+  if (s == 0) return 0;
   if (min_heap_p != 0 && s >= min_heap_p && (s % 8 == 0)) {
-    Object *obj = (Object *)(s - 16);
-    if (obj->magic == RC_MAGIC) {
-      return (i64)strlen((char *)s);
+    uint64_t *head = ((uint64_t *)s) - 2;
+    if (head[0] == 0x45515549535F5243ULL) {
+      // Return 1M if unreachable, but Equis strings should be safe
     }
   }
-  i64 len = (i64)strlen((char *)s);
-  if (len > 1000000000)
-    return 0;
+  char *str = (char *)s;
+  i64 len = 0;
+  while (len < 100000000 && str[len] != 0) { len++; }
   return len;
 }
 i64 sys_retain(i64 p) {
   if (p < 4096 || p % 8 != 0) return p;
-  if (min_heap_p == 0 || p < min_heap_p || p > max_heap_p) return p;
+  if (min_heap_p == 0 || p < min_heap_p || p >= max_heap_p) return p;
   uint64_t *head = ((uint64_t *)p) - 2;
   if (head[0] == 0x45515549535F5243ULL) {
     atomic_fetch_add((_Atomic i64 *)&head[1], 1);
@@ -255,7 +254,7 @@ void sys_free(i64 p);
 
 i64 sys_release(i64 p) {
   if (p < 4096 || p % 8 != 0) return 0;
-  if (min_heap_p == 0 || p < min_heap_p || p > max_heap_p) return 0;
+  if (min_heap_p == 0 || p < min_heap_p || p >= max_heap_p) return 0;
   uint64_t *head = ((uint64_t *)p) - 2;
   if (head[0] == 0x45515549535F5243ULL) {
     if (atomic_fetch_sub((_Atomic i64 *)&head[1], 1) == 1) {
@@ -291,7 +290,7 @@ i64 sys_strdup(i64 p_raw) {
 void sys_check_canary(i64 p_raw) { (void)p_raw; }
 void sys_free(i64 p) {
   if (p < 4096 || p % 8 != 0) return;
-  if (min_heap_p == 0 || p < min_heap_p || p > max_heap_p) return;
+  if (min_heap_p == 0 || p < min_heap_p || p >= max_heap_p) return;
   uint64_t *head = ((uint64_t *)p) - 2;
   if (head[0] == 0x45515549535F5243ULL) {
     head[0] = 0;
@@ -329,11 +328,11 @@ long long sys_read_entire_file_raw(const char *p) {
   long size = ftell(f);
   fseek(f, 0, SEEK_SET);
   char *buf = (char *)sys_malloc(size + 1);
-  if (fread(buf, 1, size, f) != (size_t)size) {
-    sys_free((i64)buf);
+  if (!buf) {
     fclose(f);
     return 0;
   }
+  fread(buf, 1, size, f);
   buf[size] = 0;
   fclose(f);
   return (long long)buf;
@@ -412,12 +411,24 @@ void sys_assert(i64 cond, i64 msg) {
     exit(1);
   }
 }
-i64 sys_str_equal(char *s1, char *s2) {
-  if (s1 == s2)
-    return 1;
-  if (!s1 || !s2)
+i64 str_equal(i64 s1, i64 s2) {
+  if (s1 == 0 || s2 == 0)
     return 0;
-  return strcmp(s1, s2) == 0;
+  return strcmp((char *)s1, (char *)s2) == 0;
+}
+i64 sys_str_substring(i64 s, i64 start, i64 end) {
+  if (s == 0) return 0;
+  char *str = (char *)s;
+  i64 len = sys_strlen(s);
+  if (start < 0) start = 0;
+  if (end > len) end = len;
+  if (start >= end) return sys_strdup((i64)"");
+  i64 sub_len = end - start;
+  i64 res = sys_malloc(sub_len + 1);
+  char *dest = (char *)res;
+  memcpy(dest, str + start, sub_len);
+  dest[sub_len] = 0;
+  return res;
 }
 i64 _eq_set_char(i64 s, i64 i, i64 v) {
   ((char *)s)[i] = (char)v;
@@ -669,7 +680,7 @@ i64 set_char(i64 ptr, i64 idx, i64 c) {
 }
 
 i64 get_char(i64 ptr, i64 idx) {
-  if (!ptr)
+  if (!ptr || idx < 0)
     return 0;
   return (i64)((unsigned char *)ptr)[idx];
 }

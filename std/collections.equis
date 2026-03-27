@@ -57,6 +57,7 @@ fn map_hash(key) {
         h = (h * 31) + get_char(key, i);
         i = i + 1;
     }
+    if (h < 0) { h = 0 - h; }
     return h;
 }
 fn vec_free(vec) {
