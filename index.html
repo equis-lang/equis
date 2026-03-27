@@ -1,0 +1,1605 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://equis-lang.github.io/equis/">
+      
+      
+      
+        <link rel="next" href="EQUIS/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Equis Language</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#why-equis" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Equis Language" class="md-header__button md-logo" aria-label="Equis Language" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Equis Language
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="EQUIS/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Language Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="architecture/" class="md-tabs__link">
+          
+  
+  
+  Core Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="stdlib_reference/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="CONTRIBUTING/" class="md-tabs__link">
+          
+  
+  
+  Community & Legal
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Equis Language" class="md-nav__button md-logo" aria-label="Equis Language" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    Equis Language
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-equis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Equis?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#language-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Language Primitives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Language Primitives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systems-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systems Programming
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build from Source
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Build from Source">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux-macos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux / macOS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows (PowerShell)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Bootstrap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-a-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a Program
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ecosystem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="EQUIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Documentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Documentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="specification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="operational_semantics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operational Semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="grammar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grammar (EBNF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="stdlib_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community & Legal
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community & Legal
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="SECURITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-equis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Equis?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#language-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Language Primitives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Language Primitives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systems-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systems Programming
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build from Source
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Build from Source">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux-macos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux / macOS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows (PowerShell)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Bootstrap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-a-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a Program
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ecosystem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<p align="center">
+  <img src="assets/logo.png" width="150" alt="Equis Logo">
+</p>
+
+<h1 align="center">Equis</h1>
+
+<p align="center">
+  <strong>A systems programming language for building verifiable accounting systems.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Release-v0.1.0-blue.svg" alt="Release">
+  <img src="https://img.shields.io/badge/License-Apache%202.0-orange.svg" alt="License">
+  <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg" alt="Platform">
+</p>
+
+<p align="center">
+  <a href="https://github.com/equis-lang/equis/actions/workflows/build.yml">
+    <img src="https://github.com/equis-lang/equis/actions/workflows/build.yml/badge.svg" alt="Equis Build Pipeline">
+  </a>
+  <a href="https://github.com/equis-lang/equis/actions/workflows/ci.yml">
+    <img src="https://github.com/equis-lang/equis/actions/workflows/ci.yml/badge.svg" alt="Equis CI">
+  </a>
+  <a href="https://github.com/equis-lang/equis/actions/workflows/docs.yml">
+    <img src="https://github.com/equis-lang/equis/actions/workflows/docs.yml/badge.svg" alt="Deploy Docs">
+  </a>
+</p>
+
+<hr />
+<p>Equis is a self-hosted, domain-specific systems language for economic and accounting software. It integrates the Resource-Event-Agent (REA) accounting model into its core semantics, providing automated verification for balanced transactions.</p>
+<h3 id="why-equis">Why Equis?</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>REA Duality</strong></td>
+<td>Mandatory runtime balance verification for all economic events</td>
+</tr>
+<tr>
+<td><strong>RBAC Enforcement</strong></td>
+<td>Role-based access control enforced at agent execution entry points</td>
+</tr>
+<tr>
+<td><strong>Immutable Audit Trail</strong></td>
+<td>Append-only JSON ledger (<code>ledger.ev</code>) for tamper-proof transaction history</td>
+</tr>
+<tr>
+<td><strong>Transactional Reversal</strong></td>
+<td>Automated compensating flows for event-level rollback</td>
+</tr>
+<tr>
+<td><strong>Self-Hosted Compiler</strong></td>
+<td>The Equis compiler is written in Equis</td>
+</tr>
+<tr>
+<td><strong>LLVM Backend</strong></td>
+<td>Compiles to optimized native machine code</td>
+</tr>
+<tr>
+<td><strong>ARC Memory Model</strong></td>
+<td>Hybrid automatic reference counting with deterministic arena allocation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="project-structure">Project Structure</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>equis/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── assets/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── logo.png
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   └── logo.svg
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>├── compiler/
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── analyzer.equis          # Symbol table &amp; scope management
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── borrow_checker.equis    # Ownership &amp; lifetime analysis
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ├── codegen.equis           # LLVM IR code generation
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ├── constants.equis         # AST node &amp; token index definitions
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── lexer.equis             # Tokenizer
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ├── lsp.equis               # Language Server Protocol handler
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   ├── main.equis              # Compiler entry point
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   ├── main.ll                 # Pre-compiled LLVM IR (bootstrap artifact)
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ├── parser.equis            # Recursive descent parser
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ├── runtime.c               # C runtime support (ARC, I/O, syscalls)
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   └── semantics.equis         # Semantic analysis &amp; REA enforcement
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>├── 
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ├── architecture.md         # Compiler pipeline design
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   ├── benchmarks.md           # Performance measurements
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   ├── grammar.ebnf            # Formal EBNF grammar
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   ├── grammar.md              # Human-readable grammar guide
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   ├── integration_guide.md    # CLI setup &amp; global installation
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   ├── operational_semantics.md# Formal duality &amp; ARC proofs
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   ├── specification.md        # Language specification
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └── stdlib_reference.md     # Standard library API reference
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>├── examples/
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   ├── benchmarks/
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │   └── speed_test.equis      # Performance &amp; stress test suite
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   ├── main.equis              # Integrated REA accounting workflow
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   └── preempt_test.equis      # Multitasking &amp; scheduler verification
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>├── scripts/
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   └── verify_ddc.sh           # Diverse Double-Compilation verifier
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>├── std/
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│   ├── accounting.equis        # ERP accounting logic
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│   ├── arena.equis             # Arena allocator
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│   ├── chan.equis               # Thread-safe channels
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│   ├── collections.equis       # Vectors &amp; hash maps
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│   ├── compliance.equis        # ESG &amp; regulatory checks
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│   ├── db.equis                # PostgreSQL connector (libpq)
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│   ├── dual_net.equis          # Distributed duality verification
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│   ├── ffi.equis               # Foreign function interface
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│   ├── fiber.equis             # Preemptive fiber scheduler
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│   ├── fixed.equis             # Fixed-point arithmetic
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│   ├── http.equis              # HTTP server
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│   ├── intern.equis            # String interning
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│   ├── io.equis                # File I/O utilities
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│   ├── json.equis              # JSON parser &amp; serializer
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│   ├── ledger.equis            # Double-entry ledger
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│   ├── net.equis               # Socket networking
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│   ├── record.equis            # Record utilities
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│   ├── rpc.equis               # Remote procedure calls
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│   ├── string.equis            # String manipulation
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│   └── sys.equis               # System primitives &amp; runtime bindings
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>├── .github/
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>│   └── workflows/
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>│       ├── build.yml           # Release build pipeline
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>│       ├── ci.yml              # Continuous integration
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>│       └── docs.yml            # Documentation deployment
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>├── bootstrap.c                 # ANSI C bootstrap compiler
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>├── Makefile                    # Linux/macOS build system
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>├── bootstrap.ps1               # Windows bootstrap script
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>├── eq                          # Linux/macOS runner script
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>├── eq.ps1                      # PowerShell runner script
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>├── eq.bat                      # Windows batch runner shim
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>├── epm                         # Package manager (Linux/macOS)
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>├── epm.ps1                     # PowerShell package manager
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>├── epm.bat                     # Windows package manager shim
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>├── install.sh                  # Linux/macOS installer
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>├── install.ps1                 # Windows installer
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>├── EQUIS.md                    # Programmer&#39;s language reference
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>├── CHANGELOG.md                # Release history
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>├── LICENSE                     # Apache 2.0
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>└── NOTICE
+</code></pre></div>
+<h2 id="language-primitives">Language Primitives</h2>
+<p>Equis incorporates accounting semantics directly into the language design:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>// Define transacting entities with role-based access
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Agent Buyer roles { &quot;CONSUMER&quot; } { id: &quot;B1&quot;; status: &quot;active&quot;; }
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Agent Seller roles { &quot;VENDOR&quot; } { id: &quot;S1&quot;; status: &quot;active&quot;; }
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>// Define trackable assets
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Resource Cash { unit: USD; decimals: 2; }
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Resource Item { unit: PCS; }
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>// Binding promise for future execution
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Commitment Order_01 evaluated_by MarketRate {
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    flow {
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        out 5 Item from Seller to Buyer;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        in 50 Cash from Buyer to Seller;
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    }
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>}
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>// Atomic state transition with balanced flows
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Event Purchase fulfills Order_01 roles { &quot;CONSUMER&quot; } {
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    logic { assert(1 &gt; 0); }
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    flow {
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        in 5 Item from Seller to Buyer;
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        out 50 Cash from Buyer to Seller;
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    }
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>}
+</code></pre></div>
+<h3 id="systems-programming">Systems Programming</h3>
+<p>Beyond REA, Equis supports full systems-level programming:</p>
+<ul>
+<li><strong>Pointers &amp; Mutability</strong> — Explicit <code>mut</code> constraints and raw pointer indexing</li>
+<li><strong>Concurrency</strong> — Thread-safe channels (<code>chan_send</code>, <code>chan_recv</code>) and checkpoint-based preemptive fibers</li>
+<li><strong>Networking</strong> — Sockets support for distributed duality verification</li>
+<li><strong>Database</strong> — PostgreSQL connectivity via <code>libpq</code></li>
+<li><strong>Atomic I/O</strong> — File operations with crash-safe semantics</li>
+</ul>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="install">Install</h3>
+<ul>
+<li><strong>Linux/macOS</strong>:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://raw.githubusercontent.com/equis-lang/equis/main/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+</code></pre></div></li>
+<li><strong>Windows</strong>:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">irm </span><span class="n">https</span><span class="p">://</span><span class="n">raw</span><span class="p">.</span><span class="n">githubusercontent</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">equis-lang</span><span class="p">/</span><span class="n">equis</span><span class="p">/</span><span class="n">main</span><span class="p">/</span><span class="n">install</span><span class="p">.</span><span class="n">ps1</span> <span class="p">|</span> <span class="nb">iex</span>
+</code></pre></div></li>
+</ul>
+<h3 id="build-from-source">Build from Source</h3>
+<h4 id="linux-macos">Linux / macOS</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/equis-lang/equis.git
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">cd</span><span class="w"> </span>equis
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>make<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
+</code></pre></div>
+<h4 id="windows-powershell">Windows (PowerShell)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">equis-lang</span><span class="p">/</span><span class="n">equis</span><span class="p">.</span><span class="n">git</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">cd </span><span class="n">equis</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">.\</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">ps1</span>
+</code></pre></div>
+<h4 id="manual-bootstrap">Manual Bootstrap</h4>
+<p>The compiler requires only a C compiler (GCC/Clang), Make, and LLVM/Clang.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>bootstrap<span class="w">   </span><span class="c1"># Build the compiler from the C bootstrap</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>make<span class="w"> </span>clean<span class="w">       </span><span class="c1"># Clean build artifacts</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
+</code></pre></div></p>
+<h3 id="run-a-program">Run a Program</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>eq<span class="w"> </span>run<span class="w"> </span>examples/main.equis
+</code></pre></div>
+<h2 id="documentation">Documentation</h2>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="EQUIS/">Programmer's Guide</a></td>
+<td>Complete language tutorial and reference</td>
+</tr>
+<tr>
+<td><a href="specification/">Language Specification</a></td>
+<td>Formal semantics and logic rules</td>
+</tr>
+<tr>
+<td><a href="grammar/">Grammar (EBNF)</a></td>
+<td>Formal language syntax specification</td>
+</tr>
+<tr>
+<td><a href="operational_semantics/">Operational Semantics</a></td>
+<td>Proof sketches for duality and ARC</td>
+</tr>
+<tr>
+<td><a href="architecture/">Architecture</a></td>
+<td>Compiler pipeline and IR design</td>
+</tr>
+<tr>
+<td><a href="stdlib_reference/">Standard Library</a></td>
+<td>Full stdlib API reference</td>
+</tr>
+<tr>
+<td><a href="integration_guide/">Integration Guide</a></td>
+<td>Global CLI setup</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ecosystem">Ecosystem</h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/equis-lang/vscode-equis">VS Code Extension</a></td>
+<td>Syntax highlighting, LSP, and file icons</td>
+</tr>
+<tr>
+<td><a href="epm">Package Manager (<code>epm</code>)</a></td>
+<td>Dependency management for Equis projects</td>
+</tr>
+</tbody>
+</table>
+<h2 id="license">License</h2>
+<p>Copyright (c) 2026 <a href="https://github.com/equis-lang">mlintangmz</a><br />
+Licensed under the <a href="LICENSE">Apache License 2.0</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 mlintangmz
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "search.highlight"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

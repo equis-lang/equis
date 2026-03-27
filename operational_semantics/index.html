@@ -1,0 +1,1380 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://equis-lang.github.io/equis/operational_semantics/">
+      
+      
+        <link rel="prev" href="../specification/">
+      
+      
+        <link rel="next" href="../grammar/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Operational Semantics - Equis Language</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#equis-formal-operational-semantics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Equis Language" class="md-header__button md-logo" aria-label="Equis Language" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Equis Language
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Operational Semantics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../EQUIS/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Language Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../architecture/" class="md-tabs__link">
+          
+  
+  
+  Core Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../stdlib_reference/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../CONTRIBUTING/" class="md-tabs__link">
+          
+  
+  
+  Community & Legal
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Equis Language" class="md-nav__button md-logo" aria-label="Equis Language" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    Equis Language
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EQUIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Documentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Documentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operational Semantics
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operational Semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-abstract-syntax-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Abstract Syntax Notation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-rea-duality-axioms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. REA Duality Axioms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. REA Duality Axioms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-balance-axiom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Balance Axiom
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-commitment-fulfillment-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Commitment Fulfillment Semantics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-memory-model-arc-arena" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Memory Model: ARC &amp; Arena
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Memory Model: ARC &amp; Arena">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-automatic-reference-counting-arc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Automatic Reference Counting (ARC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-arena-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Arena Allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-role-based-access-control-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Role-Based Access Control (RBAC)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Role-Based Access Control (RBAC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-static-admission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Static Admission
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-runtime-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Runtime Enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-temporal-evolution-ledger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Temporal Evolution &amp; Ledger
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Temporal Evolution &amp; Ledger">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-append-only-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Append-Only Semantics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-compensation-semantics-reverse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Compensation Semantics (Reverse)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grammar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grammar (EBNF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stdlib_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community & Legal
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community & Legal
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-abstract-syntax-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Abstract Syntax Notation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-rea-duality-axioms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. REA Duality Axioms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. REA Duality Axioms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-balance-axiom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Balance Axiom
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-commitment-fulfillment-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Commitment Fulfillment Semantics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-memory-model-arc-arena" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Memory Model: ARC &amp; Arena
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Memory Model: ARC &amp; Arena">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-automatic-reference-counting-arc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Automatic Reference Counting (ARC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-arena-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Arena Allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-role-based-access-control-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Role-Based Access Control (RBAC)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Role-Based Access Control (RBAC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-static-admission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Static Admission
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-runtime-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Runtime Enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-temporal-evolution-ledger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Temporal Evolution &amp; Ledger
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Temporal Evolution &amp; Ledger">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-append-only-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Append-Only Semantics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-compensation-semantics-reverse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Compensation Semantics (Reverse)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="equis-formal-operational-semantics">Equis: Formal Operational Semantics</h1>
+<p>This document provides the formal semantic model for the Equis programming language, focusing on Resource-Event-Agent (REA) duality, Automatic Reference Counting (ARC), and Role-Based Access Control (RBAC).</p>
+<h2 id="1-abstract-syntax-notation">1. Abstract Syntax Notation</h2>
+<p>Equis programs are defined over a set of agents $A$, resources $R$, and events $E$.
+A transaction is a 3-tuple $T = (e, a, r)$ where $e \in E$, $a \in A$, and $r \in R$.</p>
+<h2 id="2-rea-duality-axioms">2. REA Duality Axioms</h2>
+<h3 id="21-the-balance-axiom">2.1 The Balance Axiom</h3>
+<p>For every economic event $E_1$ that results in an outflow of resource $R$ from agent $A$ to agent $B$, there must exist a dual event $E_2$ that results in a correlated inflow of a different resource $R'$ (or the same $R$) back to agent $A$.</p>
+<p>$$\forall (E_{out}, A, B, R) \implies \exists (E_{in}, B, A, R')$$</p>
+<h3 id="22-commitment-fulfillment-semantics">2.2 Commitment Fulfillment Semantics</h3>
+<p>The <code>fulfills</code> keyword establishes a trace relationship between a Commitment $C$ and an Event $E$.
+Let $\sigma$ be the system state. The transition $\sigma \xrightarrow{execute E} \sigma'$ is valid if and only if:
+1. $E$ preserves the flow topology of $C$.
+2. All policy constraints $P$ associated with $C$ evaluate to <code>true</code> in $\sigma$.</p>
+<h2 id="3-memory-model-arc-arena">3. Memory Model: ARC &amp; Arena</h2>
+<h3 id="31-automatic-reference-counting-arc">3.1 Automatic Reference Counting (ARC)</h3>
+<p>Every heap-allocated object $O$ maintains a reference count $RC(O)$.
+- <strong>Object Creation</strong>: $RC(O) = 1$
+- <strong>Retain</strong>: $RC(O) \leftarrow RC(O) + 1$ (occurs on assignment/argument passing)
+- <strong>Release</strong>: $RC(O) \leftarrow RC(O) - 1$ (occurs when reference goes out of scope)
+- <strong>Zero-Count</strong>: If $RC(O) = 0$, the memory for $O$ is reclaimed.</p>
+<h3 id="32-arena-allocation">3.2 Arena Allocation</h3>
+<p>For deterministic real-time accounting, Equis supports sub-heaps called <em>Arenas</em>.
+An Arena $B$ is a contiguous block of size $N$. Allocation is a simple pointer bump:
+$$ptr_{next} = ptr_{base} + \text{offset}$$
+Deallocation of the entire Arena occurs in $O(1)$, resetting the bump pointer to $ptr_{base}$.</p>
+<h2 id="4-role-based-access-control-rbac">4. Role-Based Access Control (RBAC)</h2>
+<h3 id="41-static-admission">4.1 Static Admission</h3>
+<p>During semantic analysis, the compiler verifies that the agent $A$ participating in event $E$ possesses the required role $k \in Roles(E)$.
+$$A \vdash k \in Roles(E) \iff StaticCheck(A, k)$$</p>
+<h3 id="42-runtime-enforcement">4.2 Runtime Enforcement</h3>
+<p>At runtime, the execution engine validates the digital signature $sig$ against the agent's public key and verifies role metadata:
+$$EXEC(E, sig) \coloneqq Verify(sig) \wedge CheckRole(Agent(sig), Roles(E))$$</p>
+<h2 id="5-temporal-evolution-ledger">5. Temporal Evolution &amp; Ledger</h2>
+<h3 id="51-append-only-semantics">5.1 Append-Only Semantics</h3>
+<p>The ledger $L$ is a sequence of states $(s_0, s_1, \dots, s_n)$.
+A new event $E$ produces a new state $s_{n+1}$ by applying the transformation function $\tau$:
+$$s_{n+1} = \tau(s_n, E)$$
+Crucially, $\tau$ is strictly additive; existing entries in $L$ are immutable.</p>
+<h2 id="6-compensation-semantics-reverse">6. Compensation Semantics (Reverse)</h2>
+<p>The <code>reverse</code> operator does not delete $s_k$, but creates a state $s_{n+1}$ that is the functional inverse of $s_k$:
+$$s_{n+1} = s_n + (-E)$$
+This ensures audit traceability while restoring the resource balance $\Delta R = 0$.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 mlintangmz
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
