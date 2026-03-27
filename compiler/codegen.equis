@@ -241,17 +241,12 @@ fn gen_expr_variable(c, expr) {
         let mut res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
         return res;
     }
-    if (is_intrinsic_name(name)) {
-        if (str_equal(name, "get_argc") == 0 && str_equal(name, "get_argv") == 0) {
-            let mut reg = freshen_reg(c);
-            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = ptrtoint ptr @");
-            if (str_equal(name, "malloc") == 0 && str_equal(name, "free") == 0) {
-                print_raw_str("_eq_");
-            }
-            print_raw_str(name); emit_ln(" to i64");
-            let mut res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
-            return res;
-        }
+    if (str_equal(name, "get_argc") || str_equal(name, "get_argv")) {
+        let mut reg = freshen_reg(c);
+        print_raw_str("    %r"); print_raw(reg); print_raw_str(" = ptrtoint ptr @");
+        print_raw_str(name); emit_ln(" to i64");
+        let mut res = sys_malloc(2 * 8); res[0] = 1; res[1] = reg;
+        return res;
     }
     let mut reg = freshen_reg(c);
     print_raw_str("    %r"); print_raw(reg); print_raw_str(" = load i64, ptr @Global_"); print_raw_str(name); emit_ln("");
@@ -439,7 +434,10 @@ fn gen_intrinsic_call(c, callee_name, arg_results, reg, arg_count) {
             if (idx_res[0]) { print_raw_str("%r"); } print_raw(idx_res[1]); emit_ln("");
             let char_ptr = freshen_reg(c);
             print_raw_str("    %r"); print_raw(char_ptr); print_raw_str(" = load ptr, ptr %r"); print_raw(ll_ptr); emit_ln("");
-            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = ptrtoint ptr %r"); print_raw(char_ptr); emit_ln(" to i64");
+            let str_val_raw = freshen_reg(c);
+            print_raw_str("    %r"); print_raw(str_val_raw); print_raw_str(" = ptrtoint ptr %r"); print_raw(char_ptr); emit_ln(" to i64");
+            // Clone string into Equis heap
+            print_raw_str("    %r"); print_raw(reg); print_raw_str(" = call i64 @sys_strdup(i64 %r"); print_raw(str_val_raw); emit_ln(")");
             let mut k = 0; while (k < arg_count) { gen_release(c, vec_get(arg_results, k)); k = k + 1; }
             return 1;
         }
@@ -571,7 +569,7 @@ fn gen_expr_assignment(c, expr) {
     gen_retain(c, val);
     
     // Find target pointer
-    let mut ptr = 0;
+    let mut t_ptr = 0;
     let mut old_val_reg = 0;
 
     if (target[0] == EXPR_VARIABLE) {
@@ -582,7 +580,7 @@ fn gen_expr_assignment(c, expr) {
                 let entry = vec_get(locals, v_idx);
                 if (entry) {
                     if (str_equal(entry[0], name)) {
-                        ptr = entry[1];
+                        t_ptr = entry[1];
                         found_local = 1; v_idx = -1;
                     } else { v_idx = v_idx - 1; }
                 } else { v_idx = v_idx - 1; }
@@ -598,9 +596,9 @@ fn gen_expr_assignment(c, expr) {
         } else {
             // Local variable
             old_val_reg = freshen_reg(c);
-            print_raw_str("    %r"); print_raw(old_val_reg); print_raw_str(" = load i64, ptr %p"); print_raw(ptr); emit_ln("");
+            print_raw_str("    %r"); print_raw(old_val_reg); print_raw_str(" = load i64, ptr %p"); print_raw(t_ptr); emit_ln("");
             print_raw_str("    store i64 "); if (val[0]) { print_raw_str("%r"); } print_raw(val[1]);
-            print_raw_str(", ptr %p"); print_raw(ptr); emit_ln("");
+            print_raw_str(", ptr %p"); print_raw(t_ptr); emit_ln("");
             let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_val_reg; gen_release(c, old_res);
         }
     } else if (target[0] == EXPR_INDEX) {
@@ -610,10 +608,8 @@ fn gen_expr_assignment(c, expr) {
         if (arr[0]) { print_raw_str("%r"); } print_raw(arr[1]); emit_ln(" to ptr");
         let ll_ptr = freshen_reg(c); print_raw_str("    %r"); print_raw(ll_ptr); print_raw_str(" = getelementptr i64, ptr %r"); print_raw(arr_ptr); print_raw_str(", i64 ");
         if (idx[0]) { print_raw_str("%r"); } print_raw(idx[1]); emit_ln("");
-        old_val_reg = freshen_reg(c); print_raw_str("    %r"); print_raw(old_val_reg); print_raw_str(" = load i64, ptr %r"); print_raw(ll_ptr); emit_ln("");
         print_raw_str("    store i64 "); if (val[0]) { print_raw_str("%r"); } print_raw(val[1]);
         print_raw_str(", ptr %r"); print_raw(ll_ptr); emit_ln("");
-        let old_res = sys_malloc(2 * 8); old_res[0] = 1; old_res[1] = old_val_reg; gen_release(c, old_res);
         gen_release(c, arr); gen_release(c, idx);
     } else if (target[0] == EXPR_GET) {
         let obj_assign_result = gen_expr(c, target[1]);
@@ -633,13 +629,9 @@ fn gen_expr_assignment(c, expr) {
         let field_ptr = freshen_reg(c);
         print_raw_str("    %r"); print_raw(field_ptr); print_raw_str(" = getelementptr i64, ptr %r"); print_raw(obj_ptr); print_raw_str(", i64 ");
         print_raw(offset); emit_ln("");
-        old_val_reg = freshen_reg(c);
-        print_raw_str("    %r"); print_raw(old_val_reg); print_raw_str(" = load i64, ptr %r"); print_raw(field_ptr); emit_ln("");
         print_raw_str("    store i64 ");
         if (val[0]) { print_raw_str("%r"); } print_raw(val[1]);
         print_raw_str(", ptr %r"); print_raw(field_ptr); emit_ln("");
-        let old_res_get = sys_malloc(2 * 8); old_res_get[0] = 1; old_res_get[1] = old_val_reg;
-        gen_release(c, old_res_get);
         gen_release(c, obj_assign_result);
     }
     gen_release(c, val);

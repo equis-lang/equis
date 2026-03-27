@@ -14,7 +14,7 @@ fn intern_string(s) {
     }
     let existing = map_get(__intern_map, s);
     if (existing) {
-        return existing;
+        return sys_retain(existing);
     }
     
     let len = sys_strlen(s);

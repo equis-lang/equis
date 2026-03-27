@@ -78,7 +78,8 @@ fn map_put(mut m, key, val) {
     let mut entry = m[m_off];
     while (entry != 0) {
         if (str_equal(entry[0], key)) {
-            entry[1] = val;
+            sys_release(entry[1]);
+            entry[1] = sys_retain(val);
             return 1;
         }
         entry = entry[2];
@@ -88,7 +89,7 @@ fn map_put(mut m, key, val) {
     new_entry[0] = sys_retain(key);
     new_entry[1] = sys_retain(val);
     new_entry[2] = m[m_off];
-    m[m_off] = new_entry;
+    m[m_off] = sys_retain(new_entry);
     return 1;
 }
 fn map_free(m) {
@@ -99,7 +100,7 @@ fn map_free(m) {
         let mut entry = m[i + 1];
         while (entry != 0) {
             let __map_next = entry[2];
-            sys_free(entry);
+            sys_release(entry);
             entry = __map_next;
         }
         i = i + 1;
@@ -159,7 +160,7 @@ fn vec_set(vec, index, value) {
     if (vec == 0) { return 0; }
     if (index < 0 || index >= vec[0]) { return 0; }
     let offset = index + 2;
-    vec[offset] = value;
+    vec[offset] = sys_retain(value);
     return vec;
 }
 fn vec_remove(vec, index) {
@@ -198,6 +199,7 @@ fn map_remove(m, key) {
             } else {
                 prev[2] = next_entry;
             }
+            sys_release(entry);
             return 1;
         }
         prev = entry;

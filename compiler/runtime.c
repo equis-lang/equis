@@ -91,6 +91,7 @@ char **__equis_argv;
 #define RC_MAGIC 0x45515549535F5243ULL
 static _Atomic i64 active_allocs = 0;
 static i64 min_heap_p = 0;
+static i64 max_heap_p = 0;
 
 typedef struct {
   uint64_t magic;
@@ -241,10 +242,8 @@ i64 sys_strlen(i64 s) {
   return len;
 }
 i64 sys_retain(i64 p) {
-  if (p < 0x1000000 || (p % 8 != 0))
-    return p;
-  if (min_heap_p == 0 || p < min_heap_p)
-    return p;
+  if (p < 4096 || p % 8 != 0) return p;
+  if (min_heap_p == 0 || p < min_heap_p || p > max_heap_p) return p;
   uint64_t *head = ((uint64_t *)p) - 2;
   if (head[0] == 0x45515549535F5243ULL) {
     atomic_fetch_add((_Atomic i64 *)&head[1], 1);
@@ -255,10 +254,8 @@ i64 sys_retain(i64 p) {
 void sys_free(i64 p);
 
 i64 sys_release(i64 p) {
-  if (p < 0x1000000 || (p % 8 != 0))
-    return 0;
-  if (min_heap_p == 0 || p < min_heap_p)
-    return 0;
+  if (p < 4096 || p % 8 != 0) return 0;
+  if (min_heap_p == 0 || p < min_heap_p || p > max_heap_p) return 0;
   uint64_t *head = ((uint64_t *)p) - 2;
   if (head[0] == 0x45515549535F5243ULL) {
     if (atomic_fetch_sub((_Atomic i64 *)&head[1], 1) == 1) {
@@ -278,14 +275,23 @@ i64 sys_malloc(i64 size) {
   i64 res = (intptr_t)(p + 2);
   if (min_heap_p == 0 || res < min_heap_p)
     min_heap_p = res;
+  if (res + size > max_heap_p)
+    max_heap_p = res + size;
+  return res;
+}
+i64 sys_strdup(i64 p_raw) {
+  if (p_raw == 0) return 0;
+  char *s = (char *)p_raw;
+  size_t len = strlen(s);
+  i64 res = sys_malloc(len + 1);
+  char *dest = (char *)res;
+  memcpy(dest, s, len + 1);
   return res;
 }
 void sys_check_canary(i64 p_raw) { (void)p_raw; }
 void sys_free(i64 p) {
-  if (p < 0x1000000 || (p % 8 != 0))
-    return;
-  if (min_heap_p != 0 && p < min_heap_p)
-    return;
+  if (p < 4096 || p % 8 != 0) return;
+  if (min_heap_p == 0 || p < min_heap_p || p > max_heap_p) return;
   uint64_t *head = ((uint64_t *)p) - 2;
   if (head[0] == 0x45515549535F5243ULL) {
     head[0] = 0;
@@ -379,7 +385,17 @@ long long sys_write_raw(long long fd, long long buf, long long count) {
   }
   return res;
 }
-i64 sys_pin(i64 p) { return p; }
+i64 sys_pin(i64 p) {
+  if (p < 0x1000000 || (p % 8 != 0))
+    return p;
+  if (min_heap_p == 0 || p < min_heap_p)
+    return p;
+  uint64_t *head = ((uint64_t *)p) - 2;
+  if (head[0] == 0x45515549535F5243ULL) {
+    atomic_fetch_add((_Atomic i64 *)&head[1], 1000000); // Effectively PIN
+  }
+  return p;
+}
 void sys_assert(i64 cond, i64 msg) {
   if (!cond) {
     char *p = (char *)msg;
