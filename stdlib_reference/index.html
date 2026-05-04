@@ -1,0 +1,1876 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://equis-lang.github.io/equis/stdlib_reference/">
+      
+      
+        <link rel="prev" href="../grammar/">
+      
+      
+        <link rel="next" href="../integration_guide/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Standard Library - Equis Language</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#standard-library-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Equis Language" class="md-header__button md-logo" aria-label="Equis Language" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Equis Language
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Standard Library
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../EQUIS/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Language Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../architecture/" class="md-tabs__link">
+          
+  
+  
+  Core Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../CONTRIBUTING/" class="md-tabs__link">
+          
+  
+  
+  Community & Legal
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Equis Language" class="md-nav__button md-logo" aria-label="Equis Language" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    Equis Language
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EQUIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Documentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Documentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operational_semantics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operational Semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grammar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grammar (EBNF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Runtime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Runtime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdsysequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/sys.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdarenaequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/arena.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fibers-and-channels-stdsysequis-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fibers and Channels (std/sys.equis runtime)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networking-stdsysequis-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking (std/sys.equis runtime)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-stdsysequis-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database (std/sys.equis runtime)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-structures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Structures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Structures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdstringequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/string.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdinternequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/intern.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcollectionsequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/collections.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdjsonequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/json.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#math-enterprise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Math &amp; Enterprise
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Math &amp; Enterprise">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdfixedequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/fixed.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdaccountingequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/accounting.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdledgerequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/ledger.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcomplianceequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/compliance.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concurrency-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concurrency &amp; Networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concurrency &amp; Networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdchanequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/chan.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdfiberequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/fiber.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdnetequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/net.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdhttpequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/http.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stddual_netequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/dual_net.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdrpcequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/rpc.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#io-external-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I/O &amp; External Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="I/O &amp; External Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdioequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/io.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stddbequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/db.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdffiequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/ffi.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdrecordequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/record.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community & Legal
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community & Legal
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Runtime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Runtime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdsysequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/sys.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdarenaequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/arena.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fibers-and-channels-stdsysequis-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fibers and Channels (std/sys.equis runtime)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networking-stdsysequis-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking (std/sys.equis runtime)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-stdsysequis-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database (std/sys.equis runtime)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-structures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Structures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Structures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdstringequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/string.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdinternequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/intern.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcollectionsequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/collections.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdjsonequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/json.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#math-enterprise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Math &amp; Enterprise
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Math &amp; Enterprise">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdfixedequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/fixed.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdaccountingequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/accounting.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdledgerequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/ledger.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcomplianceequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/compliance.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concurrency-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concurrency &amp; Networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concurrency &amp; Networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdchanequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/chan.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdfiberequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/fiber.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdnetequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/net.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdhttpequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/http.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stddual_netequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/dual_net.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdrpcequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/rpc.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#io-external-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I/O &amp; External Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="I/O &amp; External Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdioequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/io.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stddbequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/db.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdffiequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/ffi.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdrecordequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std/record.equis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="standard-library-reference">Standard Library Reference</h1>
+<p>The Equis Standard Library (<code>std</code>) provides a foundational set of modules for memory management, data structures, and enterprise economic modeling. This reference covers all implemented functions as of v0.1.0.</p>
+<h2 id="core-runtime">Core Runtime</h2>
+<h3 id="stdsysequis"><code>std/sys.equis</code></h3>
+<p>Low-level system interaction and memory management.
+- <code>sys_malloc(size)</code>: Allocates raw memory from the heap.
+- <code>sys_realloc(p, size)</code>: Reallocates a heap block to a new size.
+- <code>sys_free(p)</code>: Frees a heap-allocated block.
+- <code>sys_retain(p)</code>: Increments reference count on a heap object.
+- <code>sys_release(p)</code>: Decrements reference count on a heap object.
+- <code>sys_strlen(s)</code>: Returns the length of a null-terminated string.
+- <code>sys_read_entire_file(path)</code>: Reads a file into a heap-allocated buffer.
+- <code>sys_rename(old, new)</code>: Atomic file rename.
+- <code>sys_os()</code>: Returns 1 (Linux), 2 (Windows), or 3 (macOS).
+- <code>sys_os_name()</code>: Returns a string identifier for the current OS.
+- <code>sys_path_separator()</code>: Returns <code>\\</code> on Windows, <code>/</code> otherwise.
+- <code>sys_get_argc()</code>, <code>sys_get_argv(i)</code>: Command-line argument access.
+- <code>sys_set_agent(id)</code>, <code>sys_get_agent()</code>: Active agent context management.
+- <code>sys_verify_role(role)</code>: RBAC role verification against the active agent.
+- <code>sys_verify_sig(payload, sig)</code>: Signature verification primitive.
+- <code>sys_verify_duality()</code>: REA duality enforcement check.
+- <code>sys_audit_flow(type, amount, res, src, dest)</code>: Logs a resource flow for audit.
+- <code>sys_reverse_event(p)</code>: Triggers compensating flows for an event.
+- <code>sys_assert(cond, msg)</code>, <code>sys_panic(msg)</code>: Runtime assertion and panic.
+- <code>write(fd, buf, count)</code>, <code>read(fd, buf, count)</code>: Low-level I/O.
+- <code>open(path, flags, mode)</code>, <code>close(fd)</code>, <code>lseek(fd, offset, whence)</code>: File descriptors.
+- <code>exit(code)</code>: Terminates the process.
+- <code>time(tloc)</code>: Returns the current system epoch time.
+- <code>printf(fmt, val)</code>: Formatted output.
+- <code>print_raw(n)</code>: Prints a 64-bit integer to stdout.
+- <code>print_raw_str(s)</code>: Prints a null-terminated string to stdout.
+- <code>print_err(s)</code>: Prints a string to stderr.
+- <code>print_raw_stderr(s)</code>: Prints a string directly to stderr.
+- <code>print_int_stderr(n)</code>: Prints a 64-bit integer to stderr.
+- <code>sys_pin(p)</code>: Pins an object to prevent garbage collection.
+- <code>sys_set_word(p, idx, val)</code>, <code>sys_get_word(p, idx)</code>: Raw memory word access.
+- <code>sys_mkdir(path)</code>: Creates a directory.</p>
+<h3 id="stdarenaequis"><code>std/arena.equis</code></h3>
+<p>Linear bump-pointer allocator for deterministic memory management.
+- <code>arena_new(size)</code>: Initializes a new memory arena.
+- <code>arena_new_owned(size, owner_id)</code>: Initializes an arena bound to a specific agent.
+- <code>arena_alloc(arena, size)</code>: Allocates aligned memory from the specified arena.
+- <code>arena_free_all(arena)</code>: Resets the arena and releases all associated blocks.</p>
+<h3 id="fibers-and-channels-stdsysequis-runtime">Fibers and Channels (<code>std/sys.equis</code> runtime)</h3>
+<p>Cooperative and preemptive multitasking (backed by C runtime).
+- <code>sys_chan_new(size)</code>: Initializes a bounded communication channel.
+- <code>sys_chan_send(chan, val)</code>: Pushes a value into the channel.
+- <code>sys_chan_recv(chan)</code>: Pulls a received value from the channel.
+- <code>sys_fiber_preempt_setup(ms)</code>: Enables signal-based preemption.</p>
+<h3 id="networking-stdsysequis-runtime">Networking (<code>std/sys.equis</code> runtime)</h3>
+<ul>
+<li><code>sys_socket_create()</code>: Creates a TCP socket.</li>
+<li><code>sys_socket_connect(s, host, port)</code>: Connects to a remote host.</li>
+<li><code>sys_socket_send(s, buf, len)</code>, <code>sys_socket_recv(s, buf, len)</code>: Send/receive data.</li>
+<li><code>sys_socket_close(s)</code>: Closes the socket.</li>
+</ul>
+<h3 id="database-stdsysequis-runtime">Database (<code>std/sys.equis</code> runtime)</h3>
+<p>PostgreSQL connectivity via libpq.
+- <code>sys_pgsql_connect(conninfo)</code>: Opens a database connection.
+- <code>sys_pgsql_exec(conn, query)</code>: Executes a SQL query.
+- <code>sys_pgsql_get_val(res, row, col)</code>: Retrieves a result cell.
+- <code>sys_pgsql_clear(res)</code>: Frees a result set.
+- <code>sys_pgsql_finish(conn)</code>: Closes a database connection.</p>
+<h2 id="data-structures">Data Structures</h2>
+<h3 id="stdstringequis"><code>std/string.equis</code></h3>
+<p>String manipulation utilities.
+- <code>str_equal(s1, s2)</code>: Content-based equality check (delegates to <code>strcmp</code>).
+- <code>str_starts_with(s, prefix)</code>: Prefix check.
+- <code>str_len(s)</code>: Returns string length.
+- <code>str_substring(s, start, len)</code>: Extracts a substring.
+- <code>str_substring_equal(s, start, len, expected)</code>: Compares a substring in-place.
+- <code>str_concat(s1, s2)</code>: Allocates and returns a joined string.
+- <code>str_from_int(n)</code>: Converts a 64-bit integer to a decimal string.
+- <code>str_to_int(s)</code>: Parses a decimal string to a 64-bit integer.
+- <code>is_alpha(c)</code>, <code>is_digit(c)</code>: Character class checks.
+- <code>print_str(s)</code>: Prints a string with <code>write(1, ...)</code>.</p>
+<h3 id="stdinternequis"><code>std/intern.equis</code></h3>
+<p>String interning for symbol deduplication.
+- <code>intern_string(s)</code>: Returns a stable pointer for O(1) identity checks.
+- <code>intern_cleanup()</code>: Releases the intern table.</p>
+<h3 id="stdcollectionsequis"><code>std/collections.equis</code></h3>
+<p>Heap-allocated vector and hash map.
+- <code>vec_new(cap)</code>: Creates a new vector with initial capacity.
+- <code>vec_push(v, val)</code>: Appends a value (returns the potentially-reallocated vector).
+- <code>vec_get(v, idx)</code>: Returns the element at the given index.
+- <code>vec_set(v, idx, val)</code>: Overwrites the element at the given index.
+- <code>vec_size(v)</code>: Returns the number of elements.
+- <code>vec_remove(v, idx)</code>: Removes an element by index (shifts remaining elements).
+- <code>vec_free(v)</code>: Releases a vector and its contents.
+- <code>map_new(cap)</code>: Creates a new hash map.
+- <code>map_put(m, key, val)</code>: Inserts or updates a key-value pair.
+- <code>map_get(m, key)</code>: Retrieves a value by key.
+- <code>map_has(m, key)</code>: Returns 1 if the key exists, 0 otherwise.
+- <code>map_keys(m)</code>: Returns a vector of all keys.
+- <code>map_remove(m, key)</code>: Removes a key-value pair.
+- <code>map_hash(key)</code>: Internal hash function.
+- <code>map_free(m)</code>: Releases the map.</p>
+<h3 id="stdjsonequis"><code>std/json.equis</code></h3>
+<p>JSON serialization and deserialization.
+- <code>json_new()</code>: Creates a new JSON object (backed by a map).
+- <code>json_put_str(m, k, v)</code>, <code>json_put_int(m, k, v)</code>: Sets a string/integer value.
+- <code>json_put_obj(m, k, v)</code>, <code>json_put_array(m, k, v)</code>: Sets a nested object/array.
+- <code>json_serialize(m)</code>: Serializes a JSON object to a string.
+- <code>json_parse(s)</code>: Parses a JSON string into a map structure.
+- <code>json_get_int(m, k)</code>, <code>json_get_str(m, k)</code>: Retrieves typed values.</p>
+<h2 id="math-enterprise">Math &amp; Enterprise</h2>
+<h3 id="stdfixedequis"><code>std/fixed.equis</code></h3>
+<p>Fixed-point arithmetic (scale: 1,000,000).
+- <code>FIXED_SCALE()</code>: Returns the scale factor (1000000).
+- <code>fixed_new(i, f)</code>: Creates a fixed-point value from integer and fractional parts.
+- <code>fixed_from_int(n)</code>: Converts an integer to fixed-point.
+- <code>fixed_from_str(s)</code>: Parses a decimal string (e.g., <code>"3.14"</code>) to fixed-point.
+- <code>fixed_add(a, b)</code>, <code>fixed_sub(a, b)</code>: Addition and subtraction.
+- <code>fixed_mul(a, b)</code>, <code>fixed_div(a, b)</code>: Multiplication and division.
+- <code>fixed_to_str(n)</code>: Converts a fixed-point value to a decimal string.
+- <code>print_fixed(n)</code>: Prints a fixed-point value to stdout.</p>
+<h3 id="stdaccountingequis"><code>std/accounting.equis</code></h3>
+<p>Double-entry accounting primitives.
+- <code>accounting_init(res, cur)</code>: Bootstraps an accounting context.
+- <code>acct_register(sys, name, type, code)</code>: Defines account metadata.
+- <code>journal_entry(acct_sys, amount, res, cur, from_acc, to_acc, date)</code>: Records double-entry movements.
+- <code>report_income_statement(acct_sys, rev_acc, exp_acc, target_date)</code>: Generates an income statement.
+- <code>report_balance_sheet(acct_sys, asset_acc, liab_acc, equity_acc, target_date)</code>: Generates a balance sheet.</p>
+<h3 id="stdledgerequis"><code>std/ledger.equis</code></h3>
+<p>Temporal resource balance tracking.
+- <code>ledger_new()</code>: Initializes a resource tracking ledger.
+- <code>ledger_process_flow(l, type, amount, res, cur, from, to, date)</code>: Commits REA flows to history.
+- <code>ledger_balance_at(l, agent, res, cur, date)</code>: Calculates agent balance at a point in time.
+- <code>ledger_get_entries_for(l, agent)</code>: Returns all entries for a given agent.</p>
+<h3 id="stdcomplianceequis"><code>std/compliance.equis</code></h3>
+<p>Regulatory and policy enforcement logic.
+- <code>compliance_calculate_vat(amount, rate)</code>: Tax calculation primitive.
+- <code>policy_enforce_spending_limit(bal, tx, limit)</code>: Threshold validation.
+- <code>policy_ifrs_revenue_recognition(contract, event)</code>: IFRS revenue check.
+- <code>policy_gaap_matching_principle(ledger, expense_event)</code>: GAAP matching.
+- <code>policy_esg_carbon_footprint(flw)</code>: ESG carbon tracking.
+- <code>policy_gov_public_fund_audit(agent, event)</code>: Public fund audit enforcement.
+- <code>i18n_format_currency(amount, iso_code)</code>: Currency formatting.</p>
+<h2 id="concurrency-networking">Concurrency &amp; Networking</h2>
+<h3 id="stdchanequis"><code>std/chan.equis</code></h3>
+<p>Bounded message-passing channels.
+- <code>chan_new(size)</code>: Initializes a bounded channel.
+- <code>chan_send(c, val)</code>: Pushes a value into the channel.
+- <code>chan_recv(c)</code>: Pulls a value from the channel.</p>
+<h3 id="stdfiberequis"><code>std/fiber.equis</code></h3>
+<p>Cooperative and preemptive multitasking.
+- <code>fiber_init()</code>: Initializes the fiber scheduler.
+- <code>fiber_spawn(f_ptr)</code>: Adds a function to the scheduler queue.
+- <code>fiber_yield()</code>: Voluntarily cedes control to the next fiber.
+- <code>fiber_exit()</code>: Terminates the current fiber.
+- <code>fiber_scheduler_run()</code>: Starts the round-robin execution loop.
+- <code>fiber_preempt_enable(ms)</code>: Enables signal-based preemption.</p>
+<h3 id="stdnetequis"><code>std/net.equis</code></h3>
+<p>TCP networking primitives.
+- <code>net_connect(host, port)</code>: Connects to a remote TCP host.
+- <code>net_send(s, data)</code>: Sends data over a connection.
+- <code>net_recv(s, len)</code>: Receives data from a connection.</p>
+<h3 id="stdhttpequis"><code>std/http.equis</code></h3>
+<p>HTTP server implementation.
+- <code>http_server_new(port)</code>: Creates and binds an HTTP server socket.
+- <code>http_accept(server_fd)</code>: Accepts an incoming connection.
+- <code>http_parse_request(req_fd)</code>: Parses an HTTP request.
+- <code>http_get_method(req)</code>, <code>http_get_path(req)</code>, <code>http_get_body(req)</code>: Request accessors.
+- <code>http_send_response(req_fd, status, body)</code>: Sends an HTTP response.
+- <code>http_send_response_ext(req_fd, status, content_type, body)</code>: Sends a response with custom content type.</p>
+<h3 id="stddual_netequis"><code>std/dual_net.equis</code></h3>
+<p>Cross-node distributed duality consensus.
+- <code>verify_dual(peer_addr, event_id)</code>: Initiates cross-node duality verification.
+- <code>commit_event(id, hash)</code>: Generates a remote network commitment.</p>
+<h3 id="stdrpcequis"><code>std/rpc.equis</code></h3>
+<p>Remote procedure calls.
+- <code>rpc_serve(port, handler)</code>: Starts an RPC server.
+- <code>rpc_call(host, port, method, params)</code>: Invokes a remote procedure.</p>
+<h2 id="io-external-integration">I/O &amp; External Integration</h2>
+<h3 id="stdioequis"><code>std/io.equis</code></h3>
+<p>File system utilities.
+- <code>io_read_lines(path)</code>: Reads an entire file into a string.
+- <code>io_write_atomic(path, content)</code>: Writes via temporary file + rename to prevent corruption.</p>
+<h3 id="stddbequis"><code>std/db.equis</code></h3>
+<p>PostgreSQL connectivity via libpq.
+- <code>db_connect(conninfo)</code>: Opens a database connection.
+- <code>db_query(conn, sql)</code>: Executes a SQL query.
+- <code>db_get(res, row, col)</code>: Retrieves a result cell.
+- <code>db_clear(res)</code>: Frees a result set.
+- <code>db_close(conn)</code>: Closes a connection.</p>
+<h3 id="stdffiequis"><code>std/ffi.equis</code></h3>
+<p>Dynamic foreign function interface.
+- <code>ffi_load_library(path)</code>: Loads a shared library via <code>dlopen</code>.
+- <code>ffi_get_symbol(lib, name)</code>: Resolves a symbol via <code>dlsym</code>.
+- <code>ffi_close(lib)</code>: Unloads a shared library.</p>
+<h3 id="stdrecordequis"><code>std/record.equis</code></h3>
+<p>Fixed-width record buffers (COBOL-style).
+- <code>record_layout_new()</code>: Initializes a record definition.
+- <code>record_add_field(l, name, len, type)</code>: Defines a named field.
+- <code>record_get_str(l, buf, name)</code>, <code>record_get_int(l, buf, name)</code>: Extracts typed data.
+- <code>record_set_str(l, buf, name, val)</code>, <code>record_set_int(l, buf, name, val)</code>: Writes typed data.
+- <code>record_width(l)</code>: Returns the total record width.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 mlintangmz
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

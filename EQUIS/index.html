@@ -1,0 +1,1781 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://equis-lang.github.io/equis/EQUIS/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../architecture/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Language Overview - Equis Language</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#equis-language-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Equis Language" class="md-header__button md-logo" aria-label="Equis Language" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Equis Language
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Language Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Language Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../architecture/" class="md-tabs__link">
+          
+  
+  
+  Core Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../stdlib_reference/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../CONTRIBUTING/" class="md-tabs__link">
+          
+  
+  
+  Community & Legal
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Equis Language" class="md-nav__button md-logo" aria-label="Equis Language" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    Equis Language
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#formal-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formal Specifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-core-syntax-and-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Core Syntax and Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Core Syntax and Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables-math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables &amp; Math
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pointers-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pointers &amp; Indexing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interfaces-and-structs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interfaces and Structs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#events-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events &amp; Flows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commitments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commitments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#policies-and-valuators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policies and Valuators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exchange-and-transformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exchange and Transformation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-event-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Event Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Event Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execute
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assert
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-modules-and-standard-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Modules and Standard Library
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-full-code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Full Code Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Documentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Documentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operational_semantics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operational Semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grammar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grammar (EBNF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stdlib_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community & Legal
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community & Legal
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#formal-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formal Specifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-core-syntax-and-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Core Syntax and Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Core Syntax and Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables-math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables &amp; Math
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pointers-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pointers &amp; Indexing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interfaces-and-structs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interfaces and Structs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#events-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events &amp; Flows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commitments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commitments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#policies-and-valuators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policies and Valuators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exchange-and-transformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exchange and Transformation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-event-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Event Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Event Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execute
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assert
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-modules-and-standard-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Modules and Standard Library
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-full-code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Full Code Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="equis-language-reference">Equis Language Reference</h1>
+<hr />
+<h2 id="formal-specifications">Formal Specifications</h2>
+<p>To ensure financial safety and compiler correctness, Equis is formally specified:
+- <strong><a href="../grammar.ebnf">Formal EBNF Grammar</a></strong>: Complete syntax definition.
+- <strong><a href="../operational_semantics/">Operational Semantics</a></strong>: Formal model of REA duality and state transitions.</p>
+<hr />
+<h2 id="1-core-syntax-and-types">1. Core Syntax and Types</h2>
+<p>Equis supports both dynamic and strong static typing. While variables can be declared loosely with <code>let</code>, functions and critical financial logic should use type annotations for compile-time verification. Supported primitive types include <code>i64</code> and <code>f64</code>.</p>
+<h3 id="memory-management">Memory Management</h3>
+<p>Equis uses <strong>Automatic Reference Counting (ARC)</strong> to manage heap memory. The runtime allocator prepends a reference-count header to each allocation. The compiler emits <code>sys_retain</code> (increment) and <code>sys_release</code> (decrement) calls at assignment, copy, and scope-exit points. When a reference count reaches zero, the object is automatically freed. This eliminates the need for a tracing garbage collector while providing deterministic memory reclamation.</p>
+<h3 id="variables-math">Variables &amp; Math</h3>
+<p>Equis uses a fixed-point arithmetic model for all numeric calculations involving decimals to ensure strict determinism. Numeric literals containing a decimal point are automatically scaled by a factor of 1,000,000.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>let tx_amount = 1000;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>let mut price = 10.5; // Use `mut` to allow reassignment
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>price = 11.0;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>let total = tx_amount + price;
+</code></pre></div>
+<h3 id="pointers-indexing">Pointers &amp; Indexing</h3>
+<p>Equis supports direct memory manipulation. Arrays and <code>struct</code> fields operate natively through pointer indexing, allowing bare-metal array manipulation using standard bracket syntax.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>let bob = sys_malloc(16);
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bob[0] = 1001; // Assign ID
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>bob[1] = 5000; // Assign Salary
+</code></pre></div></p>
+<h3 id="control-flow">Control Flow</h3>
+<p>Standard control flow structures are supported: <code>if</code>, <code>else</code>, and <code>while</code>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>if (total &gt; 1000) {
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    print 1;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>} else {
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    print 0;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>}
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>let i = 0;
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>while (i &lt; 10) {
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    i = i + 1;
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>}
+</code></pre></div></p>
+<h3 id="functions">Functions</h3>
+<p>Functions are declared using <code>fn</code> and return values using <code>return</code>. They can include optional type annotations.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fn calculate_tax(amount) {
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    return (amount * 10) / 100;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>}
+</code></pre></div></p>
+<h3 id="interfaces-and-structs">Interfaces and Structs</h3>
+<p>You can define object structures and method signatures.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>struct User {
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    id;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    balance;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>}
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>interface Node {
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    fn ping(t);
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>}
+</code></pre></div></p>
+<h3 id="external-functions">External Functions</h3>
+<p>You can bind functions from external C libraries using <code>extern fn</code>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>extern fn socket(domain, type, protocol);
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>extern fn sys_malloc(size);
+</code></pre></div></p>
+<hr />
+<p>Equis provides native keywords for economic concepts, reducing the need for accounting boilerplate.</p>
+<h3 id="agents">Agents</h3>
+<p>An <code>Agent</code> represents an entity (person or system). Agents can have specific roles.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Agent Seller roles { &quot;VENDOR&quot; } {
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    id: &quot;S-001&quot;;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    status: &quot;active&quot;;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>}
+</code></pre></div></p>
+<h3 id="resources">Resources</h3>
+<p>A <code>Resource</code> is any measured asset, such as inventory or financial units.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Resource Cash {
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    unit: USD;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    decimals: 2;
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>}
+</code></pre></div></p>
+<h3 id="events-flows">Events &amp; Flows</h3>
+<p>An <code>Event</code> is an atomic resource transfer. It requires a <code>flow</code> block to specify the balance of movement.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Event Purchase evaluated_by MarketRate roles { &quot;ADMIN&quot;, &quot;VENDOR&quot; } {
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    logic {
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>        if (tx_amount &gt; 0) { print 123; }
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    }
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    flow {
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        in tx_qty Item from Seller to Buyer;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        out tx_amount Cash from Buyer to Seller;
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    }
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>}
+</code></pre></div></p>
+<h3 id="commitments">Commitments</h3>
+<p>A <code>Commitment</code> is a promise to perform an Event in the future. Once fulfilled, an Event can explicitly reference it using <code>fulfills</code>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Commitment Order_01 evaluated_by MarketRate {
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    flow {
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>        out tx_qty Item from Seller to Buyer;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>        in tx_amount Cash from Buyer to Seller;
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    }
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>}
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Event Delivery fulfills Order_01 evaluated_by MarketRate {
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    flow {
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        out tx_qty Item from Seller to Buyer;
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        in tx_amount Cash from Buyer to Seller;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    }
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>}
+</code></pre></div></p>
+<h3 id="policies-and-valuators">Policies and Valuators</h3>
+<ul>
+<li><strong>Policy</strong>: A reusable set of rules to restrict actions.</li>
+<li><strong>Valuator</strong>: A block of logic used to determine exchange rates or resource valuations.</li>
+</ul>
+<p>Events and Commitments can use <code>evaluated_by</code> to enforce a Valuator.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Policy MaxTransfer {
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    logic {
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>        assert(tx_amount &lt;= 10000); // REA Policy enforcement
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    }
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>}
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Valuator MarketRate {
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    print 999;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>}
+</code></pre></div></p>
+<h3 id="exchange-and-transformation">Exchange and Transformation</h3>
+<ul>
+<li><strong>Exchange</strong>: Groups multiple events into a single atomic transaction.</li>
+<li><strong>Transformation</strong>: Consumes inputs to produce outputs (like a manufacturing process).</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>exchange Trade {
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    Purchase;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    Delivery;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>}
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>transformation Manufacture evaluated_by MarketRate {
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    flow {
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        in tx_qty Item from Seller to Buyer;
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>        out tx_qty Item from Buyer to Seller;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    }
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>}
+</code></pre></div>
+<hr />
+<h2 id="3-event-operations">3. Event Operations</h2>
+<p>Once REA models are defined, you can interact with them using specific operators.</p>
+<h3 id="execute">Execute</h3>
+<p>Triggers an event. You can pass runtime arguments (like signatures or IDs) as a map.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>execute Purchase { 
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    sig: &quot;Buyer&quot;;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    timestamp: &quot;1700000000&quot;;
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>};
+</code></pre></div></p>
+<h3 id="error-handling">Error Handling</h3>
+<p>Equis provides formalized error handling via <code>sys_panic</code> and the <code>Result</code> pattern.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>fn divide(a, b) {
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    if (b == 0) { sys_panic(&quot;Division by zero&quot;); }
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    return a / b;
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>}
+</code></pre></div>
+<p>The <code>Result</code> struct (<code>std/sys.equis</code>) allows for safe value wrapping:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>struct Result { ok; err; value; }
+</code></pre></div></p>
+<h3 id="assert">Assert</h3>
+<p>Validates conditions inside <code>logic</code> blocks. If the condition evaluates to <code>0</code> (false), execution halts. </p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>assert(tx_amount &gt; 0); // Stops execution if condition is false
+</code></pre></div>
+<blockquote>
+<p>[!TIP]
+Use <code>if (condition) { print 1; }</code> during development for immediate numeric tracing during execution.</p>
+</blockquote>
+<hr />
+<h2 id="4-modules-and-standard-library">4. Modules and Standard Library</h2>
+<p>You can split your code into multiple files. Equis supports exact string paths or scope resolution <code>::</code>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>use &quot;std/sys.equis&quot;;
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>use std::collections; // Automatically resolves to &quot;std/collections.equis&quot;
+</code></pre></div></p>
+<p>The Equis Standard Library (<code>std/</code>) provides tools for memory, data structures, and basic types, since the core language relies entirely on 64-bit integers and pointers:
+- <strong><code>sys</code></strong>: Memory management (<code>sys_malloc</code>, <code>free</code>), system utilities, and runtime bindings.
+- <strong><code>arena</code></strong>: Arena allocator for deterministic, fragmentation-free memory management.
+- <strong><code>string</code></strong>: Manual string manipulation (<code>str_concat</code>, <code>str_len</code>, <code>str_equal</code>, <code>print_str</code>).
+- <strong><code>intern</code></strong>: String interning for optimized symbol processing and comparisons.
+- <strong><code>collections</code></strong>: Dynamic arrays and hash maps (<code>vec_new</code>, <code>map_new</code>).
+- <strong><code>fixed</code></strong>: High-precision fixed-point arithmetic for financial values.
+- <strong><code>ledger</code></strong>: Temporal, double-entry resource balance tracking and transaction history.
+- <strong><code>accounting</code></strong>: Implementation of core Enterprise Resource Planning (ERP) accounting logic.
+- <strong><code>compliance</code></strong>: Primitives for compliance checks, ESG reporting, and specialized contracts.
+- <strong><code>db</code></strong>: Database connectors for enterprise environments (PostgreSQL via <code>libpq</code>).
+- <strong><code>fiber</code></strong>: Foundations for lightweight execution units and concurrency.
+- <strong><code>ffi</code></strong>: Foreign Function Interface utilities for C interoperability.
+- <strong><code>json</code></strong>: JSON parsing and serialization.
+- <strong><code>http</code></strong>: Basic HTTP server capabilities.</p>
+<hr />
+<h2 id="5-full-code-example">5. Full Code Example</h2>
+<p>Here is a complete example demonstrating the integration of Agents, Resources, and Events. Save this as <code>main.equis</code> and run it via <code>eq run main.equis</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>use &quot;std/sys.equis&quot;;
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>use &quot;std/collections.equis&quot;;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>use &quot;std/string.equis&quot;;
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>// =========================================================================
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>// EQUIS LANGUAGE EXAMPLE
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>// =========================================================================
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>// 1. DATA TYPES AND ABSTRACTION
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>struct Inventory { item_id; qty; }
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>interface DigitalAgent { fn ping(timestamp); }
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>// 2. RESOURCE-EVENT-AGENT (REA) MODELING
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>// Agents can have specific roles and metadata fields
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>Agent Buyer roles { &quot;CONSUMER&quot; } { id: &quot;B1&quot;; status: &quot;active&quot;; }
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>Agent Seller roles { &quot;VENDOR&quot; } { id: &quot;S1&quot;; status: &quot;active&quot;; }
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>// Resources represent assets with unit definitions
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>Resource Cash { unit: USD; decimals: 2; }
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>Resource Item { unit: PCS; }
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>// Valuators encapsulate pricing or exchange rate logic
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>Valuator MarketRate {
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>    print_raw_str(&quot;[Valuator] Calculating market rate...\n&quot;);
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>}
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>// Policies enforce business rules or compliance constraints
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>Policy RiskLimit {
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>    logic {
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>        let max_val = 5000;
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>        assert(max_val &lt;= 10000); // Standard risk check
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>    }
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>}
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>// Commitments represent promises to execute future events
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a>Commitment Order_01 evaluated_by MarketRate {
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>    flow {
+<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a>        out 5 Item from Seller to Buyer;
+<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a>        in 50 Cash from Buyer to Seller;
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>    }
+<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a>}
+<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a>
+<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a>// Events fulfill commitments and execute specific logic and flows
+<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a>Event Purchase fulfills Order_01 evaluated_by MarketRate roles { &quot;CONSUMER&quot; } {
+<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a>    logic {
+<a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a>        assert(1 &gt; 0);
+<a id="__codelineno-17-47" name="__codelineno-17-47" href="#__codelineno-17-47"></a>        print_raw_str(&quot;[Event] Executing REA Purchase contract...\n&quot;);
+<a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a>    }
+<a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a>    flow {
+<a id="__codelineno-17-50" name="__codelineno-17-50" href="#__codelineno-17-50"></a>        in 5 Item from Seller to Buyer;
+<a id="__codelineno-17-51" name="__codelineno-17-51" href="#__codelineno-17-51"></a>        out 50 Cash from Buyer to Seller;
+<a id="__codelineno-17-52" name="__codelineno-17-52" href="#__codelineno-17-52"></a>    }
+<a id="__codelineno-17-53" name="__codelineno-17-53" href="#__codelineno-17-53"></a>}
+<a id="__codelineno-17-54" name="__codelineno-17-54" href="#__codelineno-17-54"></a>
+<a id="__codelineno-17-55" name="__codelineno-17-55" href="#__codelineno-17-55"></a>Event Delivery fulfills Order_01 evaluated_by MarketRate roles { &quot;VENDOR&quot; } {
+<a id="__codelineno-17-56" name="__codelineno-17-56" href="#__codelineno-17-56"></a>    flow {
+<a id="__codelineno-17-57" name="__codelineno-17-57" href="#__codelineno-17-57"></a>        out 5 Item from Seller to Buyer;
+<a id="__codelineno-17-58" name="__codelineno-17-58" href="#__codelineno-17-58"></a>        in 50 Cash from Buyer to Seller;
+<a id="__codelineno-17-59" name="__codelineno-17-59" href="#__codelineno-17-59"></a>    }
+<a id="__codelineno-17-60" name="__codelineno-17-60" href="#__codelineno-17-60"></a>}
+<a id="__codelineno-17-61" name="__codelineno-17-61" href="#__codelineno-17-61"></a>
+<a id="__codelineno-17-62" name="__codelineno-17-62" href="#__codelineno-17-62"></a>// Higher-order economic structures
+<a id="__codelineno-17-63" name="__codelineno-17-63" href="#__codelineno-17-63"></a>exchange Trade { Purchase; Delivery; }
+<a id="__codelineno-17-64" name="__codelineno-17-64" href="#__codelineno-17-64"></a>transformation Manufacture evaluated_by MarketRate roles { &quot;VENDOR&quot; } {
+<a id="__codelineno-17-65" name="__codelineno-17-65" href="#__codelineno-17-65"></a>    flow {
+<a id="__codelineno-17-66" name="__codelineno-17-66" href="#__codelineno-17-66"></a>        in 10 Item from Seller to Buyer;
+<a id="__codelineno-17-67" name="__codelineno-17-67" href="#__codelineno-17-67"></a>        out 10 Item from Buyer to Seller;
+<a id="__codelineno-17-68" name="__codelineno-17-68" href="#__codelineno-17-68"></a>    }
+<a id="__codelineno-17-69" name="__codelineno-17-69" href="#__codelineno-17-69"></a>}
+<a id="__codelineno-17-70" name="__codelineno-17-70" href="#__codelineno-17-70"></a>
+<a id="__codelineno-17-71" name="__codelineno-17-71" href="#__codelineno-17-71"></a>// 3. CORE LOGIC WRAPPER
+<a id="__codelineno-17-72" name="__codelineno-17-72" href="#__codelineno-17-72"></a>fn run_demos() {
+<a id="__codelineno-17-73" name="__codelineno-17-73" href="#__codelineno-17-73"></a>    print_raw_str(&quot;--------------------------------------\n&quot;);
+<a id="__codelineno-17-74" name="__codelineno-17-74" href="#__codelineno-17-74"></a>    print_raw_str(&quot;Equis Core Feature Verification\n&quot;);
+<a id="__codelineno-17-75" name="__codelineno-17-75" href="#__codelineno-17-75"></a>    print_raw_str(&quot;--------------------------------------\n\n&quot;);
+<a id="__codelineno-17-76" name="__codelineno-17-76" href="#__codelineno-17-76"></a>
+<a id="__codelineno-17-77" name="__codelineno-17-77" href="#__codelineno-17-77"></a>    // Variable and arithmetic operations
+<a id="__codelineno-17-78" name="__codelineno-17-78" href="#__codelineno-17-78"></a>    let mut balance = 1000;
+<a id="__codelineno-17-79" name="__codelineno-17-79" href="#__codelineno-17-79"></a>    let cost = 500;
+<a id="__codelineno-17-80" name="__codelineno-17-80" href="#__codelineno-17-80"></a>    balance = balance - cost;
+<a id="__codelineno-17-81" name="__codelineno-17-81" href="#__codelineno-17-81"></a>
+<a id="__codelineno-17-82" name="__codelineno-17-82" href="#__codelineno-17-82"></a>    print_raw_str(&quot;System Balance: &quot;);
+<a id="__codelineno-17-83" name="__codelineno-17-83" href="#__codelineno-17-83"></a>    print_raw(balance);
+<a id="__codelineno-17-84" name="__codelineno-17-84" href="#__codelineno-17-84"></a>    print_raw_str(&quot;\n&quot;);
+<a id="__codelineno-17-85" name="__codelineno-17-85" href="#__codelineno-17-85"></a>
+<a id="__codelineno-17-86" name="__codelineno-17-86" href="#__codelineno-17-86"></a>    // Dynamic Collections (std/collections)
+<a id="__codelineno-17-87" name="__codelineno-17-87" href="#__codelineno-17-87"></a>    let list = vec_new(4);
+<a id="__codelineno-17-88" name="__codelineno-17-88" href="#__codelineno-17-88"></a>    vec_push(list, 777);
+<a id="__codelineno-17-89" name="__codelineno-17-89" href="#__codelineno-17-89"></a>    print_raw_str(&quot;Vector Get(0): &quot;);
+<a id="__codelineno-17-90" name="__codelineno-17-90" href="#__codelineno-17-90"></a>    print_raw(vec_get(list, 0));
+<a id="__codelineno-17-91" name="__codelineno-17-91" href="#__codelineno-17-91"></a>    print_raw_str(&quot;\n\n&quot;);
+<a id="__codelineno-17-92" name="__codelineno-17-92" href="#__codelineno-17-92"></a>
+<a id="__codelineno-17-93" name="__codelineno-17-93" href="#__codelineno-17-93"></a>    // REA Operations
+<a id="__codelineno-17-94" name="__codelineno-17-94" href="#__codelineno-17-94"></a>    print_raw_str(&quot;--- REA Execution Flow ---\n&quot;);
+<a id="__codelineno-17-95" name="__codelineno-17-95" href="#__codelineno-17-95"></a>    execute Purchase { sig: Buyer; timestamp: &quot;1700000000&quot; };
+<a id="__codelineno-17-96" name="__codelineno-17-96" href="#__codelineno-17-96"></a>
+<a id="__codelineno-17-97" name="__codelineno-17-97" href="#__codelineno-17-97"></a>    print_raw_str(&quot;--- REA Reverse Flow ---\n&quot;);
+<a id="__codelineno-17-98" name="__codelineno-17-98" href="#__codelineno-17-98"></a>    reverse Purchase { reason: &quot;Customer Refund&quot; };
+<a id="__codelineno-17-99" name="__codelineno-17-99" href="#__codelineno-17-99"></a>
+<a id="__codelineno-17-100" name="__codelineno-17-100" href="#__codelineno-17-100"></a>    print_raw_str(&quot;\nEquis core systems verified.\n&quot;);
+<a id="__codelineno-17-101" name="__codelineno-17-101" href="#__codelineno-17-101"></a>}
+<a id="__codelineno-17-102" name="__codelineno-17-102" href="#__codelineno-17-102"></a>
+<a id="__codelineno-17-103" name="__codelineno-17-103" href="#__codelineno-17-103"></a>// 4. ENTRY POINT
+<a id="__codelineno-17-104" name="__codelineno-17-104" href="#__codelineno-17-104"></a>fn main() {
+<a id="__codelineno-17-105" name="__codelineno-17-105" href="#__codelineno-17-105"></a>    run_demos();
+<a id="__codelineno-17-106" name="__codelineno-17-106" href="#__codelineno-17-106"></a>}
+<a id="__codelineno-17-107" name="__codelineno-17-107" href="#__codelineno-17-107"></a>
+<a id="__codelineno-17-108" name="__codelineno-17-108" href="#__codelineno-17-108"></a>main();
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 mlintangmz
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
