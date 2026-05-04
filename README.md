@@ -12,6 +12,9 @@
   <img src="https://img.shields.io/badge/Release-v0.1.0-blue.svg" alt="Release">
   <img src="https://img.shields.io/badge/License-Apache%202.0-orange.svg" alt="License">
   <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg" alt="Platform">
+  <a href="https://doi.org/10.5281/zenodo.20026585">
+    <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.20026585.svg" alt="DOI">
+  </a>
 </p>
 
 <p align="center">
@@ -114,6 +117,10 @@ equis/
 ├── epm.bat                     # Windows package manager shim
 ├── install.sh                  # Linux/macOS installer
 ├── install.ps1                 # Windows installer
+├── paper.pdf                   # Academic paper (manuscript)
+├── paper.tex                   # LaTeX source of the paper
+├── equis.bib                   # Bibliography for the paper
+├── CITATION.cff                # Citation metadata for Zenodo
 ├── EQUIS.md                    # Programmer's language reference
 ├── CHANGELOG.md                # Release history
 ├── LICENSE                     # Apache 2.0
@@ -202,6 +209,19 @@ sudo make install
 ```bash
 eq run examples/main.equis
 ```
+
+## Academic Paper
+
+The theoretical foundations of Equis are described in the following paper:
+
+> **Duality as a Type: Enforcing REA Accounting Semantics at Compile Time in the Equis Programming Language**  
+> M Lintang Maulana Zulfan (Universitas Gadjah Mada, 2026).  
+> DOI: [10.5281/zenodo.20026585](https://doi.org/10.5281/zenodo.20026585)
+
+The manuscript and bibliography are included in the root of this repository:
+- [paper.pdf](paper.pdf) — Full technical manuscript
+- [paper.tex](paper.tex) — LaTeX source
+- [equis.bib](equis.bib) — BibLaTeX bibliography
 
 ## Documentation
 

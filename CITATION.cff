@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Zulfan"
+  given-names: "M Lintang Maulana"
+  affiliation: "Universitas Gadjah Mada"
+  email: "lintangmaulanazulfan@gmail.com"
+title: "Equis: Duality as a Type - Enforcing REA Accounting Semantics at Compile Time"
+version: 0.1.0
+doi: 10.5281/zenodo.20026585
+date-released: 2026-05-04
+url: "https://github.com/equis-lang/equis"
+keywords:
+  - "REA model"
+  - "accounting duality"
+  - "type systems"
+  - "compiler verification"
+  - "financial software"
